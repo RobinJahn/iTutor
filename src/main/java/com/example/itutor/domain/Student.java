@@ -5,16 +5,22 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 public class Student {
+
+    //Attributes
     long id;
+
     @NotBlank
     String firstName=null;
+
     @NotBlank
     String lastName=null;
+
     @NotBlank(message = "{student.email.not.blank}")
     String email;
 
     private LocalDate birthDate;
 
+    //Getters + Setters
     public long getId() {
         return id;
     }
