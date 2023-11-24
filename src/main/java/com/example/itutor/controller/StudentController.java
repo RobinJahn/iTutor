@@ -25,7 +25,7 @@ public class StudentController {
         student.setBirthDate(date);
         model.addAttribute("student", student);
 
-        return "/login";
+        return "signup";
     }
 
 
@@ -34,17 +34,19 @@ public class StudentController {
                              BindingResult result,
                              RedirectAttributes attr){
 
-        System.out.println(studentRequest.getLastName());
-        System.out.println(studentRequest.getBirthDate());
-
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
-            return "/login";
+            return "signup";
         }
 
-        //studentService.save(student);
+        //TODO: save student to database
+
         attr.addFlashAttribute("success", "Student added!");
         return "redirect:/home";
     }
+
+    //add edit student method that has query parameter id
+    // edit field, check if correct, delete button
+
 }

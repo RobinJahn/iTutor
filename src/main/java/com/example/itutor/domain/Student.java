@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 
-public class Student {
+public class Student extends User{
 
     //Attributes
     long id;
