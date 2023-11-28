@@ -17,7 +17,8 @@ public class UserServiceImpl implements UserServiceI {
 		super();
 		this.userRepository = userRepository;
 	} 
-	
+
+	// All Override methods for the student
 	@Override
 	public List<User> getAllStudents() {
 		// TODO Auto-generated method stub
@@ -46,6 +47,38 @@ public class UserServiceImpl implements UserServiceI {
 	public void delete(User student) {
 		// TODO Auto-generated method stub
 		userRepository.delete(student);
+	}
+
+	// All Override methods for the researcher
+
+	@Override
+	public List<User> getAllResearchers() {
+		// TODO Auto-generated method stub
+		return (List<User>) userRepository.findAll();
+	}
+
+	@Override
+	public User saveResearcher(User researcher) {
+		// TODO Auto-generated method stub
+		return userRepository.save(researcher);
+	}
+
+	@Override
+	public User getResearcherById(Long id) {
+		// TODO Auto-generated method stub
+		return userRepository.findById(id).get();
+	}
+
+	@Override
+	public User updateResearcher(User researcher) {
+		// TODO Auto-generated method stub
+		return userRepository.save(researcher);
+	}
+
+	@Override
+	public void deleteResearcher(User researcher) {
+		// TODO Auto-generated method stub
+		userRepository.delete(researcher);
 	}
 
 }
