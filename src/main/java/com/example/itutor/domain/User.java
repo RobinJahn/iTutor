@@ -1,9 +1,19 @@
 package com.example.itutor.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
+
+@Entity
+@Table(name="student")
 public class User {
     //Attributes
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     long id;
 
     @NotBlank

@@ -1,6 +1,7 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.Student;
+import com.example.itutor.service.StudentServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +18,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class StudentController {
 
-    @RequestMapping(value = "/students/login", method = RequestMethod.GET) //http://localhost:8080/students/login
-    public String showStudentLogin(HttpServletRequest request, Model model) {
+    private StudentServiceI studentService;
+
+    public StudentController(StudentServiceI studentService) {
+        super(); //???
+        this.studentService = studentService;
+    }
+
+    @RequestMapping(value = "/students/signup", method = RequestMethod.GET) //http://localhost:8080/students/signup
+    public String showStudentSignup(HttpServletRequest request, Model model) {
 
         Student student = new Student();
-        student.setId((long) -1);
+        student.setId((long) 1);
         LocalDate date= LocalDate.now();
         student.setBirthDate(date);
         model.addAttribute("student", student);
@@ -42,6 +50,7 @@ public class StudentController {
         }
 
         //TODO: save student to database
+        studentService.saveStudent(studentRequest);
 
         attr.addFlashAttribute("success", "Student added!");
         return "redirect:/home";
@@ -63,6 +72,10 @@ public class StudentController {
             // if student was not found -> redirect to another page
             return "errorPage";
         }*/
+        // get student from database by id
+        Student existingStudent = studentService.getStudentById(studentId);
+        model.addAttribute("student", existingStudent);
+
         return "editStudent";
     }
 

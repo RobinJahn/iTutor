@@ -1,10 +1,14 @@
 package com.example.itutor.domain;
 
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-
+import jakarta.persistence.Entity;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Student extends User{
+@Entity
+@Table(name="student")
+public class Student extends User implements Serializable {
 
     //Attributes
     private LocalDate birthDate;
