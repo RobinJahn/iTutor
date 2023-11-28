@@ -29,10 +29,11 @@ public class StudentController {
     public String showStudentSignup(HttpServletRequest request, Model model) {
 
         Student student = new Student();
-        student.setId((long) 1);
         LocalDate date= LocalDate.now();
         student.setBirthDate(date);
-        model.addAttribute("student", student);
+        model.addAttribute("user", student);
+
+        model.addAttribute("link", "/students/add/process");
 
         return "signup";
     }
@@ -50,7 +51,8 @@ public class StudentController {
         }
 
         //TODO: save student to database
-        studentService.saveStudent(studentRequest);
+        Student createdStudent = studentService.saveStudent(studentRequest);
+        System.out.println(createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
         return "redirect:/home";
@@ -62,21 +64,18 @@ public class StudentController {
     @RequestMapping(value = "/students/edit/{studentId}", method = RequestMethod.GET)
     public String editStudentForm(@PathVariable Long studentId, Model model) {
         // Here the logic would have to be implemented to retrieve the student with the given studentId from the database
-        // z.B.:studentService.findById(studentId);
 
-/*        if (student != null) {
+        // get student from database by id
+        Student student = studentService.getStudentById(studentId);
+
+        if (student != null) {
             // Add the student to the model to pre-populate the form on the page
             model.addAttribute("student", student);
             return "editStudent";
         } else {
             // if student was not found -> redirect to another page
             return "errorPage";
-        }*/
-        // get student from database by id
-        Student existingStudent = studentService.getStudentById(studentId);
-        model.addAttribute("student", existingStudent);
-
-        return "editStudent";
+        }
     }
 
     @RequestMapping(value = "/students/edit/process", method = RequestMethod.POST)

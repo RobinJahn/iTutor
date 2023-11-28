@@ -21,4 +21,9 @@ public class Student extends User implements Serializable {
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", birthDate=" + birthDate + '}';
+    }
 }

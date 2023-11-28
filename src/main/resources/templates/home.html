@@ -1,17 +1,38 @@
 <!DOCTYPE html>
-<html lang="en"> <!--xmlns:th="http://www.thymeleaf.org"-->
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .center-links {
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
 </head>
 <body>
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+    <a class="navbar-brand" href="#">Educational Site</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <!-- Add other navigation items here -->
+        </ul>
+    </div>
+</nav>
 
-<h1>Welcome to the Home Page</h1>
+<div class="container center-links">
+    <a th:href="@{/students/edit/1}" class="btn btn-primary">View Student List</a>
+    <a th:href="@{/students/signup}" class="btn btn-secondary">Student Signup</a>
+</div>
 
-<p>This is a basic Home Page for our application.</p>
-
-<!-- Beispiel-Link für Studentenliste -->
-<a th:href="@{/students/edit/1}">View Student List</a>
-
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
