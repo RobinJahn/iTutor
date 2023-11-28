@@ -24,6 +24,6 @@ public class Student extends User implements Serializable {
 
     @Override
     public String toString() {
-        return "Student{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", birthDate=" + birthDate + '}';
+        return "Student {" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", birthDate=" + birthDate + '}';
     }
 }

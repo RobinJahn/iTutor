@@ -1,7 +1,8 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.Student;
-import com.example.itutor.service.StudentServiceI;
+import com.example.itutor.domain.User;
+import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class StudentController {
 
-    private StudentServiceI studentService;
+    private UserServiceI studentService;
 
-    public StudentController(StudentServiceI studentService) {
+    public StudentController(UserServiceI studentService) {
         super(); //???
         this.studentService = studentService;
     }
@@ -51,7 +52,7 @@ public class StudentController {
         }
 
         //TODO: save student to database
-        Student createdStudent = studentService.saveStudent(studentRequest);
+        User createdStudent = studentService.saveStudent(studentRequest);
         System.out.println(createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
@@ -66,7 +67,7 @@ public class StudentController {
         // Here the logic would have to be implemented to retrieve the student with the given studentId from the database
 
         // get student from database by id
-        Student student = studentService.getStudentById(studentId);
+        User student = studentService.getStudentById(studentId);
 
         if (student != null) {
             // Add the student to the model to pre-populate the form on the page
