@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserServiceI {
 	}
 
 	// All Override methods for the researcher
-
 	@Override
 	public List<User> getAllResearchers() {
 		// TODO Auto-generated method stub

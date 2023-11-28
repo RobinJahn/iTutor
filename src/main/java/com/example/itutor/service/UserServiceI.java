@@ -19,7 +19,6 @@ public interface UserServiceI {
 	void delete(User student);
 
 	// UserService for the researcher User
-
 	List<User> getAllResearchers();
 
 	User saveResearcher(User researcher);
