@@ -2,7 +2,7 @@ package com.example.itutor.domain;
 
 import jakarta.validation.constraints.NotBlank;
 
-public abstract class User {
+public class User {
     //Attributes
     long id;
 
@@ -16,21 +16,36 @@ public abstract class User {
     String email;
 
     //Getters + Setters
-    public abstract long getId();
+    public long getId() {
+        return id;
+    }
 
-    public abstract void setId(long id);
+    public void setId(long id) {
+        this.id = id;
+    }
 
-    public abstract String getFirstName();
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public abstract void setFirstName(String firstName);
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-    public abstract String getLastName();
+    public String getLastName() {
+        return lastName;
+    }
 
-    public abstract void setLastName(String lastName);
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-    public abstract String getEmail();
+    public String getEmail() {
+        return email;
+    }
 
-    public abstract void setEmail(String email);
-
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 }
