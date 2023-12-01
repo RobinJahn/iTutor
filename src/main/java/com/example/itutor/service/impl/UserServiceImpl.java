@@ -25,9 +25,9 @@ public class UserServiceImpl implements UserServiceI {
 	}
 
 	@Override
-	public User saveUser(User student) {
+	public User saveUser(User user) {
 		// TODO Auto-generated method stub
-		return userRepository.save(student);
+		return userRepository.save(user);
 	}
 
 	@Override
@@ -37,15 +37,15 @@ public class UserServiceImpl implements UserServiceI {
 	}
 
 	@Override
-	public User updateUser(User student) {
+	public User updateUser(User user) {
 		// TODO Auto-generated method stub
-		return userRepository.save(student);
+		return userRepository.save(user);
 	}
 
 	@Override
-	public void delete(User student) {
+	public void delete(User user) {
 		// TODO Auto-generated method stub
-		userRepository.delete(student);
+		userRepository.delete(user);
 	}
 
 }
