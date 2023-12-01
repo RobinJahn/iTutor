@@ -16,8 +16,8 @@ public class Researcher extends User implements Serializable {
     // Affiliation being the institution / company the researcher works for
     private String researcherAffiliation;
 
-    // Credentials being the qualification and the knowledge field of the researcher
-    private String researcherCredentials;
+    // Qualification being the knowledge field of the researcher
+    private String researcherQualification;
 
     public String getResearcherAffiliation() {
         return researcherAffiliation;
@@ -27,17 +27,17 @@ public class Researcher extends User implements Serializable {
         this.researcherAffiliation = affiliation;
     }
 
-    public String getResearcherCredentials() {
-        return researcherCredentials;
+    public String getResearcherQualification() {
+        return researcherQualification;
     }
 
-    public void setResearcherCredentials(String credentials) {
-        this.researcherCredentials = credentials;
+    public void setResearcherQualification(String credentials) {
+        this.researcherQualification = credentials;
     }
 
     @Override
     public String toString() {
-        return "Student {" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", affiliation=" + researcherAffiliation + ", credentials=" + researcherCredentials + '}';
+        return "Researcher {" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", affiliation=" + researcherAffiliation + ", credentials=" + researcherQualification + '}';
     }
 
 }
