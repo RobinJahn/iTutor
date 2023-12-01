@@ -36,7 +36,7 @@ public class StudentController {
 
         model.addAttribute("link", "/students/add/process");
 
-        return "signup";
+        return "students/studentSignup";
     }
 
 
