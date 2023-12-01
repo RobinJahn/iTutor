@@ -46,7 +46,7 @@ public class ResearcherController {
             return "signup";
         }
 
-        User createdResearcher = researcherService.saveStudent(researcherRequest);
+        User createdResearcher = researcherService.saveUser(researcherRequest);
         System.out.println(createdResearcher);
 
         attr.addFlashAttribute("success", "Researcher added!");
@@ -55,7 +55,7 @@ public class ResearcherController {
 
     @RequestMapping(value = "/researchers/edit/{researcherId}", method = RequestMethod.GET)
     public String editResearcherForm(@PathVariable Long researcherId, Model model) {
-        User researcher = researcherService.getStudentById(researcherId);
+        User researcher = researcherService.getUserById(researcherId);
 
         if (researcher != null) {
             // Add the student to the model to pre-populate the form on the page

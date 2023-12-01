@@ -9,13 +9,13 @@ public interface UserServiceI {
 	
 	List<User> getAllUsers();
 
-	User saveUser(User student);
+	User saveUser(User user);
 
 	User getUserById(Long id);
 
-	User updateUser(User student);
+	User updateUser(User user);
 	
-	void delete(User student);
+	void delete(User user);
 
 
 }
