@@ -51,8 +51,7 @@ public class StudentController {
             return "signup";
         }
 
-        //TODO: save student to database
-        User createdStudent = studentService.saveStudent(studentRequest);
+        User createdStudent = studentService.saveUser(studentRequest);
         System.out.println(createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
@@ -67,7 +66,7 @@ public class StudentController {
         // Here the logic would have to be implemented to retrieve the student with the given studentId from the database
 
         // get student from database by id
-        User student = studentService.getStudentById(studentId);
+        User student = studentService.getUserById(studentId);
 
         if (student != null) {
             // Add the student to the model to pre-populate the form on the page
