@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+
+<section class="layout-content" layout:fragment="mybody">
+    <div class="container" id="edit-profile">
+
+        <!-- Update the action to the appropriate URL for editing -->
+        <form th:action="@{${link}}" th:object="${user}" method="POST">
+
+            <h2>Edit Profile</h2>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="firstName">Firstname </label>
+                    <!-- Ensure fields are populated with existing user data -->
+                    <input type="text" class="form-control" id="firstName" placeholder="Name"
+                           autofocus="autofocus" th:field="*{firstName}"
+                           th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" />
+                    <div class="invalid-feedback">
+                        <span th:errors="*{firstName}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="lastName">Lastname </label>
+                    <input type="text" class="form-control" id="lastName" placeholder="Name"
+                           th:field="*{lastName}"
+                           th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" />
+                    <div class="invalid-feedback">
+                        <span th:errors="*{lastName}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" id="email" placeholder="Email"
+                           th:field="*{email}"
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" />
+                    <div class="invalid-feedback">
+                        <span th:errors="*{email}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Include other attributes to be edited if necessary -->
+            <div layout:fragment="moreAttributes">
+                <div> More attributes to edit </div>
+            </div>
+
+            <!-- Update the button text -->
+            <button type="submit" class="btn btn-primary btn-sm">Update Profile</button>
+        </form>
+    </div>
+</section>
+</body>
+</html>

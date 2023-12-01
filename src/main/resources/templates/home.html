@@ -1,25 +1,108 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Home Page</title>
-    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .center-links {
-            text-align: center;
-            margin-top: 50px;
-        }
-    </style>
+    <meta charset="UTF-8"/>
 </head>
+
 <body>
+<section layout:fragment="mybody">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <!-- Students Section -->
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Students</h5>
+                        <a th:href="@{/students/signup}" class="btn btn-primary btn-block mb-2">Student Signup</a>
+                        <form th:action="@{/students/showAll}" method="get" class="mb-2">
+                            <button type="submit" class="btn btn-secondary btn-block">View Student List</button>
+                        </form>
+                        <form id="editStudentForm" class="mb-2">
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary mr-2">Edit Student</button>
+                                </div>
+                                <input id="studentId" type="text" name="id" class="form-control" placeholder="Enter Student ID">
 
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
-<div class="container center-links">
-    <a th:href="@{/students/edit/1}" class="btn btn-primary">View Student List</a>
-    <a th:href="@{/students/signup}" class="btn btn-secondary">Student Signup</a>
-</div>
+            <!-- Experts Section -->
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Experts</h5>
+                        <a th:href="@{/experts/signup}" class="btn btn-primary btn-block mb-2">Expert Signup</a>
+                        <form th:action="@{/experts/showAll}" method="get" class="mb-2">
+                            <button type="submit" class="btn btn-secondary btn-block">View Expert List</button>
+                        </form>
+                        <form id="editExpertForm" class="mb-2">
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary  mr-2">Edit Expert</button>
+                                </div>
+                                <input id="expertId" type="text" name="id" class="form-control" placeholder="Enter Expert ID">
+                            </div>
+                        </form>
 
-<script src="/webjars/jquery/jquery.min.js"></script>
-<script src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Researchers Section -->
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Researchers</h5>
+                        <a th:href="@{/researchers/signup}" class="btn btn-primary btn-block mb-2">Researcher Signup</a>
+                        <form th:action="@{/researchers/showAll}" method="get" class="mb-2">
+                            <button type="submit" class="btn btn-secondary btn-block">View Researcher List</button>
+                        </form>
+                        <form id="editResearcherForm" class="mb-2">
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Edit Researcher</button>
+                                </div>
+                                <input id="researcherId" type="text" name="id" class="form-control" placeholder="Enter Researcher ID">
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div th:if="${success}" class="alert alert-success">
+            <p th:text="${success}"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('editStudentForm').onsubmit = function(event) {
+            event.preventDefault();
+            redirectToEdit('students', document.getElementById('studentId').value);
+        };
+        document.getElementById('editExpertForm').onsubmit = function(event) {
+            event.preventDefault();
+            redirectToEdit('experts', document.getElementById('expertId').value);
+        };
+        document.getElementById('editResearcherForm').onsubmit = function(event) {
+            event.preventDefault();
+            redirectToEdit('researchers', document.getElementById('researcherId').value);
+        };
+
+        function redirectToEdit(userType, id) {
+            if(id) {
+                window.location.href = '/' + userType + '/edit/' + id;
+            }
+        }
+    </script>
+</section>
+
 </body>
+
 </html>

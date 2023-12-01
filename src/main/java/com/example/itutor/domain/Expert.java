@@ -20,5 +20,11 @@ public class Expert extends User implements Serializable {
         public void setExpertise(String expertise) {
             this.expertise = expertise;
         }
+
+        @Override
+        public String toString() {
+            return "Expert {" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", expertise=" + expertise + '}';
+
+        }
 }
 

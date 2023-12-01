@@ -16,10 +16,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <!-- Custom styles for this template -->
-    <link href="/css/style.css" rel="stylesheet"/>
+    <!--link href="/css/style.css" rel="stylesheet"/-->
 </head>
 <body>
-<header th:replace="fragments/header :: header"></header>
+<header th:replace="~{fragments/header :: header}"></header>
 
 <div class="layout-main">
     <section layout:fragment="mybody">
@@ -27,7 +27,7 @@
     </section>
 </div>
 
-<footer th:replace="fragments/footer :: footer"></footer>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 
 
 <!-- Bootstrap core JavaScript

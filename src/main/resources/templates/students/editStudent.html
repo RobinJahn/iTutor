@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html layout:decorate="~{signup}" xmlns:layout="http://www.w3.org/1999/xhtml">
-<head><meta charset="UTF-8" /></head>
+<head>
+    <meta charset="UTF-8"/>
+</head>
 <body>
 
 <section class="layout-content" layout:fragment="moreAttributes">
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="birthDate">Birthdate </label>
-            <input type="date" class="form-control" id="birthDate" placeholder="Birthdate"
+            <input type="text" class="form-control" id="birthDate" placeholder="Birthdate"
                    autofocus="autofocus" th:field="*{birthDate}"
-                   th:classappend="${#fields.hasErrors('birthDate')} ? 'is-invalid'" />
+                   th:classappend="${#fields.hasErrors('birthDate')} ? 'is-invalid'"/>
             <div class="invalid-feedback">
                 <span th:errors="*{birthDate}"></span>
             </div>
         </div>
     </div>
 </section>
-</body>
-</html>

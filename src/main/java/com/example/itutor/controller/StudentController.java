@@ -12,26 +12,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.time.LocalDate;
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class StudentController {
 
-    private UserServiceI studentService;
+    private UserServiceI userService;
 
-    public StudentController(UserServiceI studentService) {
+    public StudentController(UserServiceI userService) {
         super(); //???
-        this.studentService = studentService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/students/signup", method = RequestMethod.GET) //http://localhost:8080/students/signup
     public String showStudentSignup(HttpServletRequest request, Model model) {
 
         Student student = new Student();
-        LocalDate date= LocalDate.now();
-        student.setBirthDate(date);
         model.addAttribute("user", student);
 
         model.addAttribute("link", "/students/add/process");
@@ -51,11 +48,11 @@ public class StudentController {
             return "signup";
         }
 
-        User createdStudent = studentService.saveUser(studentRequest);
+        User createdStudent = userService.saveUser(studentRequest);
         System.out.println(createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
-        return "redirect:/home";
+        return "redirect:/";
     }
 
     //add edit student method that has query parameter id
@@ -66,16 +63,18 @@ public class StudentController {
         // Here the logic would have to be implemented to retrieve the student with the given studentId from the database
 
         // get student from database by id
-        User student = studentService.getUserById(studentId);
+        Student student = (Student) userService.getUserById(studentId);
 
-        if (student != null) {
-            // Add the student to the model to pre-populate the form on the page
-            model.addAttribute("student", student);
-            return "editStudent";
-        } else {
+        if (student == null) {
             // if student was not found -> redirect to another page
+            System.err.println("Student with id " + studentId + " not found!");
             return "errorPage";
         }
+
+        // Add the student to the model to pre-populate the form on the page
+        model.addAttribute("user", student);
+        model.addAttribute("link", "/students/edit/process");
+        return "/students/editStudent";
     }
 
     @RequestMapping(value = "/students/edit/process", method = RequestMethod.POST)
@@ -86,13 +85,14 @@ public class StudentController {
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
-            return "editStudent"; // if there are any errors -> back to edit form
+            return "/students/editStudent"; // if there are any errors -> back to edit form
         }
 
-        //TODO: Update the student details in the database based on the edited data in studentRequest
+        User updatedStudent = userService.updateUser(studentRequest);
+        System.out.println(updatedStudent);
 
         attr.addFlashAttribute("success", "Student updated!");
-        return "redirect:/home";
+        return "redirect:/";
 
     }
 }

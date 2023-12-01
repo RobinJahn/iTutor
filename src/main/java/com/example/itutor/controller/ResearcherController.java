@@ -17,11 +17,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class ResearcherController {
 
-    private UserServiceI researcherService;
+    private UserServiceI userService;
 
-    public ResearcherController(UserServiceI researcherService) {
+    public ResearcherController(UserServiceI userService) {
         super(); //???
-        this.researcherService = researcherService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/researchers/signup", method = RequestMethod.GET)
@@ -32,56 +32,56 @@ public class ResearcherController {
 
         model.addAttribute("link", "/researchers/add/process");
 
-        return "signup";
+        return "researchers/researcherSignup";
     }
 
     @RequestMapping(value = "/researchers/add/process")
     public String addResearcher(@ModelAttribute @Valid Researcher researcherRequest,
                                 BindingResult result,
-                                RedirectAttributes attr){
+                                RedirectAttributes attr) {
 
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
             return "signup";
         }
 
-        User createdResearcher = researcherService.saveUser(researcherRequest);
+        User createdResearcher = userService.saveUser(researcherRequest);
         System.out.println(createdResearcher);
 
         attr.addFlashAttribute("success", "Researcher added!");
-        return "redirect:/home";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/researchers/edit/{researcherId}", method = RequestMethod.GET)
     public String editResearcherForm(@PathVariable Long researcherId, Model model) {
-        User researcher = researcherService.getUserById(researcherId);
+        Researcher researcher = (Researcher) userService.getUserById(researcherId);
 
-        if (researcher != null) {
-            // Add the student to the model to pre-populate the form on the page
-            model.addAttribute("researcher", researcher);
-            return "editResearcher";
-        } else {
+        if (researcher == null) {
             // if student was not found -> redirect to another page
             return "errorPage";
         }
+
+        model.addAttribute("user", researcher);
+        model.addAttribute("link", "/researchers/edit/process");
+        return "researchers/editResearcher";
     }
 
     @RequestMapping(value = "/researchers/edit/process", method = RequestMethod.POST)
     public String editResearcher(@ModelAttribute @Valid Researcher researcherRequest,
-                              BindingResult result,
-                              RedirectAttributes attr) {
+                                 BindingResult result,
+                                 RedirectAttributes attr) {
 
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
-            return "editResearcher"; // if there are any errors -> back to edit form
+            return "researchers/editResearcher"; // if there are any errors -> back to edit form
         }
 
         //TODO: Update the student details in the database based on the edited data in studentRequest
 
         attr.addFlashAttribute("success", "Researcher updated!");
-        return "redirect:/home";
+        return "redirect:/";
     }
 
 }

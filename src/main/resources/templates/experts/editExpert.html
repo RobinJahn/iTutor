@@ -6,15 +6,14 @@
 <section class="layout-content" layout:fragment="moreAttributes">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="birthDate">Birthdate </label>
-            <input type="date" class="form-control" id="birthDate" placeholder="Birthdate"
-                   autofocus="autofocus" th:field="*{birthDate}"
-                   th:classappend="${#fields.hasErrors('birthDate')} ? 'is-invalid'" />
+            <label for="expertise">Expertise </label>
+            <input type="text" class="form-control" id="expertise" placeholder="Expertise"
+                   th:field="*{expertise}"
+                   th:classappend="${#fields.hasErrors('expertise')} ? 'is-invalid'" />
             <div class="invalid-feedback">
-                <span th:errors="*{birthDate}"></span>
+                <span th:errors="*{expertise}"></span>
             </div>
         </div>
     </div>
+
 </section>
-</body>
-</html>

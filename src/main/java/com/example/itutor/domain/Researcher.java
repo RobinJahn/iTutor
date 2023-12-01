@@ -14,30 +14,30 @@ public class Researcher extends User implements Serializable {
     // or are these just normal people with the ability to see the statistics on the site
 
     // Affiliation being the institution / company the researcher works for
-    private String researcherAffiliation;
+    private String affiliation;
 
     // Qualification being the knowledge field of the researcher
-    private String researcherQualification;
+    private String qualification;
 
-    public String getResearcherAffiliation() {
-        return researcherAffiliation;
+    public String getAffiliation() {
+        return affiliation;
     }
 
-    public void setResearcherAffiliation(String affiliation) {
-        this.researcherAffiliation = affiliation;
+    public void setAffiliation(String researcherAffiliation) {
+        this.affiliation = researcherAffiliation;
     }
 
-    public String getResearcherQualification() {
-        return researcherQualification;
+    public String getQualification() {
+        return qualification;
     }
 
-    public void setResearcherQualification(String credentials) {
-        this.researcherQualification = credentials;
+    public void setQualification(String researcherQualification) {
+        this.qualification = researcherQualification;
     }
 
     @Override
     public String toString() {
-        return "Researcher {" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", affiliation=" + researcherAffiliation + ", credentials=" + researcherQualification + '}';
+        return "Researcher {" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", affiliation=" + affiliation + ", credentials=" + qualification + '}';
     }
 
 }

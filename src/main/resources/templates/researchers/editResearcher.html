@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html layout:decorate="~{signup}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head><meta charset="UTF-8" /></head>
+<body>
+
+<section class="layout-content" layout:fragment="moreAttributes">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="affiliation">Affiliation </label>
+            <input type="text" class="form-control" id="affiliation" placeholder="Affiliation"
+                   th:field="*{affiliation}"
+                   th:classappend="${#fields.hasErrors('Affiliation')} ? 'is-invalid'" />
+            <div class="invalid-feedback">
+                <span th:errors="*{affiliation}"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="qualification">Qualification </label>
+            <input type="text" class="form-control" id="qualification" placeholder="Qualification"
+                   th:field="*{qualification}"
+                   th:classappend="${#fields.hasErrors('Qualification')} ? 'is-invalid'" />
+            <div class="invalid-feedback">
+                <span th:errors="*{qualification}"></span>
+            </div>
+        </div>
+</section>
