@@ -19,32 +19,32 @@ public class UserServiceImpl implements UserServiceI {
 	} 
 
 	@Override
-	public List<User> getAllStudents() {
+	public List<User> getAllUsers() {
 		// TODO Auto-generated method stub
 		return (List<User>) userRepository.findAll();
 	}
 
 	@Override
-	public User saveStudent(User student) {
+	public User saveUser(User user) {
 		// TODO Auto-generated method stub
-		return userRepository.save(student);
+		return userRepository.save(user);
 	}
 
 	@Override
-	public User getStudentById(Long id) {
+	public User getUserById(Long id) {
 		// TODO Auto-generated method stub
 		return userRepository.findById(id).get();
 	}
 
 	@Override
-	public User updateStudent(User student) {
+	public User updateUser(User user) {
 		// TODO Auto-generated method stub
-		return userRepository.save(student);
+		return userRepository.save(user);
 	}
 
 	@Override
-	public void delete(User student) {
+	public void delete(User user) {
 		// TODO Auto-generated method stub
-		userRepository.delete(student);
+		userRepository.delete(user);
 	}
 }

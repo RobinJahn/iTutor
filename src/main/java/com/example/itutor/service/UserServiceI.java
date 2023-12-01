@@ -7,14 +7,15 @@ import java.util.List;
 
 public interface UserServiceI {
 	
-	List<User> getAllStudents();
+	List<User> getAllUsers();
 
-	User saveStudent(User student);
+	User saveUser(User student);
 
-	User getStudentById(Long id);
+	User getUserById(Long id);
 
-	User updateStudent(User student);
-
+	User updateUser(User student);
+	
 	void delete(User student);
+
 
 }
