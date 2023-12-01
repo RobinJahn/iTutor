@@ -25,4 +25,9 @@ public class HomeController {
     public String showLayout() {
         return "/layout";
     }
+
+    @RequestMapping(value = "/preselectUser")
+    public String showPreselectUser() {
+        return "/preselectUser";
+    }
 }
