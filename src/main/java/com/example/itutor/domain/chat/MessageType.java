@@ -9,5 +9,5 @@ public enum MessageType {
     JOIN,
 
     // User leaves a chat
-    LEAVER
+    LEAVE
 }

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>Chat</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8f+ua5z5OHw02WWF7w/4pI4Ioqz5p2EmFy/+eAnW5O3N9vnysa6Sm4WT5iCz" crossorigin="anonymous">
+    <!-- Add your custom CSS here -->
+    <style>
+        /* Chat container styles */
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chat header styles */
+        .chat-header {
+            text-align: center;
+            padding-bottom: 10px;
+        }
+
+        /* Message display area styles */
+        .chat-messages {
+            border: 1px solid #ddd;
+            background-color: #f8f8f8;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 5px;
+        }
+
+        /* Input field and send button styles */
+        .chat-input {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .message-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .send-button {
+            margin-left: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<section layout:fragment="mybody">
+    <div id="username-page"></div>
+
+    <!-- Chat interface -->
+    <div id="chat-page" class="hidden">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>iTutor Chat Demo</h2>
+            </div>
+            <ul id="messageArea"></ul>
+            <form id="messageForm" name="messageForm">
+                <div class="form-group">
+                    <div class="input-group clearfix">
+                        <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control" />
+                        <button type="submit" class="primary">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <!-- Your custom JavaScript for chat functionality -->
+    <script src="app.js"></script>
+</section>
+</body>
+</html>
