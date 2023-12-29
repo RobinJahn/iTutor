@@ -1,11 +1,6 @@
 package com.example.itutor.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 
@@ -26,6 +21,10 @@ public class Content implements Serializable {
 
     @Column(nullable = false, length = 10000) // Adjust length based on expected content size
     private String contentData;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course; // Reference to the Course
 
     // Getters and Setters
     public Long getContentID() {
@@ -58,6 +57,14 @@ public class Content implements Serializable {
 
     public void setContentData(String contentData) {
         this.contentData = contentData;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override
