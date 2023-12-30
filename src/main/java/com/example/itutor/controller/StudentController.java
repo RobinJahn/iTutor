@@ -2,8 +2,11 @@ package com.example.itutor.controller;
 
 import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
+import com.example.itutor.repository.UserRepositoryI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class StudentController {
 
     private UserServiceI userService;
+
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public StudentController(UserServiceI userService) {
         super(); //???
@@ -48,8 +55,13 @@ public class StudentController {
             return "signup";
         }
 
+        // Encode the password before saving
+        studentRequest.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
+
+        // Save the student using the service
         User createdStudent = userService.saveUser(studentRequest);
-        System.out.println(createdStudent);
+
+        System.out.println("Saved Expert:" + createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
         return "redirect:/";

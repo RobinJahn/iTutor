@@ -5,6 +5,8 @@ import com.example.itutor.domain.User;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +20,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ResearcherController {
 
     private UserServiceI userService;
+
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public ResearcherController(UserServiceI userService) {
         super(); //???
@@ -46,8 +52,14 @@ public class ResearcherController {
             return "signup";
         }
 
+        // Encode the password before saving
+        researcherRequest.setPassword(passwordEncoder.encode(researcherRequest.getPassword()));
+
+        // Save the student using the service
         User createdResearcher = userService.saveUser(researcherRequest);
-        System.out.println(createdResearcher);
+
+        System.out.println("Saved Expert:" + createdResearcher);
+
 
         attr.addFlashAttribute("success", "Researcher added!");
         return "redirect:/";

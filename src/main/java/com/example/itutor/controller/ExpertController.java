@@ -25,9 +25,6 @@ public class ExpertController {
 
 
     @Autowired
-    private UserRepositoryI userRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public ExpertController(UserServiceI userService) {
@@ -47,8 +44,7 @@ public class ExpertController {
     }
 
     @RequestMapping(value = "/experts/add/process")
-    public String addExpert(@ModelAttribute
-                            @Valid Expert expertRequest,
+    public String addExpert(@ModelAttribute @Valid Expert expertRequest,
                             BindingResult result,
                             RedirectAttributes attr) {
 
@@ -64,8 +60,7 @@ public class ExpertController {
         // Save the expert and get the created entity
         User createdExpert = userService.saveUser(expertRequest);
 
-        System.out.println(createdExpert);
-        userRepository.save(createdExpert);
+        System.out.println("Saved Expert:" + createdExpert);
 
         attr.addFlashAttribute("success", "Expert added!");
         return "redirect:/";

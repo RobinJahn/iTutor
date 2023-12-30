@@ -25,7 +25,10 @@ public class User {
     @NotBlank(message = "{student.email.not.blank}")
     String email;
 
+    @NotBlank
     String username;
+
+    @NotBlank
     String password;
 
     //Getters + Setters
