@@ -58,10 +58,14 @@ public class ExpertController {
             return "signup";
         }
 
+        // Encode the password before saving
+        expertRequest.setPassword(passwordEncoder.encode(expertRequest.getPassword()));
+
+        // Save the expert and get the created entity
         User createdExpert = userService.saveUser(expertRequest);
-        createdExpert.setPassword(passwordEncoder.encode(createdExpert.getPassword()));
-        userRepository.save(createdExpert);
+
         System.out.println(createdExpert);
+        userRepository.save(createdExpert);
 
         attr.addFlashAttribute("success", "Expert added!");
         return "redirect:/";
