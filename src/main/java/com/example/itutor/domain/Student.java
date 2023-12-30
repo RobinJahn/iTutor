@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="student")
+@Table(name="students")
 public class Student extends User implements Serializable {
 
     //Attributes

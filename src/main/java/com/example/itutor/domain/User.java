@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 
 
 @Entity
-@Table(name="student")
+@Table(name="users")
 public class User {
     //Attributes
     @Id
@@ -24,6 +24,9 @@ public class User {
 
     @NotBlank(message = "{student.email.not.blank}")
     String email;
+
+    String username;
+    String password;
 
     //Getters + Setters
     public long getId() {
@@ -58,9 +61,25 @@ public class User {
         this.email = email;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString(){
-    	return "Student [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
+        return "User {" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", username=" + username + ", password=" + password + '}';
     }
 
 }

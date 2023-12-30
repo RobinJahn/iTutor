@@ -11,6 +11,30 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
+                    <label for="username">username </label>
+                    <input type="text" class="form-control" id="username" placeholder="Name"
+                           autofocus="autofocus" th:field="*{username}"
+                           th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'" />
+                    <div class="invalid-feedback">
+                        <span th:errors="*{username}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="password">password </label>
+                    <input type="text" class="form-control" id="password" placeholder="Name"
+                           autofocus="autofocus" th:field="*{password}"
+                           th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" />
+                    <div class="invalid-feedback">
+                        <span th:errors="*{password}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
                     <label for="firstName">Firstname </label>
                     <input type="text" class="form-control" id="firstName" placeholder="Name"
                            autofocus="autofocus" th:field="*{firstName}"

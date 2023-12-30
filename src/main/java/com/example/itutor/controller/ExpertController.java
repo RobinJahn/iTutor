@@ -2,9 +2,13 @@ package com.example.itutor.controller;
 
 import com.example.itutor.domain.Expert;
 import com.example.itutor.domain.User;
+import com.example.itutor.repository.UserRepositoryI;
+import com.example.itutor.repository.impl.UserRepositoryImpl;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +22,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ExpertController {
 
     private UserServiceI userService;
+
+
+    @Autowired
+    private UserRepositoryI userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public ExpertController(UserServiceI userService) {
         super(); //???
@@ -48,6 +59,8 @@ public class ExpertController {
         }
 
         User createdExpert = userService.saveUser(expertRequest);
+        createdExpert.setPassword(passwordEncoder.encode(createdExpert.getPassword()));
+        userRepository.save(createdExpert);
         System.out.println(createdExpert);
 
         attr.addFlashAttribute("success", "Expert added!");
