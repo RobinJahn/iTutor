@@ -10,11 +10,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/courses")
-public class CourseController {
+public class CourseRESTController {
     private final CourseServiceI courseService;
 
     //@Autowired
-    public CourseController(CourseServiceI courseService) {
+    public CourseRESTController(CourseServiceI courseService) {
         this.courseService = courseService;
     }
 

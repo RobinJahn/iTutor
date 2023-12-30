@@ -8,6 +8,14 @@ import java.io.Serializable;
 @Table(name = "content")
 public class Content implements Serializable {
 
+    public class ContentType {
+        public static final String TEXT = "text";
+        public static final String VIDEO = "video";
+        public static final String AUDIO = "audio";
+        public static final String IMAGE = "image";
+        public static final String PDF = "pdf";
+    }
+
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
