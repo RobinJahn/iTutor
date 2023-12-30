@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Content Fragments</title>
+</head>
+<body>
+<!-- Content Fragment -->
+<div th:fragment="contentFragment(content)">
+    <div class="card my-3">
+        <div class="card-body">
+            <!-- heading for content -->
+            <h3 class="card-title" th:text="${content.title}">Content Title</h3>
+
+            <div th:switch="${content.contentType}">
+                <!-- Case for text content -->
+                <div th:case="${T(com.example.itutor.domain.Content$ContentType).TEXT}">
+                    <p class="card-text" th:text="${content.contentData}"></p>
+                </div>
+                <!-- Case for PDF content -->
+                <div th:case="${T(com.example.itutor.domain.Content$ContentType).PDF}">
+                    <a th:href="@{/pdfs/{contentData}(contentData=${content.contentData})}" class="btn btn-primary" th:text="${content.title}">PDF Link</a>
+                </div>
+                <!-- Case for video content -->
+                <div th:case="${T(com.example.itutor.domain.Content$ContentType).VIDEO}">
+                    <!-- Video content rendering logic here -->
+                </div>
+                <!-- Case for audio content -->
+                <div th:case="${T(com.example.itutor.domain.Content$ContentType).AUDIO}">
+                    <!-- Audio content rendering logic here -->
+                </div>
+                <!-- Case for image content -->
+                <div th:case="${T(com.example.itutor.domain.Content$ContentType).IMAGE}">
+                    <!-- Image content rendering logic here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

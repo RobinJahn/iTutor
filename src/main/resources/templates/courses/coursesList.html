@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<section layout:fragment="mybody">
+    <div class="card m-3">
+        <div class="card-body">
+            <h1 class="card-title">All Courses</h1>
+
+            <!-- Form for adding new course -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Add New Course</h2>
+                    <form th:action="@{/courses/create}" method="post">
+                        <div class="form-group">
+                            <label for="courseTitle">Course Title</label>
+                            <input type="text" class="form-control" id="courseTitle" name="title"
+                                   placeholder="Enter title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="courseDescription">Course Description</label>
+                            <textarea class="form-control" id="courseDescription" name="description" rows="3"
+                                      required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Create Course</button>
+                    </form>
+                </div>
+            </div>
+
+
+            <!-- List of courses -->
+            <div class="list-group">
+                <a th:href="@{/courses/{id}(id=${course.courseId})}" th:each="course : ${courses}"
+                   class="list-group-item list-group-item-action">
+                    <h5 th:text="${course.title}">Course Title</h5>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+
+</section>
+</body>
+</html>
