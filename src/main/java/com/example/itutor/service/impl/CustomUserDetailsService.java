@@ -21,6 +21,21 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @PostConstruct
+    private void initDefaultUser() {
+        userRepository.findByUsername("defaultUser").orElseGet(() -> {
+            User defaultUser = new User();
+            defaultUser.setUsername("defaultUser");
+            defaultUser.setPassword(passwordEncoder.encode("defaultPassword"));
+            defaultUser.setEmail("default@example.com"); // Set a default email
+            defaultUser.setFirstName("Default"); // Set a default first name
+            defaultUser.setLastName("User"); // Set a default last name
+
+            return userRepository.save(defaultUser);
+        });
+    }
+
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -32,5 +47,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
+
+
 }
+
 

@@ -8,7 +8,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
@@ -25,9 +29,8 @@ public class WebSecurityConfig {
     @Autowired
     private HandlerMappingIntrospector handlerMappingIntrospector;
 
-
     @Autowired
-    private PasswordEncoder passwordEncoder; // Injected PasswordEncoder -> from ITutorApplication
+    private PasswordEncoder passwordEncoder;
 
 
     @Autowired
@@ -35,7 +38,6 @@ public class WebSecurityConfig {
         auth.userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder);
     }
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
