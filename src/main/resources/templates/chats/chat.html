@@ -8,6 +8,7 @@
 <body>
 <section layout:fragment="mybody">
 
+    <!--
     <div id="username-page">
         <div class="username-page-container">
             <h1 class="title">Type your username to enter the Chatroom</h1>
@@ -21,8 +22,9 @@
             </form>
         </div>
     </div>
+    -->
 
-    <div id="chat-page" class="hidden">
+    <div id="chat-page">
         <div class="chat-container">
             <div class="chat-header">
                 <h2>iTutor Chat Demo</h2>
@@ -47,9 +49,9 @@
     <script>
         'use strict';
 
-        var usernamePage = document.querySelector("#username-page");
+        //var usernamePage = document.querySelector("#username-page");
         var chatPage = document.querySelector("#chat-page");
-        var usernameForm = document.querySelector("#usernameForm");
+        //var usernameForm = document.querySelector("#usernameForm");
         var messageForm = document.querySelector('#messageForm');
         var messageInput = document.querySelector('#message');
         var messageArea = document.querySelector('#messageArea');
@@ -57,7 +59,7 @@
 
         // Websocket Client and username initialization
         var stompClient = null;
-        var username = null;
+        var username = null;  // Benutzername wird vom Server gesetzt
 
         // Colors for the users
         var colors = [
@@ -66,6 +68,7 @@
         ];
 
 
+        /*
         function connect(event) {
             username = document.querySelector('#name').value.trim();
             if (username) {
@@ -84,15 +87,21 @@
             event.preventDefault();
         }
 
+         */
+
         function onConnected() {
             // Subscribe to the public topic
             stompClient.subscribe('/topic/public', onMessageReceived);
 
             // Tell the username to the server
+            // Not needed anymore because it gets it from the server
+            /*
             stompClient.send('/app/chat.addUser',
                 {},
                 JSON.stringify({sender: username, type: 'JOIN'})
             );
+
+             */
             connectingElement.classList.add('hidden');
         }
 
@@ -165,7 +174,15 @@
             return colors[index];
         }
 
-        usernameForm.addEventListener('submit', connect, true);
+        // usernameForm.addEventListener('submit', connect, true);
+
+        // Starten der Verbindung beim Laden der Seite
+        window.addEventListener('load', (event) => {
+            var socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, onConnected, onError);
+        });
+
         messageForm.addEventListener('submit', sendMessage, true);
 
 

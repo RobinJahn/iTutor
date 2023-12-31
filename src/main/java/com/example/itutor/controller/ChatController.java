@@ -1,11 +1,13 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.chat.ChatMessage;
+import com.example.itutor.domain.chat.MessageType;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +28,13 @@ public class ChatController {
     @SendTo("/topic/public")
     public ChatMessage addUser(
             @Payload ChatMessage chatMessage,
-            SimpMessageHeaderAccessor headerAccessor
+            SimpMessageHeaderAccessor headerAccessor,
+            Authentication authentication
     ) {
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        String username = authentication.getName();
+        headerAccessor.getSessionAttributes().put("username", username);
+        chatMessage.setSender(username);
+        chatMessage.setType(MessageType.JOIN);
         return chatMessage;
     }
 
