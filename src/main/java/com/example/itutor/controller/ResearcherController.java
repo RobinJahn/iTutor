@@ -106,4 +106,10 @@ public class ResearcherController {
         return "redirect:/";
     }
 
+    @RequestMapping(value = "/statistics/general", method = RequestMethod.GET)
+    public String showStatistics(HttpServletRequest request, Model model) {
+
+        return "statistics/general";
+    }
+
 }
