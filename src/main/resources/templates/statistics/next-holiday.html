@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Next Holiday</title>
+</head>
+<body>
+<div th:if="${holiday}">
+    <h2>Next Holiday</h2>
+    <p th:text="${holiday.localName} + ' (' + ${holiday.date} + ')'"></p>
+</div>
+<div th:if="${message}">
+    <p th:text="${message}"></p>
+</div>
+</body>
+</html>

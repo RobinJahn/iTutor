@@ -3,6 +3,7 @@ package com.example.itutor.controller;
 import com.example.itutor.domain.Researcher;
 import com.example.itutor.domain.Role;
 import com.example.itutor.domain.User;
+import com.example.itutor.service.HolidayServiceI;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
@@ -106,10 +107,5 @@ public class ResearcherController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/statistics/general", method = RequestMethod.GET)
-    public String showStatistics(HttpServletRequest request, Model model) {
-
-        return "statistics/general";
-    }
 
 }
