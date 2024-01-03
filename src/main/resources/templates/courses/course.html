@@ -2,6 +2,17 @@
 <html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
+    <script>
+        function toggleEditing() {
+            var form = document.getElementById("addContentForm");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+
+            var deleteButtons = document.getElementsByClassName("deleteButton");
+            for(var i = 0; i < deleteButtons.length; i++) {
+                deleteButtons[i].style.display = deleteButtons[i].style.display === "none" ? "block" : "none";
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -16,32 +27,38 @@
             <!-- Iterating over contents of the course -->
             <div th:each="content : ${course.contents}">
                 <div th:insert="~{courses/contentFragment :: contentFragment (content=${content})}"></div>
+                <!-- Delete button for each content (initially hidden) -->
+                <!-- Delete button with form (initially hidden) -->
+                <form th:action="@{/courses/deleteContent(courseId=${course.courseId}, contentId=${content.contentID})}" method="post" style="display: none;" class="deleteButton">
+                    <input type="hidden" name="contentId" th:value="${content.contentID}" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
             </div>
 
-            <div class="card ">
-                <div class="card-body">
-                    <h3 class="card-title" > Add Content </h3>
-                    <!-- Form for adding content to course -->
-                    <form th:action="@{/courses/addContent}" method="post">
-                        <!-- Hidden input for course ID -->
-                        <input type="hidden" name="courseId" th:value="${course.courseId}">
+            <!-- Edit button to toggle add content form -->
+            <button onclick="toggleEditing()" class="btn btn-secondary mt-3">Edit</button>
 
-                        <!-- Input fields for content title and data -->
-                        <div class="form-group">
-                            <label for="contentTitle">Content Title</label>
-                            <input type="text" class="form-control" id="contentTitle" name="contentTitle" placeholder="Enter content title">
-                        </div>
-                        <div class="form-group">
-                            <label for="contentData">Content Data</label>
-                            <textarea class="form-control" id="contentData" name="contentData" rows="3"></textarea>
-                        </div>
 
-                        <!-- Submit button -->
-                        <button type="submit" class="btn btn-primary">Add Content</button>
-                    </form>
+            <!-- Add Content Form (initially hidden) -->
+            <div id="addContentForm" style="display: none;">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h3 class="card-title"> Add Content </h3>
+                        <form th:action="@{/courses/addContent}" method="post">
+                            <input type="hidden" name="courseId" th:value="${course.courseId}">
+                            <div class="form-group">
+                                <label for="contentTitle">Content Title</label>
+                                <input type="text" class="form-control" id="contentTitle" name="contentTitle" placeholder="Enter content title">
+                            </div>
+                            <div class="form-group">
+                                <label for="contentData">Content Data</label>
+                                <textarea class="form-control" id="contentData" name="contentData" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Content</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-
 
         </div>
     </div>

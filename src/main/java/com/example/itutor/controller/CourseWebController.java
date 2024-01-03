@@ -72,6 +72,29 @@ public class CourseWebController {
         }
     }
 
+    @PostMapping("/deleteContent")
+    public String deleteContentFromCourse(@RequestParam Long courseId, @RequestParam Long contentId, RedirectAttributes redirectAttributes) {
+        Optional<Course> optionalCourse = courseService.getCourseById(courseId);
 
+        if (optionalCourse.isPresent()) {
+            Course course = optionalCourse.get();
+
+            // Logic to remove the content from the course
+            boolean isDeleted = course.removeContent(contentId);
+
+            if (isDeleted) {
+                // Update the course after content removal
+                courseService.updateCourse(courseId, course);
+
+                redirectAttributes.addFlashAttribute("success", "Content removed successfully!");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Content not found!");
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Course not found!");
+        }
+
+        return "redirect:/courses/" + courseId;
+    }
 
 }

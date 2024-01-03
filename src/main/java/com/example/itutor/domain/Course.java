@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
@@ -61,5 +62,19 @@ public class Course implements Serializable {
     public void addContent(Content content) {
         contents.add(content);
         content.setCourse(this); // Set the course reference in the content
+    }
+
+    public boolean removeContent(Long contentId) {
+        Iterator<Content> iterator = contents.iterator();
+
+        while (iterator.hasNext()) {
+            Content content = iterator.next();
+            if (content.getContentID().equals(contentId)) {
+                iterator.remove();
+                return true; // Content found and removed
+            }
+        }
+
+        return false; // Content not found
     }
 }
