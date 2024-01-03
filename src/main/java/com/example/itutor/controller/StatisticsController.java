@@ -47,4 +47,18 @@ public class StatisticsController {
 
         return "statistics/general";
     }
+
+    // Methode für detaillierte Statistik 1
+    @RequestMapping("/statistics/detail1")
+    public String showDetailedStatistics1(Model model) {
+        // something
+        return "statistics/details1";
+    }
+
+    // Methode für detaillierte Statistik 2
+    @RequestMapping("/statistics/detail2")
+    public String showDetailedStatistics2(Model model) {
+        // something
+        return "statistics/details2";
+    }
 }

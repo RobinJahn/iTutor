@@ -56,6 +56,8 @@ public class WebSecurityConfig {
                         //.requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/hello")).hasAuthority("STUDENT")
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/statistics/general")).hasAuthority("RESEARCHER")
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/statistics/next-holiday")).hasAuthority("RESEARCHER")
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/statistics/details1")).hasAuthority("RESEARCHER")
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/statistics/details2")).hasAuthority("RESEARCHER")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

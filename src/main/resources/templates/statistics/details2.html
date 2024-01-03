@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detaillierte Statistik 2</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Detaillierte Statistik 2: Kursbeliebtheit</h1>
+<div style="width:60%">
+    <canvas id="popularityChart"></canvas>
+</div>
+
+<script>
+    var ctx = document.getElementById('popularityChart').getContext('2d');
+    var popularityChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Kurs A', 'Kurs B', 'Kurs C', 'Kurs D'],
+            datasets: [{
+                label: 'Beliebtheit der Kurse',
+                data: [300, 50, 100, 150],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detaillierte Statistik 1</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Detaillierte Statistik 1: Nutzerfortschritt</h1>
+<div style="width:60%">
+    <canvas id="progressChart"></canvas>
+</div>
+
+<script>
+    var ctx = document.getElementById('progressChart').getContext('2d');
+    var progressChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni'],
+            datasets: [{
+                label: 'Durchschnittlicher Fortschritt',
+                data: [20, 40, 50, 60, 80, 100],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
