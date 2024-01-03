@@ -1,11 +1,11 @@
 package com.example.itutor.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.validation.constraints.NotEmpty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -30,6 +30,18 @@ public class User {
 
     @NotBlank
     String password;
+
+    private boolean active = true;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="userrole",
+            joinColumns = @JoinColumn(name="iduser"),
+            inverseJoinColumns = @JoinColumn(name="idrole")
+    )
+    private List<Role> roles = new ArrayList<Role>();
+
+
 
     //Getters + Setters
     public long getId() {
@@ -72,6 +84,14 @@ public class User {
         this.username = username;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -79,6 +99,16 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+
 
     @Override
     public String toString(){

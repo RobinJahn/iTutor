@@ -16,6 +16,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
@@ -43,6 +44,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
+                        //Everybody
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/home")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/signup")).permitAll()
@@ -51,12 +53,16 @@ public class WebSecurityConfig {
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/add/process")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/experts/add/process")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/researchers/add/process")).permitAll()
+                        //All logged in Users
                         .anyRequest().authenticated()
+                        //Roles
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/hello")).hasAuthority("STUDENT")
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .permitAll()
                 )
+
                 .logout(LogoutConfigurer::permitAll);
 
         return http.build();

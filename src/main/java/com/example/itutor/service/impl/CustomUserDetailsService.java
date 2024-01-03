@@ -1,5 +1,7 @@
 package com.example.itutor.service.impl;
 
+import com.example.itutor.config.MyUserDetails;
+import com.example.itutor.domain.Role;
 import com.example.itutor.domain.User;
 import com.example.itutor.repository.UserRepositoryI;
 import jakarta.annotation.PostConstruct;
@@ -11,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -31,6 +35,15 @@ public class CustomUserDetailsService implements UserDetailsService {
             defaultUser.setFirstName("Default"); // Set a default first name
             defaultUser.setLastName("User"); // Set a default last name
 
+//            Role role = new Role();
+//            role.setDescription("USER");
+//            Collection<User> users = new ArrayList<>();
+//            users.add(defaultUser);
+//            role.setUsers(users);
+//            List<Role> roles = new ArrayList<>();
+//            roles.add(role);
+//            defaultUser.setRoles(roles);
+
             return userRepository.save(defaultUser);
         });
     }
@@ -42,7 +55,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
+        //return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
+        return new MyUserDetails(user);
     }
 
 
