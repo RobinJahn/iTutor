@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -67,17 +68,9 @@ public class StudentController {
         // Encode the password before saving
         studentRequest.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
 
-
-        Role role = new Role();
-        role.setDescription("STUDENT");
-        Collection<User> users = new ArrayList<>();
-        users.add(studentRequest);
-        role.setUsers(users);
-        Role createdRole = roleService.createRole(role);
-
-        List<Role> roles = new ArrayList<>();
-        roles.add(createdRole);
-        studentRequest.setRoles(roles);
+        //Get and set roles
+        Role role = roleService.findOrCreate("STUDENT");
+        studentRequest.addRole(role);
 
         // Save the student using the service
         User createdStudent = userService.saveUser(studentRequest);

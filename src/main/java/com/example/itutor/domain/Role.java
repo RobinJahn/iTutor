@@ -45,4 +45,12 @@ public class Role implements Serializable {
     public void setUsers(Collection<User> users) {
         this.users = users;
     }
+
+    public boolean addUser(User user) {
+        //Check if array is initialized
+        if (this.users == null) {
+            this.users = new java.util.ArrayList<User>();
+        }
+    	return this.users.add(user);
+    }
 }

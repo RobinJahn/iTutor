@@ -34,16 +34,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             defaultUser.setEmail("default@example.com"); // Set a default email
             defaultUser.setFirstName("Default"); // Set a default first name
             defaultUser.setLastName("User"); // Set a default last name
-
-//            Role role = new Role();
-//            role.setDescription("USER");
-//            Collection<User> users = new ArrayList<>();
-//            users.add(defaultUser);
-//            role.setUsers(users);
-//            List<Role> roles = new ArrayList<>();
-//            roles.add(role);
-//            defaultUser.setRoles(roles);
-
             return userRepository.save(defaultUser);
         });
     }
@@ -55,7 +45,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        //return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
         return new MyUserDetails(user);
     }
 

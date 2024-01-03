@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface RoleServiceI {
 
+    Role findOrCreate(String description);
     List<Role> getAllRoles();
     Optional<Role> getRoleById(Long id);
     Role createRole(Role role);

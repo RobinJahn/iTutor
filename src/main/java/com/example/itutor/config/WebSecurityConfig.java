@@ -44,7 +44,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        //Everybody
+
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/home")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/signup")).permitAll()
@@ -53,10 +53,8 @@ public class WebSecurityConfig {
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/add/process")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/experts/add/process")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/researchers/add/process")).permitAll()
-                        //All logged in Users
-                        .anyRequest().authenticated()
-                        //Roles
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/hello")).hasAuthority("STUDENT")
+                        .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")

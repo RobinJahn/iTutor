@@ -3,6 +3,7 @@ package com.example.itutor.service.impl;
 import com.example.itutor.domain.Role;
 import com.example.itutor.repository.RoleRepository;
 import com.example.itutor.service.RoleServiceI;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,32 @@ public class RoleServiceImpl implements RoleServiceI {
 
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
+    }
+
+    @PostConstruct
+    private void initRoles() {
+        createRoleIfNotFound("STUDENT");
+        createRoleIfNotFound("EXPERT");
+        createRoleIfNotFound("RESEARCHER");
+    }
+
+    private void createRoleIfNotFound(String description) {
+        Optional<Role> roleOpt = roleRepository.findByDescription(description);
+        if (roleOpt.isEmpty()) {
+            Role newRole = new Role();
+            newRole.setDescription(description);
+            roleRepository.save(newRole);
+        }
+    }
+
+
+    public Role findOrCreate(String description) {
+        return roleRepository.findByDescription(description)
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setDescription(description);
+                    return roleRepository.save(newRole);
+                });
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.Expert;
+import com.example.itutor.domain.Role;
 import com.example.itutor.domain.User;
 import com.example.itutor.repository.UserRepositoryI;
 import com.example.itutor.repository.impl.UserRepositoryImpl;
+import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -18,18 +20,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
+
 @Controller
 public class ExpertController {
 
-    private UserServiceI userService;
+    private final UserServiceI userService;
 
+    private final RoleServiceI roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ExpertController(UserServiceI userService) {
+    public ExpertController(UserServiceI userService, RoleServiceI roleService) {
         super(); //???
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @RequestMapping(value = "/experts/signup", method = RequestMethod.GET) //http://localhost:8080/experts/signup
@@ -56,6 +62,10 @@ public class ExpertController {
 
         // Encode the password before saving
         expertRequest.setPassword(passwordEncoder.encode(expertRequest.getPassword()));
+
+        //Get and set roles
+        Role expertRole = roleService.findOrCreate("EXPERT");
+        expertRequest.addRole(expertRole);
 
         // Save the expert and get the created entity
         User createdExpert = userService.saveUser(expertRequest);

@@ -1,7 +1,9 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.Researcher;
+import com.example.itutor.domain.Role;
 import com.example.itutor.domain.User;
+import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -16,18 +18,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
+
 @Controller
 public class ResearcherController {
 
-    private UserServiceI userService;
+    private final UserServiceI userService;
 
+    private final RoleServiceI roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ResearcherController(UserServiceI userService) {
+    public ResearcherController(UserServiceI userService, RoleServiceI roleService) {
         super(); //???
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @RequestMapping(value = "/researchers/signup", method = RequestMethod.GET)
@@ -54,6 +60,10 @@ public class ResearcherController {
 
         // Encode the password before saving
         researcherRequest.setPassword(passwordEncoder.encode(researcherRequest.getPassword()));
+
+        //Get and set roles
+        Role researcherRole = roleService.findOrCreate("RESEARCHER");
+        researcherRequest.addRole(researcherRole);
 
         // Save the student using the service
         User createdResearcher = userService.saveUser(researcherRequest);

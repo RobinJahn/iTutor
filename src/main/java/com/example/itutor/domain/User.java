@@ -106,6 +106,22 @@ public class User {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+        for (Role role : roles) {
+            role.addUser(this);
+        }
+    }
+
+    public boolean addRole(Role role) {
+        //Check if the roles array is null
+        if (this.roles == null) {
+            this.roles = new ArrayList<>();
+        }
+        //Check if the role is already in the list
+        if (this.roles.contains(role)) {
+            return false;
+        }
+        this.roles.add(role);
+        return role.addUser(this);
     }
 
 
