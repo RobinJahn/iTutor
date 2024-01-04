@@ -25,6 +25,16 @@
     <section layout:fragment="mybody">
         <div> main content</div>
     </section>
+
+    <!-- Success Message -->
+    <div th:if="${success}" class="alert alert-success">
+        <p th:text="${success}"></p>
+    </div>
+
+    <!-- Error Message -->
+    <div th:if="${error}" class="alert alert-danger">
+        <p th:text="${error}"></p>
+    </div>
 </div>
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
