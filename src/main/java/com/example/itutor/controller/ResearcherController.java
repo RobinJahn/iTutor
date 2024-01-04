@@ -5,6 +5,7 @@ import com.example.itutor.domain.Role;
 import com.example.itutor.domain.User;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
+import com.example.itutor.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,14 +66,19 @@ public class ResearcherController {
         Role researcherRole = roleService.findOrCreate("RESEARCHER");
         researcherRequest.addRole(researcherRole);
 
-        // Save the student using the service
-        User createdResearcher = userService.saveUser(researcherRequest);
+        // Save the student and get the created entity
+        try {
+            User createdUser = userService.saveUser(researcherRequest);
+            System.out.println("Saved user:" + createdUser);
 
-        System.out.println("Saved Expert:" + createdResearcher);
+            attr.addFlashAttribute("success", "User added!");
+            return "redirect:/";
+        } catch (UserServiceImpl.CustomUserCreationException e) {
+            System.err.println("Error creating user: " + e.getMessage());
 
-
-        attr.addFlashAttribute("success", "Researcher added!");
-        return "redirect:/";
+            attr.addFlashAttribute("error", "User with username " + researcherRequest.getUsername() + " already exists!");
+            return "redirect:/researchers/signup";
+        }
     }
 
     @RequestMapping(value = "/researchers/edit/{researcherId}", method = RequestMethod.GET)

@@ -6,6 +6,7 @@ import com.example.itutor.domain.User;
 import com.example.itutor.repository.UserRepositoryI;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
+import com.example.itutor.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -72,14 +73,19 @@ public class StudentController {
         Role role = roleService.findOrCreate("STUDENT");
         studentRequest.addRole(role);
 
-        // Save the student using the service
-        User createdStudent = userService.saveUser(studentRequest);
+        // Save the student and get the created entity
+        try {
+            User createdUser = userService.saveUser(studentRequest);
+            System.out.println("Saved user:" + createdUser);
 
+            attr.addFlashAttribute("success", "User added!");
+            return "redirect:/";
+        } catch (UserServiceImpl.CustomUserCreationException e) {
+            System.err.println("Error creating user: " + e.getMessage());
 
-        System.out.println("Saved Expert:" + createdStudent);
-
-        attr.addFlashAttribute("success", "Student added!");
-        return "redirect:/";
+            attr.addFlashAttribute("error", "User with username " + studentRequest.getUsername() + " already exists!");
+            return "redirect:/students/signup";
+        }
     }
 
     //add edit student method that has query parameter id

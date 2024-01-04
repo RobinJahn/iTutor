@@ -26,6 +26,7 @@ public class User {
     String email;
 
     @NotBlank
+    @Column(unique = true)
     String username;
 
     @NotBlank

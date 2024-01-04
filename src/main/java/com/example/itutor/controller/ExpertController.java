@@ -7,6 +7,7 @@ import com.example.itutor.repository.UserRepositoryI;
 import com.example.itutor.repository.impl.UserRepositoryImpl;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
+import com.example.itutor.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,12 +69,18 @@ public class ExpertController {
         expertRequest.addRole(expertRole);
 
         // Save the expert and get the created entity
-        User createdExpert = userService.saveUser(expertRequest);
+        try {
+            User createdUser = userService.saveUser(expertRequest);
+            System.out.println("Saved User:" + createdUser);
 
-        System.out.println("Saved Expert:" + createdExpert);
+            attr.addFlashAttribute("success", "User added!");
+            return "redirect:/";
+        } catch (UserServiceImpl.CustomUserCreationException e) {
+            System.err.println("Error creating user: " + e.getMessage());
 
-        attr.addFlashAttribute("success", "Expert added!");
-        return "redirect:/";
+            attr.addFlashAttribute("error", "User with username " + expertRequest.getUsername() + " already exists!");
+            return "redirect:/experts/signup";
+        }
     }
 
     @RequestMapping(value = "/experts/edit/{expertId}", method = RequestMethod.GET)
