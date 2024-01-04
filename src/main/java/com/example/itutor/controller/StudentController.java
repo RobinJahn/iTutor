@@ -1,8 +1,10 @@
 package com.example.itutor.controller;
 
+import com.example.itutor.domain.Role;
 import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
 import com.example.itutor.repository.UserRepositoryI;
+import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +20,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 @Controller
 public class StudentController {
 
     private UserServiceI userService;
 
+    private RoleServiceI roleService;
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public StudentController(UserServiceI userService) {
+    public StudentController(UserServiceI userService, RoleServiceI roleService) {
         super(); //???
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @RequestMapping(value = "/students/signup", method = RequestMethod.GET) //http://localhost:8080/students/signup
@@ -58,8 +68,13 @@ public class StudentController {
         // Encode the password before saving
         studentRequest.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
 
+        //Get and set roles
+        Role role = roleService.findOrCreate("STUDENT");
+        studentRequest.addRole(role);
+
         // Save the student using the service
         User createdStudent = userService.saveUser(studentRequest);
+
 
         System.out.println("Saved Expert:" + createdStudent);
 
