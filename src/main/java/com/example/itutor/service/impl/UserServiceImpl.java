@@ -2,6 +2,7 @@ package com.example.itutor.service.impl;
 
 import java.util.List;
 
+import com.example.itutor.domain.Status;
 import com.example.itutor.domain.User;
 import org.springframework.stereotype.Service;
 import com.example.itutor.repository.UserRepositoryI;
@@ -12,6 +13,7 @@ public class UserServiceImpl implements UserServiceI {
 
 	//Why not autowired ??? - because constructor injection is better
 	private UserRepositoryI userRepository;
+	//private UserRepositoryImplForChat userRepositoryImplForChat;
 	
 	public UserServiceImpl(UserRepositoryI userRepository) {
 		super();
@@ -27,7 +29,23 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public User saveUser(User user) {
 		// TODO Auto-generated method stub
+		user.setStatus(Status.ONLINE);
 		return userRepository.save(user);
+	}
+
+	@Override
+	public void disconnect(User user) {
+		var storedUser = userRepository.findById(user.getId())
+				.orElse(null);
+		if (storedUser != null) {
+			storedUser.setStatus(Status.OFFLINE);
+			userRepository.save(storedUser);
+		}
+	}
+
+	@Override
+	public List<User> findConnectedUsers() {
+		return userRepository.findAllByStatus(Status.ONLINE);
 	}
 
 	@Override

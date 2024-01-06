@@ -17,5 +17,8 @@ public interface UserServiceI {
 	
 	void delete(User user);
 
+	void disconnect(User user);
+
+	List<User> findConnectedUsers();
 
 }
