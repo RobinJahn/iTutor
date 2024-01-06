@@ -35,12 +35,25 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public void disconnect(User user) {
+		System.out.println("User to be disconnected: " + user);
+		userRepository.findById(user.getId()).ifPresent(storedUser -> {
+			storedUser.setStatus(Status.OFFLINE);
+			userRepository.save(storedUser);
+		});
+
+
+
+
+		// old approach - works but throws one error everytime you log out
+		/*
 		var storedUser = userRepository.findById(user.getId())
-				.orElse(null);
+				.orElseThrow();
 		if (storedUser != null) {
 			storedUser.setStatus(Status.OFFLINE);
 			userRepository.save(storedUser);
 		}
+
+		 */
 	}
 
 	@Override

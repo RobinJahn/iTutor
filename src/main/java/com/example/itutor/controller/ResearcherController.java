@@ -68,7 +68,7 @@ public class ResearcherController {
         // Save the student using the service
         User createdResearcher = userService.saveUser(researcherRequest);
 
-        System.out.println("Saved Expert:" + createdResearcher);
+        System.out.println("Saved Researcher:" + createdResearcher);
 
 
         attr.addFlashAttribute("success", "Researcher added!");
