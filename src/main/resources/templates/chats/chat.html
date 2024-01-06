@@ -70,6 +70,32 @@
         let firstName = null;
         let selectedUserId = null;
 
+        async function getCurrentUser(){
+            try {
+                const response = await fetch('/user/me');
+                if(response.ok) {
+                    const user = await response.json();
+                    username = user.username;
+                    firstName = user.firstName;
+
+                    if (username && firstName) {
+                        chatPage.classList.remove('hidden');
+
+                        const socket = new SockJS('/ws');
+                        stompClient = Stomp.over(socket);
+                        stompClient.connect({}, onConnected, onError);
+                    }
+                } else {
+                    console.error('failed to load user');
+                }
+            } catch (error) {
+                console.error('failed to load user', error);
+            }
+        }
+
+        getCurrentUser();
+
+        /*
         function connect(event) {
             username = document.querySelector('#username').value.trim();
             firstName = document.querySelector('#firstName').value.trim();
@@ -86,16 +112,20 @@
             event.preventDefault();
         }
 
+         */
+
 
         function onConnected() {
             stompClient.subscribe(`/user/${username}/queue/messages`, onMessageReceived);
             stompClient.subscribe(`/user/public`, onMessageReceived);
 
-            // register the connected user
+            /*
             stompClient.send("/app/user.addUser",
                 {},
                 JSON.stringify({username: username, firstName: firstName, status: 'ONLINE'})
             );
+
+             */
             document.querySelector('#connected-user-firstName').textContent = firstName;
             findAndDisplayConnectedUsers().then();
         }
@@ -240,7 +270,7 @@
             window.location.reload();
         }
 
-        usernameForm.addEventListener('submit', connect, true); // step 1
+        // usernameForm.addEventListener('submit', connect, true); // step 1
         messageForm.addEventListener('submit', sendMessage, true);
         logout.addEventListener('click', onLogout, true);
         window.onbeforeunload = () => onLogout();

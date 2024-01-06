@@ -1,6 +1,7 @@
 package com.example.itutor.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.example.itutor.domain.Status;
 import com.example.itutor.domain.User;
@@ -13,7 +14,6 @@ public class UserServiceImpl implements UserServiceI {
 
 	//Why not autowired ??? - because constructor injection is better
 	private UserRepositoryI userRepository;
-	//private UserRepositoryImplForChat userRepositoryImplForChat;
 	
 	public UserServiceImpl(UserRepositoryI userRepository) {
 		super();

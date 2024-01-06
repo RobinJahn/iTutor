@@ -1,5 +1,6 @@
 package com.example.itutor.controller;
 
+import com.example.itutor.domain.Status;
 import com.example.itutor.domain.User;
 import com.example.itutor.service.UserServiceI;
 import lombok.RequiredArgsConstructor;

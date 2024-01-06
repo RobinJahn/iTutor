@@ -4,14 +4,13 @@ import com.example.itutor.domain.User;
 import com.example.itutor.domain.chat.ChatMessage;
 import com.example.itutor.domain.chat.ChatMessageService;
 import com.example.itutor.domain.chat.ChatNotification;
-import com.example.itutor.domain.chat.MessageType;
+import com.example.itutor.repository.UserRepositoryI;
+import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,6 +29,7 @@ public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
+    private final UserRepositoryI userRepositoryI;
 
     @MessageMapping("/chat")
     public void processMessage(
@@ -55,9 +56,10 @@ public class ChatController {
     }
 
     @GetMapping("/user/me")
-    public ResponseEntity<User> getCurrentUser(Authentication authentication) {
+    public ResponseEntity<Optional<User>> getCurrentUser(Authentication authentication) {
         String username = authentication.getName();
-        User user =
+        Optional<User> user = userRepositoryI.findByUsername(username);
+        return ResponseEntity.ok(user);
     }
 
 
