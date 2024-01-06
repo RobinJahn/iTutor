@@ -40,20 +40,6 @@ public class UserServiceImpl implements UserServiceI {
 			storedUser.setStatus(Status.OFFLINE);
 			userRepository.save(storedUser);
 		});
-
-
-
-
-		// old approach - works but throws one error everytime you log out
-		/*
-		var storedUser = userRepository.findById(user.getId())
-				.orElseThrow();
-		if (storedUser != null) {
-			storedUser.setStatus(Status.OFFLINE);
-			userRepository.save(storedUser);
-		}
-
-		 */
 	}
 
 	@Override

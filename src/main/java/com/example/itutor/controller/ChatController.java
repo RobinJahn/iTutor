@@ -62,34 +62,6 @@ public class ChatController {
         return ResponseEntity.ok(user);
     }
 
-
-
-
-    /*
-
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(
-            @Payload ChatMessage chatMessage
-    ) {
-        return chatMessage;
-    }
-
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public ChatMessage addUser(
-            @Payload ChatMessage chatMessage,
-            SimpMessageHeaderAccessor headerAccessor,
-            Authentication authentication
-    ) {
-        String username = authentication.getName();
-        headerAccessor.getSessionAttributes().put("username", username);
-        chatMessage.setSender(username);
-        chatMessage.setType(MessageType.JOIN);
-        return chatMessage;
-    }
-    */
-
     @RequestMapping(value = "/chats/chat", method = RequestMethod.GET) //http://localhost:8080/chats/chat
     public String showChat(HttpServletRequest request, Model model) {
 
