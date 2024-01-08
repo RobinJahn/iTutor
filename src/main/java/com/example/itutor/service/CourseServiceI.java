@@ -12,4 +12,5 @@ public interface CourseServiceI {
     Course createCourse(Course course);
     Course updateCourse(Long id, Course updatedCourse);
     boolean deleteCourse(Long id);
+    String getLoggedInUsername();
 }

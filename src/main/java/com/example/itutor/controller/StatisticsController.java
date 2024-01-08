@@ -1,6 +1,8 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.Holiday;
+import com.example.itutor.domain.UserActivity;
+import com.example.itutor.repository.UserActivityRepositoryI;
 import com.example.itutor.service.HolidayServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class StatisticsController {
 
     @Autowired
     final HolidayServiceI holidayService;
+
+    @Autowired
+    private UserActivityRepositoryI userActivityRepositoryI;
 
     public StatisticsController(HolidayServiceI holidayService) {
         this.holidayService = holidayService;
@@ -60,5 +65,18 @@ public class StatisticsController {
     public String showDetailedStatistics2(Model model) {
         // something
         return "statistics/details2";
+    }
+
+    @RequestMapping(value = "/statistics/statistics", method = RequestMethod.GET)
+    public String showStatisticsPage() {
+        return "statistics/statistics";
+    }
+
+    @RequestMapping("/statistics/userActivityCourseCreation")
+    public String showCourseCreationStats(Model model){
+        List<UserActivity> courseCreationActivities = userActivityRepositoryI.findByActivityType("Course Creation");
+        System.out.println("the UserActivity looks like this: " + courseCreationActivities);
+        model.addAttribute("courseCreations", courseCreationActivities);
+        return "statistics/userActivityCourseCreation";
     }
 }

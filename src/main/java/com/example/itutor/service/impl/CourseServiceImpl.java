@@ -1,19 +1,26 @@
 package com.example.itutor.service.impl;
 
+import com.example.itutor.config.MyUserDetails;
 import com.example.itutor.domain.Course;
+import com.example.itutor.domain.UserActivity;
 import com.example.itutor.repository.CourseRepository;
+import com.example.itutor.repository.UserActivityRepositoryI;
 import com.example.itutor.service.CourseServiceI;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseServiceI {
     private final CourseRepository courseRepository;
+    private final UserActivityRepositoryI userActivityRepositoryI;
     //@Autowired
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserActivityRepositoryI userActivityRepositoryI) {
         this.courseRepository = courseRepository;
+        this.userActivityRepositoryI = userActivityRepositoryI;
     }
     @Override
     public List<Course> getAllCourses() {
@@ -27,7 +34,13 @@ public class CourseServiceImpl implements CourseServiceI {
 
     @Override
     public Course createCourse(Course course) {
-        return courseRepository.save(course);
+        // Course has to be saved first, to get an ID
+        courseRepository.save(course);
+
+        String loggedInUserUsername = getLoggedInUsername();
+        UserActivity activity = new UserActivity(LocalDate.now(), "Course Creation", loggedInUserUsername, course.getCourseId());
+        userActivityRepositoryI.save(activity);
+        return course;
     }
 
     @Override
@@ -46,5 +59,15 @@ public class CourseServiceImpl implements CourseServiceI {
             return true;
         }
         return false; // Or Error-Handling
+    }
+
+    @Override
+    public String getLoggedInUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof MyUserDetails) {
+            return ((MyUserDetails) principal).getUsername();
+        } else {
+            return principal.toString();
+        }
     }
 }

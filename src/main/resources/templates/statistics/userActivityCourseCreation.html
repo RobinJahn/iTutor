@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course-Creation-Stats</title>
+</head>
+<body>
+<h1>Course-Creation-Stats</h1>
+<div>
+    <ul>
+        <li th:each="activity : ${courseCreations}">
+            <span th:text="${activity.date}">Datum</span>
+            - von <span th:text="${activity.username}">Benutzer</span>
+            - Kurs-ID: <span th:text="${activity.courseId}">Kurs-ID</span>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

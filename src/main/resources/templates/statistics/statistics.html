@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics</title>
+</head>
+<body>
+<section layout:fragment="mybody">
+    <h1>Statistik-Übersicht</h1>
+
+    <!-- Dropdown-Menü zur Auswahl der Statistik -->
+    <select id="statsDropdown" onchange="changeStatsView()">
+        <option value="general">General Overview</option>
+        <option value="holidays">Statistics regarding public holidays</option>
+        <option value="userActivityCourseCreation">User Activity in Course Creation</option>
+        <option value="courseEngagement">Kursbeteiligung</option>
+    </select>
+
+    <div id="statsContent">
+        <!-- Inhalt ändert sich basierend auf der Auswahl -->
+    </div>
+
+    <script>
+        function changeStatsView() {
+            var selectedValue = document.getElementById('statsDropdown').value;
+            // Logik zum Anzeigen unterschiedlicher Statistikseiten basierend auf der Auswahl
+            // Beispiel: window.location.href = '/statistics/' + selectedValue;
+            window.location.href = '/statistics/' + selectedValue;
+        }
+    </script>
+
+
+</section>
+
+</body>
+</html>
