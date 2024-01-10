@@ -31,11 +31,38 @@
 
 
             <!-- List of courses -->
-            <div class="list-group">
-                <a th:href="@{/courses/{id}(id=${course.courseId})}" th:each="course : ${courses}"
+            <div class="list-group mt-3">
+                <!-- Iterating over courses in the current page -->
+                <a th:href="@{/courses/{id}(id=${course.courseId})}"
+                   th:each="course : ${coursesPage}"
                    class="list-group-item list-group-item-action">
                     <h5 th:text="${course.title}">Course Title</h5>
                 </a>
+            </div>
+
+            <!-- Pagination controls -->
+            <div th:if="${!coursesPage.empty}">
+                <div>
+                    <ul class="pagination mt-3">
+                        <li class="page-item" th:classappend="${coursesPage.first} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/courses(page=${coursesPage.number - 1}, size=${coursesPage.size})}">&laquo;
+                                Previous</a>
+                        </li>
+
+                        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, coursesPage.totalPages - 1)}"
+                            th:classappend="${pageNum == coursesPage.number} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/courses(page=${pageNum}, size=${coursesPage.size})}"
+                               th:text="${pageNum + 1}"></a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${coursesPage.last} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/courses(page=${coursesPage.number + 1}, size=${coursesPage.size})}">Next
+                                &raquo;</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
         </div>
