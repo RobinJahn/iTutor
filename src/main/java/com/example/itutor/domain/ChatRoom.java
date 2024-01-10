@@ -1,4 +1,4 @@
-package com.example.itutor.domain.chat.chatroom;
+package com.example.itutor.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

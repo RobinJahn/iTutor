@@ -1,6 +1,6 @@
-package com.example.itutor.domain.chat.chatroom;
+package com.example.itutor.repository;
 
-import com.example.itutor.domain.chat.chatroom.ChatRoom;
+import com.example.itutor.domain.ChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

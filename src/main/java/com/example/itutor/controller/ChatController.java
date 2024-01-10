@@ -2,10 +2,9 @@ package com.example.itutor.controller;
 
 import com.example.itutor.domain.User;
 import com.example.itutor.domain.chat.ChatMessage;
-import com.example.itutor.domain.chat.ChatMessageService;
+import com.example.itutor.service.impl.ChatMessageService;
 import com.example.itutor.domain.chat.ChatNotification;
 import com.example.itutor.repository.UserRepositoryI;
-import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

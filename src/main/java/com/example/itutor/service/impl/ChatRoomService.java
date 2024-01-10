@@ -1,7 +1,7 @@
-package com.example.itutor.domain.chat.chatroom;
+package com.example.itutor.service.impl;
 
-import com.example.itutor.domain.chat.chatroom.ChatRoom;
-import com.example.itutor.domain.chat.chatroom.ChatRoomRepository;
+import com.example.itutor.domain.ChatRoom;
+import com.example.itutor.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
