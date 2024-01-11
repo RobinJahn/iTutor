@@ -1,6 +1,6 @@
 <header th:fragment="header">
 	<nav class="navbar navbar-expand-md navbar-light bg-light">
-		<a class="navbar-brand mx-3" href="#">Educational Site</a>
+		<a class="navbar-brand mx-3" href="#" th:text="#{app.title}">Educational Site</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -12,10 +12,20 @@
 				<li class="nav-item active">
 					<a class="nav-link" th:href="@{/chats/chat}">Chatroom</a>
 				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+					   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Language
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" th:href="@{'/?lang=en'}" th:text="#{navbar.language.english}">English</a>
+						<a class="dropdown-item" th:href="@{'/?lang=de'}" th:text="#{navbar.language.german}">Deutsch</a>
+					</div>
+				</li>
 				<!-- Add other navigation items here -->
 				<li class="nav-item logout-button">
 					<form th:action="@{/logout}" method="post">
-						<button type="submit" class="btn btn-link nav-link">Logout</button>
+						<button type="submit" class="btn btn-link nav-link" th:text="#{logout}">Logout</button>
 					</form>
 				</li>
 			</ul>
