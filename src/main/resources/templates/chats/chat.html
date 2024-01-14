@@ -25,6 +25,7 @@
             <div class="chat-area">
                 <div class="chat-area" id="chat-messages">
                 </div>
+                <button id="loadMoreBtn" class="load-more-btn">Load More Messages</button>
 
                 <form id="messageForm" name="messageForm" class="hidden">
                     <div class="message-input">
@@ -51,6 +52,10 @@
         let username = null;
         let firstName = null;
         let selectedUserId = null;
+
+        // for pagination
+        let currentPage = 0;
+        const pageSize = 10;
 
         async function getCurrentUser(){
             try {
@@ -138,7 +143,7 @@
             clickedUser.classList.add('active');
 
             selectedUserId = clickedUser.getAttribute('id');
-            fetchAndDisplayUserChat().then();
+            fetchAndDisplayUserChat(0, pageSize).then();
 
             const nbrMsg = clickedUser.querySelector('.nbr-msg');
             nbrMsg.classList.add('hidden');
@@ -146,13 +151,18 @@
 
         }
 
-        function displayMessage(senderId, content) {
+        function displayMessage(senderId, content, position = 'append') {
             const messageContainer = document.createElement('div');
             messageContainer.classList.add('message');
             if (senderId === username) {
                 messageContainer.classList.add('sender');
             } else {
                 messageContainer.classList.add('receiver');
+            }
+            if (position === "prepend") {
+                chatArea.prepend(messageContainer);
+            } else {
+                chatArea.appendChild(messageContainer);
             }
             const message = document.createElement('p');
             message.textContent = content;
@@ -161,12 +171,21 @@
         }
 
         async function fetchAndDisplayUserChat() {
-            const userChatResponse = await fetch(`/messages/${username}/${selectedUserId}`);
-            const userChat = await userChatResponse.json();
-            chatArea.innerHTML = '';
-            userChat.forEach(chat => {
-                displayMessage(chat.senderId, chat.content);
-            });
+            const userChatResponse = await fetch(`/messages/${username}/${selectedUserId}?page=${currentPage}&size=${pageSize}`);
+            if (userChatResponse.ok) {
+                const userChat = await userChatResponse.json();
+                chatArea.innerHTML = '';
+                userChat.content.forEach(chat => {
+                    displayMessage(chat.senderId, chat.content);
+                });
+                if (!userChat.last) {
+                    document.getElementById('loadMoreBtn').style.display = 'block';
+                } else {
+                    document.getElementById('loadMoreBtn').style.display = 'none';
+                }
+            } else {
+                console.error('Failed to load messages');
+            }
             chatArea.scrollTop = chatArea.scrollHeight;
         }
 
@@ -218,7 +237,27 @@
             }
         }
 
-        // usernameForm.addEventListener('submit', connect, true); // step 1
+        async function loadMoreMessages(page, size) {
+            const response = await fetch(`/messages/${username}/${selectedUserId}?page=${page}&size=${size}`);
+            if (response.ok) {
+                const messagesPage = await response.json();
+                messagesPage.content.forEach(msg => {
+                    displayMessage(msg.senderId, msg.content, 'prepend');
+                });
+                // Deaktiviert den Button, wenn es keine weiteren Nachrichten zu laden gibt
+                if (messagesPage.last) {
+                    document.getElementById('loadMoreBtn').style.display = 'none';
+                }
+            } else {
+                console.error('Failed to load more messages');
+            }
+        }
+
+        document.getElementById('loadMoreBtn').addEventListener('click', function() {
+            currentPage++; // Erhöht die aktuelle Seite, um die nächste Seite zu laden
+            loadMoreMessages(currentPage, pageSize);
+        });
+
         messageForm.addEventListener('submit', sendMessage, true);
 
     </script>

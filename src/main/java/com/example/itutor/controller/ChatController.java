@@ -1,5 +1,6 @@
 package com.example.itutor.controller;
 
+import com.example.itutor.domain.ChatRoom;
 import com.example.itutor.domain.User;
 import com.example.itutor.domain.chat.ChatMessage;
 import com.example.itutor.service.impl.ChatMessageService;
@@ -7,6 +8,13 @@ import com.example.itutor.domain.chat.ChatNotification;
 import com.example.itutor.repository.UserRepositoryI;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -14,10 +22,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,11 +52,14 @@ public class ChatController {
     }
 
     @GetMapping("/messages/{senderId}/{recipientId}")
-    public ResponseEntity<List<ChatMessage>> findChatMessages(
+    public ResponseEntity<Page<ChatMessage>> findChatMessages(
             @PathVariable String senderId,
-            @PathVariable String recipientId
+            @PathVariable String recipientId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
+        Page<ChatMessage> messages = chatMessageService.findChatMessages(senderId, recipientId, page, size);
+        return ResponseEntity.ok(messages);
     }
 
     @GetMapping("/user/me")
