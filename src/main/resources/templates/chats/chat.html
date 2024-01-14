@@ -23,9 +23,9 @@
             </div>
 
             <div class="chat-area">
+                <button id="loadMoreBtn" class="load-more-btn">Load More Messages</button>
                 <div class="chat-area" id="chat-messages">
                 </div>
-                <button id="loadMoreBtn" class="load-more-btn">Load More Messages</button>
 
                 <form id="messageForm" name="messageForm" class="hidden">
                     <div class="message-input">
@@ -159,23 +159,28 @@
             } else {
                 messageContainer.classList.add('receiver');
             }
-            if (position === "prepend") {
-                chatArea.prepend(messageContainer);
-            } else {
-                chatArea.appendChild(messageContainer);
-            }
             const message = document.createElement('p');
             message.textContent = content;
             messageContainer.appendChild(message);
-            chatArea.appendChild(messageContainer);
+
+            if (position === "prepend") {
+                chatArea.prepend(messageContainer);
+            } else {
+                chatArea.appendChild(messageContainer)
+            }
         }
 
         async function fetchAndDisplayUserChat() {
             const userChatResponse = await fetch(`/messages/${username}/${selectedUserId}?page=${currentPage}&size=${pageSize}`);
             if (userChatResponse.ok) {
                 const userChat = await userChatResponse.json();
+                console.log("content ist: " + userChat.content);
                 chatArea.innerHTML = '';
-                userChat.content.forEach(chat => {
+
+                const reversedContent = userChat.content.reverse();
+                console.log("reversed content: " + reversedContent);
+
+                reversedContent.forEach(chat => {
                     displayMessage(chat.senderId, chat.content);
                 });
                 if (!userChat.last) {
