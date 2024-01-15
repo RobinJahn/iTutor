@@ -89,6 +89,8 @@
 
             document.querySelector('#connected-user-firstName').textContent = firstName;
             findAndDisplayConnectedUsers().then();
+
+            requestNotificationPermission();
         }
 
         async function findAndDisplayConnectedUsers() {
@@ -222,10 +224,17 @@
         async function onMessageReceived(payload) {
             await findAndDisplayConnectedUsers();
             console.log('Message received', payload);
+
             const message = JSON.parse(payload.body);
             if (selectedUserId && selectedUserId === message.senderId) {
                 displayMessage(message.senderId, message.content);
                 chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            // only shows a notification when you are in the chatroom and currently in another chat with a third party member
+            // so if you are chatting with someone and another person sends you a message, you will get notified
+            if (selectedUserId && selectedUserId !== message.senderId) {
+                showNotification(message.content);
             }
 
             if (selectedUserId) {
@@ -255,6 +264,26 @@
                 }
             } else {
                 console.error('Failed to load more messages');
+            }
+        }
+
+        function requestNotificationPermission() {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    console.log("Notification permission granted.");
+                } else {
+                    console.log("Notification permission denied.");
+                }
+            });
+        }
+
+        function showNotification(message) {
+            if (Notification.permission === "granted") {
+                new Notification("Neue Chat-Nachricht", {
+                    body: message,
+                    // optional icon
+                    // icon: "path/to/icon.png"
+                });
             }
         }
 
