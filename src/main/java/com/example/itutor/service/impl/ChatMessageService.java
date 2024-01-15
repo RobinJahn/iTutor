@@ -35,4 +35,9 @@ public class ChatMessageService {
         return chatId.map(id -> repository.findByChatId(id, pageable))
                         .orElse(Page.empty());
     }
+
+    public Page<ChatMessage> findAllMessages(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
+        return repository.findAllByOrderByTimestampDesc(pageable);
+    }
 }
