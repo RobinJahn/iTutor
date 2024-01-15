@@ -40,4 +40,12 @@ public class ChatMessageService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
         return repository.findAllByOrderByTimestampDesc(pageable);
     }
+
+    public long countTotalMessages() {
+        return repository.count();
+    }
+
+    public long countMessagesByChatId(String chatId) {
+        return repository.countByChatId(chatId);
+    }
 }

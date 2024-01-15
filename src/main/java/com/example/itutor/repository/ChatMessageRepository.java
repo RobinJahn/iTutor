@@ -10,4 +10,5 @@ import java.util.List;
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, String> {
     Page<ChatMessage> findByChatId(String chatId, Pageable pageable);
     Page<ChatMessage> findAllByOrderByTimestampDesc(Pageable pageable);
+    long countByChatId(String chatId);
 }

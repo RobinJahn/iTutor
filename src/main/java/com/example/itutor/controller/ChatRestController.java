@@ -28,6 +28,22 @@ public class ChatRestController {
         return ResponseEntity.ok(messages);
     }
 
+    // Get the count of all messages in the system
+    @GetMapping("/messages/count")
+    public ResponseEntity<Long> getTotalMessageCount() {
+        long messageCount = chatMessageService.countTotalMessages();
+        return ResponseEntity.ok(messageCount);
+    }
+
+    // Get the count of messages in a specific chat using the chatId
+    // for the chatId always use the String senderUsername_recipientUsername
+    // for example asdf_qwer is the chat between asdf and qwer
+    @GetMapping("/messages/count/{chatId}")
+    public ResponseEntity<Long> getMessageCountByChatId(@PathVariable String chatId) {
+        long messageCount = chatMessageService.countMessagesByChatId(chatId);
+        return ResponseEntity.ok(messageCount);
+    }
+
 
     // more endpoints
 }
