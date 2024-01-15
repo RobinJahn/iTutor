@@ -4,6 +4,10 @@ import com.example.itutor.domain.chat.ChatMessage;
 import com.example.itutor.service.impl.ChatRoomService;
 import com.example.itutor.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,8 +29,10 @@ public class ChatMessageService {
         return chatMessage;
     }
 
-    public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
+    public Page<ChatMessage> findChatMessages(String senderId, String recipientId, int page, int size) {
         var chatId = chatRoomService.getChatRoomId(senderId, recipientId, false);
-        return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
+        return chatId.map(id -> repository.findByChatId(id, pageable))
+                        .orElse(Page.empty());
     }
 }
