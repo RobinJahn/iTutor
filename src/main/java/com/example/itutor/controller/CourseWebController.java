@@ -2,6 +2,7 @@ package com.example.itutor.controller;
 
 import com.example.itutor.domain.Content;
 import com.example.itutor.domain.Course;
+import com.example.itutor.service.ContentServiceI;
 import com.example.itutor.service.CourseServiceI;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -16,9 +17,11 @@ import java.util.Optional;
 @RequestMapping("/courses")
 public class CourseWebController {
     private final CourseServiceI courseService;
+    private final ContentServiceI contentService;
 
-    public CourseWebController(CourseServiceI courseService) {
+    public CourseWebController(CourseServiceI courseService, ContentServiceI contentService) {
         this.courseService = courseService;
+        this.contentService = contentService;
     }
 
     @GetMapping
@@ -59,6 +62,10 @@ public class CourseWebController {
             newContent.setTitle(contentTitle);
             newContent.setContentType(Content.ContentType.TEXT);
             newContent.setContentData(contentData);
+            newContent.setCourse(course);
+
+            //Save content in the database
+            contentService.createContent(newContent);
 
             // Add the new content to the course
             course.addContent(newContent); // Assuming Course class has an addContent method
