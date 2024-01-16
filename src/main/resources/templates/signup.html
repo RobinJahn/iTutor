@@ -11,8 +11,8 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="username">username </label>
-                    <input type="text" class="form-control" id="username" placeholder="Name"
+                    <label th:for="username" th:text="#{form.label.username}">Username</label>
+                    <input type="text" class="form-control" id="username" th:placeholder="#{form.placeholder.username}"
                            autofocus="autofocus" th:field="*{username}"
                            th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'" />
                     <div class="invalid-feedback">
@@ -23,8 +23,8 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="password">password </label>
-                    <input type="text" class="form-control" id="password" placeholder="Name"
+                    <label th:for="password" th:text="#{form.label.password}">Password</label>
+                    <input type="text" class="form-control" id="password" th:placeholder="#{form.placeholder.password}"
                            autofocus="autofocus" th:field="*{password}"
                            th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" />
                     <div class="invalid-feedback">
@@ -35,8 +35,8 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="firstName">Firstname </label>
-                    <input type="text" class="form-control" id="firstName" placeholder="Name"
+                    <label th:for="firstName" th:text="#{form.label.firstname}">Firstname </label>
+                    <input type="text" class="form-control" id="firstName" th:placeholder="#{form.placeholder.firstname}"
                            autofocus="autofocus" th:field="*{firstName}"
                            th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" />
                     <div class="invalid-feedback">
@@ -47,8 +47,8 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="lastName">Lastname </label>
-                    <input type="text" class="form-control" id="lastName" placeholder="Name"
+                    <label th:for="lastName" th:text="#{form.label.lastName}">Lastname </label>
+                    <input type="text" class="form-control" id="lastName" th:placeholder="#{form.placeholder.lastname}"
                            autofocus="autofocus" th:field="*{lastName}"
                            th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" />
                     <div class="invalid-feedback">
@@ -60,8 +60,8 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="email">Email</label>
-                    <input type="text" class="form-control" id="email" placeholder="Email"
+                    <label th:for="email" th:text="#{form.label.email}">Email</label>
+                    <input type="text" class="form-control" id="email" th:placeholder="#{form.placeholder.email}"
                            th:field="*{email}"
                            th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" />
                     <div class="invalid-feedback">
@@ -74,7 +74,7 @@
                 <div> more attributes </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+            <button type="submit" class="btn btn-primary btn-sm" th:text="#{form.button.save}">Save</button>
         </form>
     </div>
 </section>
