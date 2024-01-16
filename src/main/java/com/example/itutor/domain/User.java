@@ -2,6 +2,7 @@ package com.example.itutor.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -23,7 +24,9 @@ public class User {
     @NotBlank
     String lastName=null;
 
-    @NotBlank(message = "{student.email.not.blank}")
+    //@NotBlank(message = "{student.email.not.blank}")
+    @NotEmpty(message = "Email is required")
+    @Email(message = "Invalid email address")
     String email;
 
     @NotBlank

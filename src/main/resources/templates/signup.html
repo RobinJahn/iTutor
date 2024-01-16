@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
-<head><meta charset="UTF-8" /></head>
+<head>
+    <meta charset="UTF-8" />
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function showEmailError() {
+            var emailInput = document.getElementById('email');
+            var errorSpan = document.getElementById('emailError');
+
+            // Überprüfe das E-Mail-Format mit einem einfachen regulären Ausdruck
+            var emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailFormat.test(emailInput.value)) {
+                // Wenn das E-Mail-Format ungültig ist, zeige die Fehlermeldung an
+                errorSpan.style.display = 'block';
+            } else {
+                // Andernfalls verstecke die Fehlermeldung
+                errorSpan.style.display = 'none';
+            }
+        }
+        /*]]>*/
+    </script>
+</head>
 <body>
 
 <section class="layout-content" layout:fragment="mybody">
     <div class="container" id="registration">
 
         <form th:action="@{${link}}"
-              th:object="${user}" method="POST">
-
+              th:object="${user}" th:action="@{/students/add/process}" method="post">
+            
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="username">username </label>
@@ -62,11 +83,13 @@
                 <div class="form-group col-md-6">
                     <label for="email">Email</label>
                     <input type="text" class="form-control" id="email" placeholder="Email"
-                           th:field="*{email}"
-                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" />
-                    <div class="invalid-feedback">
+                           th:field="*{email}" oninput="showEmailError()" />
+                    <div class="invalid-feedback" id="emailError" th:if="${#fields.hasErrors('email')}">
                         <span th:errors="*{email}"></span>
                     </div>
+                    <small class="text-danger" th:if="${#fields.hasErrors('email')}" style="display:none;">
+                        Invalid email address
+                    </small>
                 </div>
             </div>
 

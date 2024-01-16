@@ -4,6 +4,7 @@ import com.example.itutor.domain.Role;
 import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
 import com.example.itutor.repository.UserRepositoryI;
+import com.example.itutor.service.EmailServiceI;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +37,8 @@ public class StudentController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    //private EmailServiceI emailService;
+
     public StudentController(UserServiceI userService, RoleServiceI roleService) {
         super(); //???
         this.userService = userService;
@@ -52,7 +55,6 @@ public class StudentController {
 
         return "students/studentSignup";
     }
-
 
     @RequestMapping(value = "/students/add/process")
     public String addStudent(@ModelAttribute @Valid Student studentRequest,
@@ -74,7 +76,6 @@ public class StudentController {
 
         // Save the student using the service
         User createdStudent = userService.saveUser(studentRequest);
-
 
         System.out.println("Saved Expert:" + createdStudent);
 
