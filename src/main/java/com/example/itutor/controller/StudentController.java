@@ -3,7 +3,6 @@ package com.example.itutor.controller;
 import com.example.itutor.domain.Role;
 import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
-import com.example.itutor.repository.UserRepositoryI;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,10 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 @Controller
 public class StudentController {
@@ -76,7 +71,7 @@ public class StudentController {
         User createdStudent = userService.saveUser(studentRequest);
 
 
-        System.out.println("Saved Expert:" + createdStudent);
+        System.out.println("Saved Student:" + createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
         return "redirect:/";

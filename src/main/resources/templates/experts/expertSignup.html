@@ -6,8 +6,8 @@
 <section class="layout-content" layout:fragment="moreAttributes">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="expertise">Expertise </label>
-            <input type="text" class="form-control" id="expertise" placeholder="Expertise"
+            <label th:for="expertise" th:text="#{form.label.expertise}">Expertise </label>
+            <input type="text" class="form-control" id="expertise" th:placeholder="#{form.placeholder.expertise}"
                    autofocus="autofocus" th:field="*{expertise}"
                    th:classappend="${#fields.hasErrors('expertise')} ? 'is-invalid'" />
             <div class="invalid-feedback">
