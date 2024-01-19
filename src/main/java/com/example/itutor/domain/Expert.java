@@ -6,7 +6,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name="student")
+@Table(name="experts")
 public class Expert extends User implements Serializable {
 
         //Attributes
@@ -23,8 +23,7 @@ public class Expert extends User implements Serializable {
 
         @Override
         public String toString() {
-            return "Expert {" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", expertise=" + expertise + '}';
-
+            return "Expert {" + "id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", expertise=" + expertise + '}';
         }
 }
 

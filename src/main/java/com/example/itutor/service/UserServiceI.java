@@ -1,5 +1,6 @@
 package com.example.itutor.service;
 
+import com.example.itutor.domain.Status;
 import com.example.itutor.domain.User;
 
 import java.util.List;
@@ -17,5 +18,8 @@ public interface UserServiceI {
 	
 	void delete(User user);
 
+	void disconnect(User user);
+
+	List<User> findConnectedUsers();
 
 }

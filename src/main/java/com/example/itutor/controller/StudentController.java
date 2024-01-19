@@ -1,9 +1,15 @@
 package com.example.itutor.controller;
 
+import com.example.itutor.domain.Role;
 import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
+import com.example.itutor.service.EmailSenderService;
+import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
+import com.example.itutor.service.impl.EmailSenderServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,14 +21,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 @Controller
 public class StudentController {
 
     private UserServiceI userService;
 
-    public StudentController(UserServiceI userService) {
+    private RoleServiceI roleService;
+
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    EmailSenderService emailService;
+
+    public StudentController(UserServiceI userService, RoleServiceI roleService) {
         super(); //???
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @RequestMapping(value = "/students/signup", method = RequestMethod.GET) //http://localhost:8080/students/signup
@@ -48,8 +65,18 @@ public class StudentController {
             return "signup";
         }
 
+        // Encode the password before saving
+        studentRequest.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
+
+        //Get and set roles
+        Role role = roleService.findOrCreate("STUDENT");
+        studentRequest.addRole(role);
+
+        // Save the student using the service
         User createdStudent = userService.saveUser(studentRequest);
-        System.out.println(createdStudent);
+
+        emailService.sendEmail(createdStudent.getEmail());
+        System.out.println("Saved Student:" + createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
         return "redirect:/";

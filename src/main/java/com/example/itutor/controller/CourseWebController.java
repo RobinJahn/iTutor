@@ -3,6 +3,8 @@ package com.example.itutor.controller;
 import com.example.itutor.domain.Content;
 import com.example.itutor.domain.Course;
 import com.example.itutor.service.CourseServiceI;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +22,8 @@ public class CourseWebController {
     }
 
     @GetMapping
-    public String getAllCourses(Model model) {
-        model.addAttribute("courses", courseService.getAllCourses());
+    public String getAllCourses(Model model, @PageableDefault(size = 7) Pageable pageable) {
+        model.addAttribute("coursesPage", courseService.getAllCourses(pageable));
         return "courses/coursesList"; // Thymeleaf template name for listing courses
     }
 

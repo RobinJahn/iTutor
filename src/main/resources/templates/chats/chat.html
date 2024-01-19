@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Chat</title>
+    <link rel="stylesheet" href="/css/chat.css" />
+</head>
+<body>
+<section layout:fragment="mybody">
+
+    <div class="chat-container-wrapper">
+        <h2 th:text="#{chat}">Chatroom iTutor - Chat with Experts and colleagues here!</h2>
+        <div class="chat-container hidden" id="chat-page">
+            <div class="users-list">
+                <div class="users-list-container">
+                    <h2 th:text="#{chat.onlineUsers}">Online Users</h2>
+                    <ul id="connectedUsers">
+                    </ul>
+                </div>
+                <div>
+                    <p id="connected-user-firstName"></p>
+                </div>
+            </div>
+
+            <div class="chat-area">
+                <button id="loadMoreBtn" class="load-more-btn">Load More Messages</button>
+                <div class="chat-area" id="chat-messages">
+                </div>
+
+                <form id="messageForm" name="messageForm" class="hidden">
+                    <div class="message-input">
+                        <input autocomplete="off" type="text" id="message" th:placeholder="#{chat.typemessage}">
+                        <button type="submit" class="btn btn-primary" th:text="#{button.send}">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script>
+        'use strict';
+
+        const chatPage = document.querySelector('#chat-page');
+        const messageForm = document.querySelector('#messageForm');
+        const messageInput = document.querySelector('#message');
+        const connectingElement = document.querySelector('.connecting');
+        const chatArea = document.querySelector('#chat-messages');
+
+        let stompClient = null;
+        let username = null;
+        let firstName = null;
+        let selectedUserId = null;
+
+        // for pagination
+        let currentPage = 0;
+        const pageSize = 10;
+
+        async function getCurrentUser(){
+            try {
+                const response = await fetch('/user/me');
+                if(response.ok) {
+                    const user = await response.json();
+                    username = user.username;
+                    firstName = user.firstName;
+
+                    if (username && firstName) {
+                        chatPage.classList.remove('hidden');
+
+                        const socket = new SockJS('/ws');
+                        stompClient = Stomp.over(socket);
+                        stompClient.connect({}, onConnected, onError);
+                    }
+                } else {
+                    console.error('failed to load user');
+                }
+            } catch (error) {
+                console.error('failed to load user', error);
+            }
+        }
+
+        getCurrentUser();
+
+
+        function onConnected() {
+            stompClient.subscribe(`/user/${username}/queue/messages`, onMessageReceived);
+            stompClient.subscribe(`/user/public`, onMessageReceived);
+
+            document.querySelector('#connected-user-firstName').textContent = firstName;
+            findAndDisplayConnectedUsers().then();
+
+            requestNotificationPermission();
+        }
+
+        async function findAndDisplayConnectedUsers() {
+            const connectedUsersResponse = await fetch('/users');
+            let connectedUsers = await connectedUsersResponse.json();
+            connectedUsers = connectedUsers.filter(user => user.username !== username);
+            const connectedUsersList = document.getElementById('connectedUsers');
+            connectedUsersList.innerHTML = '';
+
+            connectedUsers.forEach(user => {
+                appendUserElement(user, connectedUsersList);
+                if (connectedUsers.indexOf(user) < connectedUsers.length - 1) {
+                    const separator = document.createElement('li');
+                    separator.classList.add('separator');
+                    connectedUsersList.appendChild(separator);
+                }
+            });
+        }
+
+        function appendUserElement(user, connectedUsersList) {
+            const listItem = document.createElement('li');
+            listItem.classList.add('user-item');
+            listItem.id = user.username;
+
+            const userImage = document.createElement('img');
+            userImage.src = '../img/user_icon.png';
+            userImage.alt = user.firstName;
+
+            const usernameSpan = document.createElement('span');
+            usernameSpan.textContent = user.firstName;
+
+            const receivedMsgs = document.createElement('span');
+            receivedMsgs.textContent = '0';
+            receivedMsgs.classList.add('nbr-msg', 'hidden');
+
+            listItem.appendChild(userImage);
+            listItem.appendChild(usernameSpan);
+            listItem.appendChild(receivedMsgs);
+
+            listItem.addEventListener('click', userItemClick);
+
+            connectedUsersList.appendChild(listItem);
+        }
+
+        function userItemClick(event) {
+            document.querySelectorAll('.user-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            messageForm.classList.remove('hidden');
+
+            const clickedUser = event.currentTarget;
+            clickedUser.classList.add('active');
+
+            selectedUserId = clickedUser.getAttribute('id');
+            fetchAndDisplayUserChat(0, pageSize).then();
+
+            const nbrMsg = clickedUser.querySelector('.nbr-msg');
+            nbrMsg.classList.add('hidden');
+            nbrMsg.textContent = '0';
+
+        }
+
+        function displayMessage(senderId, content, position = 'append') {
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message');
+            if (senderId === username) {
+                messageContainer.classList.add('sender');
+            } else {
+                messageContainer.classList.add('receiver');
+            }
+            const message = document.createElement('p');
+            message.textContent = content;
+            messageContainer.appendChild(message);
+
+            if (position === "prepend") {
+                chatArea.prepend(messageContainer);
+            } else {
+                chatArea.appendChild(messageContainer)
+            }
+        }
+
+        async function fetchAndDisplayUserChat() {
+            const userChatResponse = await fetch(`/messages/${username}/${selectedUserId}?page=${currentPage}&size=${pageSize}`);
+            if (userChatResponse.ok) {
+                const userChat = await userChatResponse.json();
+                console.log("content ist: " + userChat.content);
+                chatArea.innerHTML = '';
+
+                const reversedContent = userChat.content.reverse();
+                console.log("reversed content: " + reversedContent);
+
+                reversedContent.forEach(chat => {
+                    displayMessage(chat.senderId, chat.content);
+                });
+                if (!userChat.last) {
+                    document.getElementById('loadMoreBtn').style.display = 'block';
+                } else {
+                    document.getElementById('loadMoreBtn').style.display = 'none';
+                }
+            } else {
+                console.error('Failed to load messages');
+            }
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+
+        function onError() {
+            connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
+            connectingElement.style.color = 'red';
+        }
+
+
+        function sendMessage(event) {
+            const messageContent = messageInput.value.trim();
+            if (messageContent && stompClient) {
+                const chatMessage = {
+                    senderId: username,
+                    recipientId: selectedUserId,
+                    content: messageInput.value.trim(),
+                    timestamp: new Date()
+                };
+                stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+                displayMessage(username, messageInput.value.trim());
+                messageInput.value = '';
+            }
+            chatArea.scrollTop = chatArea.scrollHeight;
+            event.preventDefault();
+        }
+
+
+        async function onMessageReceived(payload) {
+            await findAndDisplayConnectedUsers();
+            console.log('Message received', payload);
+
+            const message = JSON.parse(payload.body);
+            if (selectedUserId && selectedUserId === message.senderId) {
+                displayMessage(message.senderId, message.content);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            // only shows a notification when you are in the chatroom and currently in another chat with a third party member
+            // so if you are chatting with someone and another person sends you a message, you will get notified
+            if (selectedUserId && selectedUserId !== message.senderId) {
+                showNotification(message.content);
+            }
+
+            if (selectedUserId) {
+                document.querySelector(`#${selectedUserId}`).classList.add('active');
+            } else {
+                messageForm.classList.add('hidden');
+            }
+
+            const notifiedUser = document.querySelector(`#${message.senderId}`);
+            if (notifiedUser && !notifiedUser.classList.contains('active')) {
+                const nbrMsg = notifiedUser.querySelector('.nbr-msg');
+                nbrMsg.classList.remove('hidden');
+                nbrMsg.textContent = '';
+            }
+        }
+
+        async function loadMoreMessages(page, size) {
+            const response = await fetch(`/messages/${username}/${selectedUserId}?page=${page}&size=${size}`);
+            if (response.ok) {
+                const messagesPage = await response.json();
+                messagesPage.content.forEach(msg => {
+                    displayMessage(msg.senderId, msg.content, 'prepend');
+                });
+                // Deaktiviert den Button, wenn es keine weiteren Nachrichten zu laden gibt
+                if (messagesPage.last) {
+                    document.getElementById('loadMoreBtn').style.display = 'none';
+                }
+            } else {
+                console.error('Failed to load more messages');
+            }
+        }
+
+        function requestNotificationPermission() {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    console.log("Notification permission granted.");
+                } else {
+                    console.log("Notification permission denied.");
+                }
+            });
+        }
+
+        function showNotification(message) {
+            if (Notification.permission === "granted") {
+                new Notification("Neue Chat-Nachricht", {
+                    body: message,
+                    // optional icon
+                    // icon: "path/to/icon.png"
+                });
+            }
+        }
+
+        document.getElementById('loadMoreBtn').addEventListener('click', function() {
+            currentPage++; // Erhöht die aktuelle Seite, um die nächste Seite zu laden
+            loadMoreMessages(currentPage, pageSize);
+        });
+
+        messageForm.addEventListener('submit', sendMessage, true);
+
+    </script>
+</section>
+</body>
+</html>

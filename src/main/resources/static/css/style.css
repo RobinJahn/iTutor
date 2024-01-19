@@ -1,0 +1,10 @@
+.navbar-nav {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+}
+
+.navbar-nav .logout-button {
+    margin-left: auto;
+    padding-right: 10px;
+}
