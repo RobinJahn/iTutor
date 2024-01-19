@@ -115,4 +115,9 @@ public class ExpertController {
         attr.addFlashAttribute("success", "Expert updated!");
         return "redirect:/";
     }
+
+    @RequestMapping(value = "/experts/guideline", method = RequestMethod.GET)
+    public String showGuideline() {
+        return "experts/guideline";
+    }
 }

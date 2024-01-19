@@ -53,7 +53,11 @@ public class WebSecurityConfig {
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/add/process")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/experts/add/process")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/researchers/add/process")).permitAll()
-                        //.requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/hello")).hasAuthority("STUDENT")
+
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/motivation")).hasAuthority("STUDENT")
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/experts/guideline")).hasAuthority("EXPERT")
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/statistics")).hasAuthority("RESEARCHER")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

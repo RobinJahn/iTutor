@@ -11,4 +11,5 @@ public interface UserRepositoryI extends MyBaseRepository<User, Long>{
     Optional<User> findByUsername(String username);
     List<User> findAll();
     List<User> findAllByStatus(Status status);
+
 }
