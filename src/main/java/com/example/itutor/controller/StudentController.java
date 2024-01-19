@@ -3,9 +3,10 @@ package com.example.itutor.controller;
 import com.example.itutor.domain.Role;
 import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
-import com.example.itutor.repository.UserRepositoryI;
+import com.example.itutor.service.EmailSenderService;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
+import com.example.itutor.service.impl.EmailSenderServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,10 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 @Controller
 public class StudentController {
@@ -35,6 +32,9 @@ public class StudentController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    EmailSenderService emailService;
 
     public StudentController(UserServiceI userService, RoleServiceI roleService) {
         super(); //???
@@ -75,8 +75,8 @@ public class StudentController {
         // Save the student using the service
         User createdStudent = userService.saveUser(studentRequest);
 
-
-        System.out.println("Saved Expert:" + createdStudent);
+        emailService.sendEmail(createdStudent.getEmail());
+        System.out.println("Saved Student:" + createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
         return "redirect:/";

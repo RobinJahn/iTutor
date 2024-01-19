@@ -3,6 +3,7 @@ package com.example.itutor.controller;
 import com.example.itutor.domain.Researcher;
 import com.example.itutor.domain.Role;
 import com.example.itutor.domain.User;
+import com.example.itutor.service.EmailSenderService;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +30,9 @@ public class ResearcherController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    EmailSenderService emailService;
 
     public ResearcherController(UserServiceI userService, RoleServiceI roleService) {
         super(); //???
@@ -68,6 +72,7 @@ public class ResearcherController {
         // Save the student using the service
         User createdResearcher = userService.saveUser(researcherRequest);
 
+        emailService.sendEmail(createdResearcher.getEmail());
         System.out.println("Saved Researcher:" + createdResearcher);
 
 

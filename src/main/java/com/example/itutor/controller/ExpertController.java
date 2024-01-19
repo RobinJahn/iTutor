@@ -5,6 +5,7 @@ import com.example.itutor.domain.Role;
 import com.example.itutor.domain.User;
 import com.example.itutor.repository.UserRepositoryI;
 import com.example.itutor.repository.impl.UserRepositoryImpl;
+import com.example.itutor.service.EmailSenderService;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +32,9 @@ public class ExpertController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    EmailSenderService emailService;
 
     public ExpertController(UserServiceI userService, RoleServiceI roleService) {
         super(); //???
@@ -70,6 +74,7 @@ public class ExpertController {
         // Save the expert and get the created entity
         User createdExpert = userService.saveUser(expertRequest);
 
+        emailService.sendEmail(createdExpert.getEmail());
         System.out.println("Saved Expert:" + createdExpert);
 
         attr.addFlashAttribute("success", "Expert added!");
