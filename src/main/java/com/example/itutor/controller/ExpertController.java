@@ -2,10 +2,7 @@ package com.example.itutor.controller;
 
 import com.example.itutor.domain.Expert;
 import com.example.itutor.domain.Role;
-import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
-import com.example.itutor.repository.UserRepositoryI;
-import com.example.itutor.repository.impl.UserRepositoryImpl;
 import com.example.itutor.service.EmailSenderService;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
@@ -22,8 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Arrays;
 
 @Controller
 public class ExpertController {
@@ -86,13 +81,13 @@ public class ExpertController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/experts/edit/{expertId}", method = RequestMethod.GET)
-    public String editExpertForm(@PathVariable Long expertId, Model model) {
-
-        Expert expert = (Expert) userService.getUserById(expertId); //TODO: test if that fails on return null
+    @RequestMapping(value = "/experts/edit/{userName}", method = RequestMethod.GET)
+    public String editExpertForm(@PathVariable String userName, Model model) {
+        //get user by username
+        Expert expert = (Expert) userService.findByUsername(userName);
 
         if (expert == null) {
-            System.err.println("Expert with id " + expertId + " not found!");
+            System.err.println("Expert with id " + userName + " not found!");
             return "error";
         }
 
@@ -106,7 +101,7 @@ public class ExpertController {
 
     @RequestMapping(value = "/experts/edit/process")
     public String editExpert(@ModelAttribute
-                             @Valid Expert expertRequest,
+                             Expert expertRequest,
                              BindingResult result,
                              RedirectAttributes attr,
                              Model model) {

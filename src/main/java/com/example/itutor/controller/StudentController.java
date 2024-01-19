@@ -89,14 +89,14 @@ public class StudentController {
     //add edit student method that has query parameter id
     // edit field, check if correct, delete button
 
-    @RequestMapping(value = "/students/edit/{studentId}", method = RequestMethod.GET)
-    public String editStudentForm(@PathVariable Long studentId, Model model) {
-        // get student from database by id
-        Student student = (Student) userService.getUserById(studentId);
+    @RequestMapping(value = "/students/edit/{userName}", method = RequestMethod.GET)
+    public String editStudentForm(@PathVariable String userName, Model model) {
+        // get student by username
+        Student student = (Student) userService.findByUsername(userName);
 
         if (student == null) {
             // if student was not found -> redirect to another page
-            System.err.println("Student with id " + studentId + " not found!");
+            System.err.println("Student with id " + userName + " not found!");
             return "error";
         }
 

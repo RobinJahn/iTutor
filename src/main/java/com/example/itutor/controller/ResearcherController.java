@@ -85,14 +85,14 @@ public class ResearcherController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/researchers/edit/{researcherId}", method = RequestMethod.GET)
-    public String editResearcherForm(@PathVariable Long researcherId, Model model) {
-        // Get the researcher from the database
-        Researcher researcher = (Researcher) userService.getUserById(researcherId);
+    @RequestMapping(value = "/researchers/edit/{userName}", method = RequestMethod.GET)
+    public String editResearcherForm(@PathVariable String userName, Model model) {
+        // get researcher by username
+        Researcher researcher = (Researcher) userService.findByUsername(userName);
 
         if (researcher == null) {
             // if researcher was not found -> redirect to another page
-            System.out.println("Researcher with id " + researcherId + " not found");
+            System.out.println("Researcher with id " + userName + " not found");
             return "error";
         }
 
