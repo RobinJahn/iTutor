@@ -58,6 +58,8 @@ public class WebSecurityConfig {
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/experts/guideline")).hasAuthority("EXPERT")
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/statistics")).hasAuthority("RESEARCHER")
 
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/error")).permitAll()
+                        //.requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/hello")).hasAuthority("STUDENT")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
