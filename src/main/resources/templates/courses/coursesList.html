@@ -34,7 +34,7 @@
             <div class="list-group">
                 <a th:href="@{/courses/{id}(id=${course.courseId})}" th:each="course : ${courses}"
                    class="list-group-item list-group-item-action">
-                    <h5 th:text="${course.title}">Course Title</h5>
+                    <div th:insert="~{courses/courseFragment :: courseFragment (course=${course})}"></div>
                 </a>
             </div>
 
