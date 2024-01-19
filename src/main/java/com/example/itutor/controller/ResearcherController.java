@@ -2,6 +2,7 @@ package com.example.itutor.controller;
 
 import com.example.itutor.domain.Researcher;
 import com.example.itutor.domain.Role;
+import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
 import com.example.itutor.service.EmailSenderService;
 import com.example.itutor.service.RoleServiceI;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,10 +36,13 @@ public class ResearcherController {
     @Autowired
     EmailSenderService emailService;
 
-    public ResearcherController(UserServiceI userService, RoleServiceI roleService) {
+    private final Validator validator;
+
+    public ResearcherController(UserServiceI userService, RoleServiceI roleService,  Validator validator) {
         super(); //???
         this.userService = userService;
         this.roleService = roleService;
+        this.validator = validator;
     }
 
     @RequestMapping(value = "/researchers/signup", method = RequestMethod.GET)
@@ -82,12 +87,16 @@ public class ResearcherController {
 
     @RequestMapping(value = "/researchers/edit/{researcherId}", method = RequestMethod.GET)
     public String editResearcherForm(@PathVariable Long researcherId, Model model) {
+        // Get the researcher from the database
         Researcher researcher = (Researcher) userService.getUserById(researcherId);
 
         if (researcher == null) {
-            // if student was not found -> redirect to another page
-            return "errorPage";
+            // if researcher was not found -> redirect to another page
+            System.out.println("Researcher with id " + researcherId + " not found");
+            return "error";
         }
+
+        researcher.setPassword(null);
 
         model.addAttribute("user", researcher);
         model.addAttribute("link", "/researchers/edit/process");
@@ -95,17 +104,39 @@ public class ResearcherController {
     }
 
     @RequestMapping(value = "/researchers/edit/process", method = RequestMethod.POST)
-    public String editResearcher(@ModelAttribute @Valid Researcher researcherRequest,
+    public String editResearcher(@ModelAttribute Researcher researcherRequest,
                                  BindingResult result,
-                                 RedirectAttributes attr) {
+                                 RedirectAttributes attr,
+                                 Model model) {
+
+        researcherRequest.setId(userService.findByUsername(researcherRequest.getUsername()).getId());
+
+        // Check if a new password has been entered
+        if (!researcherRequest.getPassword().isEmpty()) {
+            // Encrypt the new password
+            String encodedPassword = passwordEncoder.encode(researcherRequest.getPassword());
+            researcherRequest.setPassword(encodedPassword);
+        } else {
+            // Retrieve the current password from the database and set it, so it doesn't get overwritten
+            Researcher existingResearcher = (Researcher) userService.getUserById(researcherRequest.getId());
+            researcherRequest.setPassword(existingResearcher.getPassword());
+        }
+
+        // Manually invoke validation
+        validator.validate(researcherRequest, result);
 
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
+            //add model attribute user
+            model.addAttribute("user", researcherRequest);
             return "researchers/editResearcher"; // if there are any errors -> back to edit form
         }
 
-        //TODO: Update the student details in the database based on the edited data in studentRequest
+
+
+        User updatedResearcher = userService.updateUser(researcherRequest);
+        System.out.println(updatedResearcher);
 
         attr.addFlashAttribute("success", "Researcher updated!");
         return "redirect:/";

@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -36,10 +37,13 @@ public class StudentController {
     @Autowired
     EmailSenderService emailService;
 
-    public StudentController(UserServiceI userService, RoleServiceI roleService) {
+    private final Validator validator;
+
+    public StudentController(UserServiceI userService, RoleServiceI roleService, Validator validator) {
         super(); //???
         this.userService = userService;
         this.roleService = roleService;
+        this.validator = validator;
     }
 
     @RequestMapping(value = "/students/signup", method = RequestMethod.GET) //http://localhost:8080/students/signup
@@ -87,16 +91,16 @@ public class StudentController {
 
     @RequestMapping(value = "/students/edit/{studentId}", method = RequestMethod.GET)
     public String editStudentForm(@PathVariable Long studentId, Model model) {
-        // Here the logic would have to be implemented to retrieve the student with the given studentId from the database
-
         // get student from database by id
         Student student = (Student) userService.getUserById(studentId);
 
         if (student == null) {
             // if student was not found -> redirect to another page
             System.err.println("Student with id " + studentId + " not found!");
-            return "errorPage";
+            return "error";
         }
+
+        student.setPassword(null);
 
         // Add the student to the model to pre-populate the form on the page
         model.addAttribute("user", student);
@@ -105,15 +109,36 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/students/edit/process", method = RequestMethod.POST)
-    public String editStudent(@ModelAttribute @Valid Student studentRequest,
+    public String editStudent(@ModelAttribute Student studentRequest,
                               BindingResult result,
-                              RedirectAttributes attr) {
+                              RedirectAttributes attr,
+                              Model model) {
+
+        studentRequest.setId(userService.findByUsername(studentRequest.getUsername()).getId());
+
+        // Check if a new password has been entered
+        if (!studentRequest.getPassword().isEmpty()) {
+            // Encrypt the new password
+            String encodedPassword = passwordEncoder.encode(studentRequest.getPassword());
+            studentRequest.setPassword(encodedPassword);
+        } else {
+            // Retrieve the current password from the database and set it, so it doesn't get overwritten
+            Student existingStudent = (Student) userService.getUserById(studentRequest.getId());
+            studentRequest.setPassword(existingStudent.getPassword());
+        }
+
+        // Manually invoke validation
+        validator.validate(studentRequest, result);
 
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
+            //add model attribute user
+            model.addAttribute("user", studentRequest);
             return "/students/editStudent"; // if there are any errors -> back to edit form
         }
+
+
 
         User updatedStudent = userService.updateUser(studentRequest);
         System.out.println(updatedStudent);

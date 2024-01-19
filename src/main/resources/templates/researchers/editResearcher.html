@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html layout:decorate="~{signup}" xmlns:layout="http://www.w3.org/1999/xhtml">
-<head><meta charset="UTF-8" /></head>
+<head>
+    <meta charset="UTF-8"/>
+</head>
 <body>
 
 <section class="layout-content" layout:fragment="moreAttributes">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label th:for="affiliation" th:text="#{form.label.affiliation}>Affiliation </label>
+            <label for="affiliation" th:text="#{form.label.affiliation}">Affiliation </label>
             <input type="text" class="form-control" id="affiliation" th:placeholder="#{form.placeholder.affiliation}"
-                   th:field="*{affiliation}"
+                    autofocus="autofocus" th:field="*{affiliation}"
                    th:classappend="${#fields.hasErrors('Affiliation')} ? 'is-invalid'" />
             <div class="invalid-feedback">
                 <span th:errors="*{affiliation}"></span>

@@ -2,6 +2,7 @@ package com.example.itutor.controller;
 
 import com.example.itutor.domain.Expert;
 import com.example.itutor.domain.Role;
+import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
 import com.example.itutor.repository.UserRepositoryI;
 import com.example.itutor.repository.impl.UserRepositoryImpl;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,10 +38,13 @@ public class ExpertController {
     @Autowired
     EmailSenderService emailService;
 
-    public ExpertController(UserServiceI userService, RoleServiceI roleService) {
+    private final Validator validator;
+
+    public ExpertController(UserServiceI userService, RoleServiceI roleService, Validator validator) {
         super(); //???
         this.userService = userService;
         this.roleService = roleService;
+        this.validator = validator;
     }
 
     @RequestMapping(value = "/experts/signup", method = RequestMethod.GET) //http://localhost:8080/experts/signup
@@ -88,8 +93,10 @@ public class ExpertController {
 
         if (expert == null) {
             System.err.println("Expert with id " + expertId + " not found!");
-            return "errorPage";
+            return "error";
         }
+
+        expert.setPassword(null);
 
         model.addAttribute("user", expert);
         model.addAttribute("link", "/experts/edit/process");
@@ -101,13 +108,34 @@ public class ExpertController {
     public String editExpert(@ModelAttribute
                              @Valid Expert expertRequest,
                              BindingResult result,
-                             RedirectAttributes attr) {
+                             RedirectAttributes attr,
+                             Model model) {
+
+        expertRequest.setId(userService.findByUsername(expertRequest.getUsername()).getId());
+
+        // Check if a new password has been entered
+        if (!expertRequest.getPassword().isEmpty()) {
+            // Encrypt the new password
+            String encodedPassword = passwordEncoder.encode(expertRequest.getPassword());
+            expertRequest.setPassword(encodedPassword);
+        } else {
+            // Retrieve the current password from the database and set it, so it doesn't get overwritten
+            Expert existingExpert = (Expert) userService.getUserById(expertRequest.getId());
+            expertRequest.setPassword(existingExpert.getPassword());
+        }
+
+        // Manually invoke validation
+        validator.validate(expertRequest, result);
 
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
-            return "experts/editExpert";
+            //add model attribute user
+            model.addAttribute("user", expertRequest);
+            return "/experts/editExpert"; // if there are any errors -> back to edit form
         }
+
+
 
         User updatedExpert = userService.updateUser(expertRequest);
         System.out.println(updatedExpert);

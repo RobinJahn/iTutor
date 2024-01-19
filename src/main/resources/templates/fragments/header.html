@@ -25,6 +25,9 @@
 						<li><a class="dropdown-item" th:href="@{'/?lang=de'}" th:text="#{navbar.language.german}">Deutsch</a></li>
 					</ul>
 				</li>
+				<li class="nav-item active">
+					<a class="nav-link" th:href="@{/about}">About</a>
+				</li>
 				<!-- Add other navigation items here -->
 				<li class="nav-item logout-button">
 					<form th:action="@{/logout}" method="post">
