@@ -4,12 +4,13 @@
 -- INSERT INTO role (id, description) VALUES (1, 'STUDENT');
 -- INSERT INTO role (id, description) VALUES (2, 'RESEARCHER');
 -- INSERT INTO role (id, description) VALUES (3, 'EXPERT');
+-- already done in RoleService
 
 -- Insert students
 -- Replace 'password' with the actual hashed password, if your system uses password hashing
 -- The birthDate format should match your database date format, typically 'YYYY-MM-DD'
-INSERT INTO users (id, DTYPE, first_name, last_name, email, username, password, active, status, birth_date) VALUES (2, 'Student', 'John', 'Doe', 'john.doe@example.com', 'johndoe', 'password', true, 0, '2000-01-01');
-INSERT INTO users (id, DTYPE, first_name, last_name, email, username, password, active, status, birth_date) VALUES (3, 'Student', 'Jane', 'Smith', 'jane.smith@example.com', 'janesmith', 'password', true, 0, '2001-02-02');
+INSERT INTO users (DTYPE, first_name, last_name, email, username, password, active, status, birth_date) VALUES ('Student', 'John', 'Doe', 'john.doe@example.com', 'johndoe', '$2a$10$lO6.hETkU6HMx71srMUJpuRi3P6fMC4/qMyqXebMFrfkerjQ4QHVy', true, 0, '2000-01-01');
+INSERT INTO users (DTYPE, first_name, last_name, email, username, password, active, status, birth_date) VALUES ('Student', 'Jane', 'Smith', 'jane.smith@example.com', 'janesmith', '$2a$10$lO6.hETkU6HMx71srMUJpuRi3P6fMC4/qMyqXebMFrfkerjQ4QHVy', true, 0, '2001-02-02');
 
 
 -- Insert user-role mappings
