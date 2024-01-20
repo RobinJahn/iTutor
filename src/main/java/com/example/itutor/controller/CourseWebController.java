@@ -2,7 +2,9 @@ package com.example.itutor.controller;
 
 import com.example.itutor.domain.Content;
 import com.example.itutor.domain.Course;
+import com.example.itutor.service.ContentServiceI;
 import com.example.itutor.service.CourseServiceI;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -16,9 +18,11 @@ import java.util.Optional;
 @RequestMapping("/courses")
 public class CourseWebController {
     private final CourseServiceI courseService;
+    private final ContentServiceI contentService;
 
-    public CourseWebController(CourseServiceI courseService) {
+    public CourseWebController(CourseServiceI courseService, ContentServiceI contentService) {
         this.courseService = courseService;
+        this.contentService = contentService;
     }
 
     @GetMapping
@@ -28,9 +32,14 @@ public class CourseWebController {
     }
 
     @GetMapping("/{id}")
-    public String getCourseById(@PathVariable Long id, Model model) {
-        Course course = courseService.getCourseById(id)
-                .orElse(null); // Handle the case where the course is not found
+    public String getCourseById(@PathVariable Long id,
+                                Model model,
+                                @PageableDefault(size = 7) Pageable pageable) {
+
+        Course course = courseService.getCourseById(id).orElse(null);
+
+        model.addAttribute("contents", contentService.getAllContents(pageable));
+
         model.addAttribute("course", course);
         return course != null ? "courses/course" : "error"; // Thymeleaf template for course details or error
     }
@@ -59,6 +68,10 @@ public class CourseWebController {
             newContent.setTitle(contentTitle);
             newContent.setContentType(Content.ContentType.TEXT);
             newContent.setContentData(contentData);
+            newContent.setCourse(course);
+
+            //Save content in the database
+            contentService.createContent(newContent);
 
             // Add the new content to the course
             course.addContent(newContent); // Assuming Course class has an addContent method
