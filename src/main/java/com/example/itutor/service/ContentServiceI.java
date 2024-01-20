@@ -13,5 +13,5 @@ public interface ContentServiceI {
     Content createContent(Content content);
     Content updateContent(Long id, Content updatedContent);
     boolean deleteContent(Long id);
-
+    Page<Content> getContentsByCourseId(Long courseId, Pageable pageable);
 }

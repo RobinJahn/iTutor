@@ -52,5 +52,10 @@ public class ContentServiceImpl implements ContentServiceI {
         return false; // Or Error-Handling
     }
 
+    @Override
+    public Page<Content> getContentsByCourseId(Long courseId, Pageable pageable) {
+        return contentRepository.findByCourseCourseId(courseId, pageable);
+    }
+
 
 }

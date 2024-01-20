@@ -21,8 +21,8 @@ public class Course implements Serializable {
     @NotBlank
     private String description;
 
-    @ElementCollection
-    private List<Long> contents = new ArrayList<>();
+    @OneToMany(mappedBy = "course")
+    private List<Content> contents = new ArrayList<>();
 
 
     public void setCourseId(Long courseId) {
@@ -49,16 +49,16 @@ public class Course implements Serializable {
         this.description = description;
     }
 
-    public List<Long> getContents() {
+    public List<Content> getContents() {
         return contents;
     }
 
-    public void setContents(List<Long> contents) {
+    public void setContents(List<Content> contents) {
         this.contents = contents;
     }
 
     public void addContent(Content content) {
-        contents.add(content.getContentID());
-        content.setCourse(this); // Set the course reference in the content
+        contents.add(content);
+        content.setCourse(this);
     }
 }

@@ -4,6 +4,7 @@ import com.example.itutor.domain.Content;
 import com.example.itutor.domain.Course;
 import com.example.itutor.service.ContentServiceI;
 import com.example.itutor.service.CourseServiceI;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -37,11 +38,15 @@ public class CourseWebController {
                                 @PageableDefault(size = 7) Pageable pageable) {
 
         Course course = courseService.getCourseById(id).orElse(null);
+        if (course == null) {
+            return "error";
+        }
 
-        model.addAttribute("contents", contentService.getAllContents(pageable));
-
+        Page<Content> contents = contentService.getContentsByCourseId(id, pageable);
+        model.addAttribute("contents", contents);
         model.addAttribute("course", course);
-        return course != null ? "courses/course" : "error"; // Thymeleaf template for course details or error
+
+        return "courses/course";
     }
 
 
@@ -68,7 +73,6 @@ public class CourseWebController {
             newContent.setTitle(contentTitle);
             newContent.setContentType(Content.ContentType.TEXT);
             newContent.setContentData(contentData);
-            newContent.setCourse(course);
 
             //Save content in the database
             contentService.createContent(newContent);
