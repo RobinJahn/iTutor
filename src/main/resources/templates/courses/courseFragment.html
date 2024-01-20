@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Course Fragments</title>
+</head>
+<body>
+<!-- Course Fragment -->
+<div th:fragment="courseFragment(course)">
+    <div class="card-body">
+        <!-- heading for content -->
+        <h3 class="card-title" th:text="${course.title}">Course Title</h3>
+
+        <p th:text="${course.description}">Course Description</p>
+    </div>
+</div>
+</body>
+</html>

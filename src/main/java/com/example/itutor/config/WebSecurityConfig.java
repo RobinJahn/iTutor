@@ -47,20 +47,27 @@ public class WebSecurityConfig {
 
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/home")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/error")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/signup")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/experts/signup")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/researchers/signup")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/add/process")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/experts/add/process")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/researchers/add/process")).permitAll()
-                        //.requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/hello")).hasAuthority("STUDENT")
+
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/motivation")).hasAuthority("STUDENT")
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/experts/guideline")).hasAuthority("EXPERT")
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/statistics")).hasAuthority("RESEARCHER")
+
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/css/**")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/js/**")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector,"/image/**")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .permitAll()
                 )
-
                 .logout(LogoutConfigurer::permitAll);
 
         return http.build();
