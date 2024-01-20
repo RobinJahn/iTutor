@@ -20,17 +20,17 @@
                 <div class="row">
                     <!-- Students Section -->
                     <div class="col-sm-auto">
-                        <div th:replace="~{fragments/home_card_component :: userCard('Students', '@{/students/signup}', 'editStudentForm', 'Enter Username')}"></div>
+                        <div th:replace="~{fragments/home_card_component :: userCard('Students', '/students/signup', 'editStudentForm', 'Enter Username')}"></div>
                     </div>
 
                     <!-- Experts Section -->
                     <div class="col-sm-auto">
-                        <div th:replace="~{fragments/home_card_component :: userCard('Experts', '@{/experts/signup}', 'editExpertForm', 'Enter Username')}"></div>
+                        <div th:replace="~{fragments/home_card_component :: userCard('Experts', '/experts/signup', 'editExpertForm', 'Enter Username')}"></div>
                     </div>
 
                     <!-- Researchers Section -->
                     <div class="col-sm-auto">
-                        <div th:replace="~{fragments/home_card_component :: userCard('Researchers', '@{/researchers/signup}', 'editResearcherForm', 'Enter Username')}"></div>
+                        <div th:replace="~{fragments/home_card_component :: userCard('Researchers', '/researchers/signup', 'editResearcherForm', 'Enter Username')}"></div>
                     </div>
                 </div>
 
