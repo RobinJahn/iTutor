@@ -4,6 +4,7 @@ import com.example.itutor.domain.Content;
 import com.example.itutor.domain.Course;
 import com.example.itutor.service.ContentServiceI;
 import com.example.itutor.service.CourseServiceI;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -31,9 +32,14 @@ public class CourseWebController {
     }
 
     @GetMapping("/{id}")
-    public String getCourseById(@PathVariable Long id, Model model) {
-        Course course = courseService.getCourseById(id)
-                .orElse(null); // Handle the case where the course is not found
+    public String getCourseById(@PathVariable Long id,
+                                Model model,
+                                @PageableDefault(size = 7) Pageable pageable) {
+
+        Course course = courseService.getCourseById(id).orElse(null);
+
+        model.addAttribute("contents", contentService.getAllContents(pageable));
+
         model.addAttribute("course", course);
         return course != null ? "courses/course" : "error"; // Thymeleaf template for course details or error
     }

@@ -14,9 +14,31 @@
             <p th:text="${course.description}">Course Description</p>
 
             <!-- Iterating over contents of the course -->
-            <div th:each="content : ${course.contents}">
+            <div th:each="content : ${contents}">
                 <div th:insert="~{courses/contentFragment :: contentFragment (content=${content})}"></div>
             </div>
+
+            <!-- Pagination controls for contents -->
+            <div th:if="${!contents.empty}">
+                <div>
+                    <ul class="pagination mt-3">
+                        <li class="page-item" th:classappend="${contents.first} ? 'disabled'">
+                            <a class="page-link" th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number - 1}, size=${contents.size})}">&laquo; Previous</a>
+                        </li>
+
+                        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, contents.totalPages - 1)}"
+                            th:classappend="${pageNum == contents.number} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/courses/{id}(id=${course.courseId}, page=${pageNum}, size=${contents.size})}" th:text="${pageNum + 1}"></a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${contents.last} ? 'disabled'">
+                            <a class="page-link" th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number + 1}, size=${contents.size})}">Next &raquo;</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
 
             <div class="card ">
                 <div class="card-body">

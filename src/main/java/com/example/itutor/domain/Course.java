@@ -21,9 +21,8 @@ public class Course implements Serializable {
     @NotBlank
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
-    private List<Content> contents = new ArrayList<>(); // A list to hold multiple content items
-
+    @ElementCollection
+    private List<Long> contents = new ArrayList<>();
 
 
     public void setCourseId(Long courseId) {
@@ -50,16 +49,16 @@ public class Course implements Serializable {
         this.description = description;
     }
 
-    public List<Content> getContents() {
+    public List<Long> getContents() {
         return contents;
     }
 
-    public void setContents(List<Content> contents) {
+    public void setContents(List<Long> contents) {
         this.contents = contents;
     }
 
     public void addContent(Content content) {
-        contents.add(content);
+        contents.add(content.getContentID());
         content.setCourse(this); // Set the course reference in the content
     }
 }
