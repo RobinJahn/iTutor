@@ -10,69 +10,30 @@
         <div class="row justify-content-center">
 
             <!-- Mascot Image Section -->
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <img th:src="@{/image/mascot.png}" alt="Mascot" class="img-fluid">
             </div>
 
             <!-- Sign Up and Edit Section -->
-            <div class="col-md-7">
-                <div class="row">
+            <div class="col">
 
+                <div class="row">
                     <!-- Students Section -->
-                    <div class="col-xl-4 col-lg-6">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Students</h5>
-                                <a th:href="@{/students/signup}" class="btn btn-primary btn-block mb-2">Student Signup</a>
-                                <form id="editStudentForm" class="mb-2">
-                                    <div class="input-group">
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn btn-primary mr-2">Edit Student</button>
-                                        </div>
-                                        <input id="studentId" type="text" name="id" class="form-control" placeholder="Enter Student ID">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                    <div class="col-sm-auto">
+                        <div th:replace="~{fragments/home_card_component :: userCard('Students', '@{/students/signup}', 'editStudentForm', 'Enter Username')}"></div>
                     </div>
 
                     <!-- Experts Section -->
-                    <div class="col-xl-4 col-lg-6">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Experts</h5>
-                                <a th:href="@{/experts/signup}" class="btn btn-primary btn-block mb-2">Expert Signup</a>
-                                <form id="editExpertForm" class="mb-2">
-                                    <div class="input-group">
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn btn-primary  mr-2">Edit Expert</button>
-                                        </div>
-                                        <input id="expertId" type="text" name="id" class="form-control" placeholder="Enter Expert ID">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                    <div class="col-sm-auto">
+                        <div th:replace="~{fragments/home_card_component :: userCard('Experts', '@{/experts/signup}', 'editExpertForm', 'Enter Username')}"></div>
                     </div>
 
                     <!-- Researchers Section -->
-                    <div class="col-xl-4 col-lg-6">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Researchers</h5>
-                                <a th:href="@{/researchers/signup}" class="btn btn-primary btn-block mb-2">Researcher Signup</a>
-                                <form id="editResearcherForm" class="mb-2">
-                                    <div class="input-group">
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn btn-primary">Edit Researcher</button>
-                                        </div>
-                                        <input id="researcherId" type="text" name="id" class="form-control" placeholder="Enter Researcher ID">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                    <div class="col-sm-auto">
+                        <div th:replace="~{fragments/home_card_component :: userCard('Researchers', '@{/researchers/signup}', 'editResearcherForm', 'Enter Username')}"></div>
                     </div>
-
                 </div>
+
             </div>
         </div>
 
