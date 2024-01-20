@@ -5,7 +5,7 @@
 
 <section class="layout-content" layout:fragment="moreAttributes">
     <div class="form-row">
-        <div class="form-group col-md-6">
+        <div class="form-group col">
             <label th:for="affiliation" th:text="#{form.label.affiliation}">Affiliation </label>
             <input type="text" class="form-control" id="affiliation" th:placeholder="#{form.placeholder.affiliation}"
                    autofocus="autofocus" th:field="*{affiliation}"
@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="form-group col-md-6">
+        <div class="form-group col">
             <label th:for="qualification" th:text="#{form.label.qualification}">Qualification </label>
             <input type="text" class="form-control" id="qualification" th:placeholder="#{form.placeholder.qualification}"
                    autofocus="autofocus" th:field="*{qualification}"
