@@ -15,7 +15,6 @@ public class HomeController {
 
     @RequestMapping(value = "/")
     public String showHome() {
-        System.out.println(openAIService.getChatResponse("Hi how are you doing today?"));
         return "/home";
     }
 
