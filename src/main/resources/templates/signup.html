@@ -8,8 +8,8 @@
 <section class="layout-content" layout:fragment="mybody">
     <div class="row align-items-start justify-content-center mt-3">
         <!-- Sign Up and Edit Section -->
-        <div class="col-sm-5">
-            <div class="container" id="registration">
+        <div class="col-lg-5 col-md-12">
+            <div class="container mb-3" id="registration">
 
                 <form th:action="@{${link}}"
                       th:object="${user}" method="POST">
@@ -90,7 +90,7 @@
         </div>
 
         <!-- Mascot Image Section -->
-        <div class="col-sm-4 d-flex justify-content-end">
+        <div class="col-lg-4 col-md-12 d-flex justify-content-end">
             <div class="container">
                 <img th:src="@{/image/signupOwl.png}" alt="Mascot" class="img-fluid">
             </div>

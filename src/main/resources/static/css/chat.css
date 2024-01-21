@@ -37,9 +37,10 @@ body {
 .chat-container-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     min-height: 100vh;
     flex-direction: column;
+    margin-top: 1rem;
 }
 
 
