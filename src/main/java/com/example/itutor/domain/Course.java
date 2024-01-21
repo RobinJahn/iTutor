@@ -1,5 +1,6 @@
 package com.example.itutor.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -22,6 +23,7 @@ public class Course implements Serializable {
     private String description;
 
     @OneToMany(mappedBy = "course")
+    @JsonManagedReference
     private List<Content> contents = new ArrayList<>();
 
 

@@ -23,7 +23,8 @@ public class CourseRESTController {
 
     @GetMapping
     public ResponseEntity<Page<Course>> getAllCourses(@PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.ok(courseService.getAllCourses(pageable));
+        Page<Course> courses = courseService.getAllCourses(pageable);
+        return ResponseEntity.ok(courses);
     }
 
     @GetMapping("/{id}")
