@@ -33,7 +33,7 @@
             <div class="card-body">
                 <th:block th:each="message, iterStat : ${aiMessages}">
                     <div class="d-flex " th:classappend="${iterStat.even} ? 'flex-row-reverse' : 'flex-row'">
-                        <div class="col-8 col-md-auto" >
+                        <div class="col-8" >
                             <div th:class="'message-bubble ' + (${iterStat.even} ? 'system-message' : 'user-message')"
                                  th:text="${message}">
                                 Message content
@@ -58,6 +58,7 @@
                         <div class="col text-right">
                             <button type="button" class="btn btn-danger mt-2" onclick="location.href='/ai/delete'" th:text="#{ai.restart}">Restart Chat</button>
                         </div>
+                    </div>
                 </form>
             </div>
         </div>

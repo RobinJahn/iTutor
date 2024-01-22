@@ -33,6 +33,15 @@ public class OpenAIService implements OpenAIServiceI {
 
     @Override
     public AiMessages saveMessages(AiMessages aiMessages) {
+        //check if message with this id exists
+        if (aiMessages.getId() != null) {
+            Optional<AiMessages> aiMessagesOptional = aiMessagesRepository.findById(aiMessages.getId());
+            if (aiMessagesOptional.isPresent()) {
+                AiMessages aiMessagesFromDb = aiMessagesOptional.get();
+                aiMessagesFromDb.setMessages(aiMessages.getMessages());
+                return aiMessagesRepository.save(aiMessagesFromDb);
+            }
+        }
         return aiMessagesRepository.save(aiMessages);
     }
 
@@ -62,8 +71,9 @@ public class OpenAIService implements OpenAIServiceI {
         messagesJson.append("[");
 
         for (int i = 0; i < aiMessages.getMessages().size(); i++) {
+            String messageContent = aiMessages.getMessages().get(i).replace("\n", "\\n");
             String role = (i % 2 == 0) ? "system" : "user";
-            messagesJson.append(String.format("{ \"role\": \"%s\", \"content\": \"%s\" }", role, aiMessages.getMessages().get(i)));
+            messagesJson.append(String.format("{ \"role\": \"%s\", \"content\": \"%s\" }", role, messageContent));
             if (i < aiMessages.getMessages().size() - 1) {
                 messagesJson.append(", ");
             }

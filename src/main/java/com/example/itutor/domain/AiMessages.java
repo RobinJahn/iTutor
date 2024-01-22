@@ -19,7 +19,7 @@ public class AiMessages {
     private Long id;
 
     @ElementCollection
-    @Column(length = 1000)
+    @Column(length = 10000)
     private List<String> messages = new ArrayList<>();
 
     @OneToOne

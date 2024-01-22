@@ -2,7 +2,9 @@ package com.example.itutor.controller;
 
 
 import com.example.itutor.domain.AiMessages;
+import com.example.itutor.domain.Course;
 import com.example.itutor.domain.User;
+import com.example.itutor.service.CourseServiceI;
 import com.example.itutor.service.OpenAIServiceI;
 import com.example.itutor.service.UserServiceI;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+import java.util.Optional;
+
 @Controller
 public class AIController {
 
@@ -21,31 +26,22 @@ public class AIController {
 
     private final UserServiceI userService;
 
+    private final CourseServiceI courseService;
+
     private User currentUser;
 
-    public AIController(OpenAIServiceI openAIService, UserServiceI userService) {
+    public AIController(OpenAIServiceI openAIService, UserServiceI userService, CourseServiceI courseService) {
         this.openAIService = openAIService;
         this.userService = userService;
+        this.courseService = courseService;
     }
 
     @GetMapping("/ai")
     public String showAI(Model model) {
-        //get currently logged-in user with spring boot security
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserName = null;
-        if (authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-
-            if (principal instanceof UserDetails) {
-                currentUserName = ((UserDetails) principal).getUsername();
-            } else {
-                currentUserName = principal.toString();
-            }
-        }
-        if (currentUserName == null) {
+        currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
             return "redirect:/login";
         }
-        currentUser = userService.findByUsername(currentUserName);
 
         AiMessages aiMessages = openAIService.getMessagesForUser(currentUser);
 
@@ -77,4 +73,41 @@ public class AIController {
         openAIService.resetMessagesForUser(currentUser);
         return "redirect:/ai"; // Redirect to the chat page
     }
+
+
+    @GetMapping("/aiTranslate")
+    public String showAiTranslate(Model model){
+        currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        List<Course> courses = courseService.getAllCourses(); // Replace with your method to fetch courses
+        model.addAttribute("courses", courses);
+        return "/aiTranslate";
+    }
+
+    @PostMapping("/aiTranslate")
+    public String sendRequestAndAssembleMessages(Model model,
+                                                 @RequestParam("selectedCourse") Long courseId,
+                                                 @RequestParam("targetLanguage") String targetLanguage) {
+        Optional<Course> optionalCourse = courseService.getCourseById(courseId);
+        if (!optionalCourse.isPresent()) {
+            return "redirect:/aiTranslate";
+        }
+        Course selectedCourse = optionalCourse.get();
+        String courseText = selectedCourse.getCourseAsText();
+
+        AiMessages aiMessage = new AiMessages(currentUser);
+        aiMessage.addMessage("Please translate this course to " + targetLanguage + ": " + courseText);
+
+        // Send the courseText to AI and get the response
+        String aiResponse = openAIService.getChatResponse(aiMessage);
+        // Handle AI response
+        aiMessage.addMessage(aiResponse);
+        AiMessages aiMessages = openAIService.saveMessages(aiMessage);
+        model.addAttribute("aiMessages", aiMessages.messagesWithoutFirst());
+
+        return "redirect:/ai";
+    }
+
 }

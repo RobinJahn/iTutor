@@ -77,6 +77,21 @@ public class Content implements Serializable {
         this.course = course;
     }
 
+    public String getContentAsString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Content");
+        sb.append(contentID);
+        sb.append(": ");
+        sb.append(title);
+        sb.append("\n");
+        if (contentType.equals(ContentType.TEXT)) {
+            sb.append(contentData);
+            sb.append("\n");
+            return sb.toString();
+        }
+        return sb.toString();
+    }
+
     @Override
     public String toString() {
         return "Content {" +
