@@ -2,12 +2,12 @@
 <div th:fragment="userCard(title, signupUrl, editFormId, inputPlaceholder)">
   <div class="card mb-3">
     <div class="card-body">
-      <h5 class="card-title" th:text="${title}">Title</h5>
-      <a th:href="@{${signupUrl}}" class="btn btn-primary btn-block mb-2">Signup</a>
+      <h5 class="card-title" th:text="#{${title}}">Title</h5>
+      <a th:href="@{${signupUrl}}" class="btn btn-primary btn-block mb-2" th:text="#{home.signup}">Signup</a>
       <form th:id="${editFormId}" class="mb-2">
         <div class="input-group">
-          <button type="submit" class="btn btn-primary mr-2" th:text="'Edit ' + ${title}">Edit</button>
-          <input type="text" name="id" class="form-control" th:placeholder="${inputPlaceholder}">
+          <button type="submit" class="btn btn-primary mr-2" th:text="#{home.edit} + ' ' + #{${title}}">Edit</button>
+          <input type="text" name="id" class="form-control" th:placeholder="#{${inputPlaceholder}}">
         </div>
       </form>
     </div>

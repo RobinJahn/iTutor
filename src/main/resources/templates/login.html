@@ -23,7 +23,7 @@
                             <div>
                                 <form th:action="@{/login}" method="post">
                                     <div class="card-body">
-                                        <h3 class="card-title text-center">Sign In</h3>
+                                        <h3 class="card-title text-center" th:text="#{login.signIn}">Sign In</h3>
 
                                         <div class="mb-3">
                                             <label for="username" th:text="#{login.username}"
@@ -38,7 +38,7 @@
                                         <div class="d-grid gap-2">
                                             <input type="submit" th:value="#{login.signIn}"
                                                    class="btn btn-primary mb-2"/>
-                                            <a href="/" class="btn btn-secondary">Return to Home</a>
+                                            <a href="/" class="btn btn-secondary" th:text="#{login.return}">Return to Home</a>
                                         </div>
                                     </div>
                                 </form>

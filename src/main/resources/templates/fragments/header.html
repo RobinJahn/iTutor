@@ -1,4 +1,4 @@
-<header th:fragment="header">
+<header th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
 	<nav class="navbar navbar-expand-md navbar-light bg-light">
 		<a class="navbar-brand mx-3" th:href="@{/}" th:text="#{app.title}">Educational Site</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,6 +11,12 @@
 				</li>
 				<li class="nav-item active">
 					<a class="nav-link" th:href="@{/chats/chat}" th:text="#{navbar.chat}">Chatroom</a>
+				</li>
+				<li class="nav-item" sec:authorize="hasAuthority('STUDENT')">
+					<a class="nav-link" th:href="@{/students/motivation}" th:text="#{navbar.motivation}">Motivate Me!</a>
+				</li>
+				<li class="nav-item" sec:authorize="hasAuthority('EXPERT')">
+					<a class="nav-link" th:href="@{/experts/guideline}" th:text="#{navbar.guideline}">Guideline</a>
 				</li>
 				<li class="nav-item active">
 					<a class="nav-link" th:href="@{/ai}" th:text="#{navbar.ai}">Chat with AI</a>
