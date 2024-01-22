@@ -44,6 +44,9 @@ public class ChatRestController {
         return ResponseEntity.ok(messageCount);
     }
 
+    // man soll sich die nachrichten holen können mit userID also welcher user gerade eingeloggt ist soll seinen nachrichten verlauf sehen
+
+    // ist ja REST also muss man Update delete, post undso also andere methoden auch machen
 
     // more endpoints
 }
