@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <title>iTutor</title>
 
@@ -19,12 +19,14 @@
     <link href="/css/style.css" rel="stylesheet"/>
 </head>
 <body>
-<header th:replace="~{fragments/header :: header}"></header>
+<div class="main-wrapper d-flex flex-column min-vh-100">
+    <header th:replace="~{fragments/header :: header}"></header>
 
-<div class="layout-main container">
-    <section layout:fragment="mybody">
-        <div> main content</div>
-    </section>
+    <div class="layout-main container">
+        <section layout:fragment="mybody">
+            <div> main content</div>
+        </section>
+    </div>
 </div>
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
@@ -37,7 +39,7 @@
 <script src="/webjars/jquery/jquery.min.js"></script>
 <script src="/webjars/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<!<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script type="text/javascript">
@@ -53,7 +55,5 @@
     });
 
 </script>
-
-
 </body>
 </html>

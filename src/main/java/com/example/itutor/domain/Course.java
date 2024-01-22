@@ -1,5 +1,6 @@
 package com.example.itutor.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -21,9 +22,9 @@ public class Course implements Serializable {
     @NotBlank
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
-    private List<Content> contents = new ArrayList<>(); // A list to hold multiple content items
-
+    @OneToMany(mappedBy = "course")
+    @JsonManagedReference
+    private List<Content> contents = new ArrayList<>();
 
 
     public void setCourseId(Long courseId) {
@@ -60,6 +61,6 @@ public class Course implements Serializable {
 
     public void addContent(Content content) {
         contents.add(content);
-        content.setCourse(this); // Set the course reference in the content
+        content.setCourse(this);
     }
 }

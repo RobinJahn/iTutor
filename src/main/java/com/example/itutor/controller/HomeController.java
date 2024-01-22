@@ -26,10 +26,6 @@ public class HomeController {
         return "/layout";
     }
 
-    @RequestMapping(value = "/preselectUser")
-    public String showPreselectUser() {
-        return "/preselectUser";
-    }
 
     @RequestMapping(value = "/hello")
     public String showHello() {

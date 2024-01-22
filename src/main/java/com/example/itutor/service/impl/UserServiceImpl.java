@@ -64,4 +64,14 @@ public class UserServiceImpl implements UserServiceI {
 		// TODO Auto-generated method stub
 		userRepository.delete(user);
 	}
+
+	@Override
+	public User findByUsername(String username) {
+		//return user or null
+		Optional<User> user = userRepository.findByUsername(username);
+		if(user.isPresent()) {
+			return user.get();
+		}
+		return null;
+	}
 }

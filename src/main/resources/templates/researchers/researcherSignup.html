@@ -5,22 +5,22 @@
 
 <section class="layout-content" layout:fragment="moreAttributes">
     <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="affiliation">Affiliation </label>
-            <input type="text" class="form-control" id="affiliation" placeholder="Affiliation"
+        <div class="form-group col">
+            <label th:for="affiliation" th:text="#{form.label.affiliation}">Affiliation </label>
+            <input type="text" class="form-control" id="affiliation" th:placeholder="#{form.placeholder.affiliation}"
                    autofocus="autofocus" th:field="*{affiliation}"
-                   th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" />
+                   th:classappend="${#fields.hasErrors('affiliation')} ? 'is-invalid'" />
             <div class="invalid-feedback">
                 <span th:errors="*{affiliation}"></span>
             </div>
         </div>
     </div>
     <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="qualification">Qualification </label>
-            <input type="text" class="form-control" id="qualification" placeholder="Qualification"
+        <div class="form-group col">
+            <label th:for="qualification" th:text="#{form.label.qualification}">Qualification </label>
+            <input type="text" class="form-control" id="qualification" th:placeholder="#{form.placeholder.qualification}"
                    autofocus="autofocus" th:field="*{qualification}"
-                   th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" />
+                   th:classappend="${#fields.hasErrors('qualification')} ? 'is-invalid'" />
             <div class="invalid-feedback">
                 <span th:errors="*{qualification}"></span>
             </div>

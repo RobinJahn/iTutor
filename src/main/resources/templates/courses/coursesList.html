@@ -6,38 +6,67 @@
 <body>
 <section layout:fragment="mybody">
     <div class="card m-3">
-        <div class="card-body">
-            <h1 class="card-title">All Courses</h1>
 
-            <!-- Form for adding new course -->
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">Add New Course</h2>
-                    <form th:action="@{/courses/create}" method="post">
-                        <div class="form-group">
-                            <label for="courseTitle">Course Title</label>
-                            <input type="text" class="form-control" id="courseTitle" name="title"
-                                   placeholder="Enter title" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="courseDescription">Course Description</label>
-                            <textarea class="form-control" id="courseDescription" name="description" rows="3"
-                                      required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-3">Create Course</button>
-                    </form>
+        <img class="card-img-top" src="/image/StudyOwls1.png" alt="Studying owls">
+
+        <div class="card-body">
+            <h1 class="card-title" th:text="#{courses.showAll}">All Courses</h1>
+
+            <!-- List of courses -->
+            <div class="list-group mt-3">
+                <!-- Iterating over courses in the current page -->
+                <a th:href="@{/courses/{id}(id=${course.courseId})}"
+                   th:each="course : ${coursesPage}"
+                   class="list-group-item list-group-item-action">
+                    <div th:insert="~{courses/courseFragment :: courseFragment (course=${course})}"></div>
+                </a>
+            </div>
+
+            <!-- Pagination controls -->
+            <div th:if="${!coursesPage.empty}">
+                <div>
+                    <ul class="pagination mt-3">
+                        <li class="page-item" th:classappend="${coursesPage.first} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/courses(page=${coursesPage.number - 1}, size=${coursesPage.size})}">&laquo;
+                                Previous</a>
+                        </li>
+
+                        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, coursesPage.totalPages - 1)}"
+                            th:classappend="${pageNum == coursesPage.number} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/courses(page=${pageNum}, size=${coursesPage.size})}"
+                               th:text="${pageNum + 1}"></a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${coursesPage.last} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/courses(page=${coursesPage.number + 1}, size=${coursesPage.size})}">Next
+                                &raquo;</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
 
-            <!-- List of courses -->
-            <div class="list-group">
-                <a th:href="@{/courses/{id}(id=${course.courseId})}" th:each="course : ${courses}"
-                   class="list-group-item list-group-item-action">
-                    <h5 th:text="${course.title}">Course Title</h5>
-                </a>
+            <!-- Form for adding new course -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title" th:text="#{courses.AddNew}">Add New Course</h2>
+                    <form th:action="@{/courses/create}" method="post">
+                        <div class="form-group">
+                            <label for="courseTitle" th:text="#{courses.title}">Course Title</label>
+                            <input type="text" class="form-control" id="courseTitle" name="title"
+                                   th:placeholder="#{courses.placeholder.title}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="courseDescription" th:text="#{courses.description}">Course Description</label>
+                            <textarea class="form-control" id="courseDescription" name="description" rows="3"
+                                      required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3" th:text="#{create.course}">Create Course</button>
+                    </form>
+                </div>
             </div>
-
         </div>
     </div>
 

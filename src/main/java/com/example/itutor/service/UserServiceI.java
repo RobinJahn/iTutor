@@ -22,4 +22,6 @@ public interface UserServiceI {
 
 	List<User> findConnectedUsers();
 
+	User findByUsername(String username);
+
 }

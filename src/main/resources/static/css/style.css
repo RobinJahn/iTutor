@@ -4,7 +4,7 @@
     display: flex;
 }
 
-.navbar-nav .logout-button {
+.navbar-nav .first-item-right {
     margin-left: auto;
-    padding-right: 10px;
 }
+

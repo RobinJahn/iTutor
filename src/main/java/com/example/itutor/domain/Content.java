@@ -1,5 +1,6 @@
 package com.example.itutor.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -31,8 +32,9 @@ public class Content implements Serializable {
     private String contentData;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course; // Reference to the Course
+    @JoinColumn(name = "course_id")
+    @JsonBackReference
+    private Course course;
 
     // Getters and Setters
     public Long getContentID() {
