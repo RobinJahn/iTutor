@@ -16,22 +16,11 @@
                 <div th:case="${T(com.example.itutor.domain.Content$ContentType).TEXT}">
                     <p class="card-text" th:text="${content.contentData}"></p>
                 </div>
-                <!-- Case for PDF content -->
-                <div th:case="${T(com.example.itutor.domain.Content$ContentType).PDF}">
-                    <a th:href="@{/pdfs/{contentData}(contentData=${content.contentData})}" class="btn btn-primary" th:text="${content.title}">PDF Link</a>
+                <div th:case="${T(com.example.itutor.domain.Content$ContentType).DOCUMENT}">
+                    <p th:text="${content.contentData}">File Description</p>
+                    <a th:href="@{/courses/files/{id}(id=${content.contentID})}" class="btn btn-primary" >Download</a>
                 </div>
-                <!-- Case for video content -->
-                <div th:case="${T(com.example.itutor.domain.Content$ContentType).VIDEO}">
-                    <!-- Video content rendering logic here -->
-                </div>
-                <!-- Case for audio content -->
-                <div th:case="${T(com.example.itutor.domain.Content$ContentType).AUDIO}">
-                    <!-- Audio content rendering logic here -->
-                </div>
-                <!-- Case for image content -->
-                <div th:case="${T(com.example.itutor.domain.Content$ContentType).IMAGE}">
-                    <!-- Image content rendering logic here -->
-                </div>
+
             </div>
         </div>
     </div>

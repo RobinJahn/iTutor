@@ -2,19 +2,20 @@ package com.example.itutor.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "content")
 public class Content implements Serializable {
 
     public class ContentType {
         public static final String TEXT = "text";
-        public static final String VIDEO = "video";
-        public static final String AUDIO = "audio";
-        public static final String IMAGE = "image";
-        public static final String PDF = "pdf";
+        public static final String DOCUMENT = "document";
     }
 
     // Attributes
@@ -28,54 +29,27 @@ public class Content implements Serializable {
     @Column(nullable = false)
     private String contentType;
 
-    @Column(nullable = false, length = 10000) // Adjust length based on expected content size
+    @Column(nullable = false, length = 10000)
     private String contentData;
+
+
+    @Column(nullable = true)
+    private String fileName;
+
+    @Column(nullable = true)
+    private String mimeType;
+
+    @Lob
+    @Column(nullable = true)
+    private byte[] contentByteData;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     @JsonBackReference
     private Course course;
 
-    // Getters and Setters
-    public Long getContentID() {
-        return contentID;
-    }
 
-    public void setContentID(Long contentID) {
-        this.contentID = contentID;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public String getContentData() {
-        return contentData;
-    }
-
-    public void setContentData(String contentData) {
-        this.contentData = contentData;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
 
     public String getContentAsString(){
         StringBuilder sb = new StringBuilder();
