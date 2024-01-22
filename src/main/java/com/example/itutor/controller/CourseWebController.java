@@ -91,6 +91,11 @@ public class CourseWebController {
         }
     }
 
+    @GetMapping("/upload")
+    public String showUploadForm() {
+        return "upload";
+    }
+
 
 
 }

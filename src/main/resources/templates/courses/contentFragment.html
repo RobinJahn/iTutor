@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}" />
     <title>Content Fragments</title>
 </head>
 <body>
@@ -10,6 +12,36 @@
         <div class="card-body">
             <!-- heading for content -->
             <h3 class="card-title" th:text="${content.title}">Content Title</h3>
+
+            <div class="card mb-3" sec:authorize="hasAuthority('EXPERT')">
+                <div class="card-body">
+                    <!-- Form für den Datei-Upload -->
+                    <form th:action="@{/gcp/upload}" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="file" th:text="#{upload.chooseFile}">Choose a file:</label>
+                            <input type="file" class="form-control-file" name="file" id="file" accept=".txt, .pdf, .doc, .docx">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="title" th:text="#{upload.title}">Title:</label>
+                            <input type="text" class="form-control" name="title" id="title">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contentType" th:text="#{upload.contentType}">Content Type:</label>
+                            <select class="form-control" name="contentType" id="contentType">
+                                <option value="text" th:text="#{upload.contentType.text}">Text</option>
+                                <option value="video" th:text="#{upload.contentType.video}">Video</option>
+                                <option value="audio" th:text="#{upload.contentType.audio}">Audio</option>
+                                <option value="image" th:text="#{upload.contentType.image}">Image</option>
+                                <option value="pdf" th:text="#{upload.contentType.pdf}">PDF</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" th:text="#{upload.button}">Upload</button>
+                    </form>
+                </div>
+            </div>
 
             <div th:switch="${content.contentType}">
                 <!-- Case for text content -->
