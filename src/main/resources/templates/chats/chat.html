@@ -264,7 +264,7 @@
                 messagesPage.content.forEach(msg => {
                     displayMessage(msg.senderId, msg.content, 'prepend');
                 });
-                // Deaktiviert den Button, wenn es keine weiteren Nachrichten zu laden gibt
+                // deactivates the button when no more messages can be loaded
                 if (messagesPage.last) {
                     document.getElementById('loadMoreBtn').style.display = 'none';
                 }
@@ -273,30 +273,7 @@
             }
         }
 
-        /*
-        function requestNotificationPermission() {
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    console.log("Notification permission granted.");
-                } else {
-                    console.log("Notification permission denied.");
-                }
-            });
-        }
-
-        function showNotification(message) {
-            if (Notification.permission === "granted") {
-                new Notification("Neue Chat-Nachricht", {
-                    body: message,
-                    // optional icon
-                    icon: "image/icon_notification.png"
-                });
-            }
-        }
-
-         */
         requestNotificationPermission();
-
 
         document.getElementById('loadMoreBtn').addEventListener('click', function() {
             currentPage++; // Erhöht die aktuelle Seite, um die nächste Seite zu laden
