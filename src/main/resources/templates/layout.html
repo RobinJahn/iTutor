@@ -15,6 +15,76 @@
     <link href="/webjars/open-iconic/font/css/open-iconic-bootstrap.min.css" rel="stylesheet"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
+    <!-- Extra script for the WebSocket - Chat. SockJS and Stomp-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <!-- Script to connect to the webSocket if user is logged in - placed in the head to load first before other decorated sites. Because they might have to use it-->
+    <script>
+
+        let globalStompClient = null;
+        let globalUsername = null;
+        let globalFirstName = null;
+
+        async function getCurrentUserAndConnectWebSocket() {
+            try {
+                const response = await fetch('/user/me');
+                if(response.ok) {
+                    const user = await response.json();
+                    globalUsername = user.username;
+                    globalFirstName = user.firstName;
+
+                    if (globalUsername && globalFirstName) {
+                        const socket = new SockJS('/ws');
+                        globalStompClient = Stomp.over(socket);
+                        globalStompClient.connect({}, function() {
+                            // Global WebSocket subscriptions
+                            globalStompClient.subscribe(`/user/${globalUsername}/queue/messages`, function() {
+                                if (!window.location.pathname.includes('/chats/chat')) {
+                                    // don't show the message yet in the notification (keep it secret)
+                                    showNotification("You have a new message, go check out the ChatRoom");
+                                }
+                            });
+                        }, function(error) {
+                            console.log('Error in WebSocket connection:', error);
+                        });
+                    }
+                } else {
+                    console.error('Failed to load user');
+                }
+            } catch (error) {
+                console.error('Error fetching user', error);
+            }
+        }
+
+        // Call this function on page load
+        getCurrentUserAndConnectWebSocket();
+
+        function shouldShowNotification() {
+            return localStorage.getItem('notificationsEnabled') === 'true';
+        }
+
+        // functions to receive notifications for new chat messages
+        function requestNotificationPermission() {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    console.log("Notification permission granted.");
+                } else {
+                    console.log("Notification permission denied.");
+                }
+            });
+        }
+
+        function showNotification(message) {
+            if (Notification.permission === "granted" && shouldShowNotification()) {
+                new Notification("New Chat Message", {
+                    body: message,
+                    icon: "../image/icon_notification.png"
+                });
+            }
+        }
+    </script>
+
     <!-- Custom styles for this template -->
     <link href="/css/style.css" rel="stylesheet"/>
 </head>
@@ -41,6 +111,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Scripts that depend on DOM elements
+    $(document).ready(function() {
+        // This code runs when the DOM is fully loaded
+        const notificationToggle = document.getElementById('notificationToggle');
+        if (notificationToggle) {
+            const notificationPreference = localStorage.getItem('notificationsEnabled');
+            const notificationsEnabled = notificationPreference !== null ? JSON.parse(notificationPreference) : true;
+            notificationToggle.checked = notificationsEnabled;
+
+            notificationToggle.addEventListener('change', function () {
+                const isEnabled = this.checked;
+                localStorage.setItem('notificationsEnabled', isEnabled);
+            });
+        }
+    });
+</script>
+
+<!-- Script to control the Notification Owl according to the status of the notification switch -->
+<script>
+    document.getElementById('notificationToggle').addEventListener('change', function() {
+        const notificationOwl = document.getElementById('notificationOwl');
+        if(this.checked) {
+            notificationOwl.src = '/image/awakeOwl.PNG';
+        } else {
+            notificationOwl.src = '/image/sleepingOwl.PNG';
+        }
+    });
+
+</script>
 
 <script type="text/javascript">
 

@@ -56,9 +56,9 @@
         const connectingElement = document.querySelector('.connecting');
         const chatArea = document.querySelector('#chat-messages');
 
-        let stompClient = null;
-        let username = null;
-        let firstName = null;
+        let stompClient = globalStompClient;
+        let username = globalUsername;
+        let firstName = globalFirstName;
         let selectedUserId = null;
 
         // for pagination
@@ -124,7 +124,7 @@
             listItem.id = user.username;
 
             const userImage = document.createElement('img');
-            userImage.src = '../img/user_icon.png';
+            userImage.src = '/image/user_icon.png';
             userImage.alt = user.firstName;
 
             const usernameSpan = document.createElement('span');
@@ -239,8 +239,6 @@
                 chatArea.scrollTop = chatArea.scrollHeight;
             }
 
-            // only shows a notification when you are in the chatroom and currently in another chat with a third party member
-            // so if you are chatting with someone and another person sends you a message, you will get notified
             if (selectedUserId && selectedUserId !== message.senderId) {
                 showNotification(message.content);
             }
@@ -275,6 +273,7 @@
             }
         }
 
+        /*
         function requestNotificationPermission() {
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
@@ -294,6 +293,10 @@
                 });
             }
         }
+
+         */
+        requestNotificationPermission();
+
 
         document.getElementById('loadMoreBtn').addEventListener('click', function() {
             currentPage++; // Erhöht die aktuelle Seite, um die nächste Seite zu laden
