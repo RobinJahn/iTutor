@@ -9,9 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +36,27 @@ public class ChatMessageService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
         return chatId.map(id -> repository.findByChatId(id, pageable))
                         .orElse(Page.empty());
+    }
+
+    public Page<ChatMessage> findAllMessages(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
+        return repository.findAllByOrderByTimestampDesc(pageable);
+    }
+
+    public long countTotalMessages() {
+        return repository.count();
+    }
+
+    public long countMessagesByChatId(String chatId) {
+        return repository.countByChatId(chatId);
+    }
+
+    public Optional<ChatMessage> findById(long id) {
+        return repository.findById(id);
+    }
+
+    @Transactional
+    public void deleteById(long id) {
+        repository.deleteById(id);
     }
 }
