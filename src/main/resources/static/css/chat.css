@@ -20,6 +20,13 @@ body {
     background-color: #0056b3;
 }
 
+#chat-mascot {
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
 .chat-container {
     display: flex;
     width: 75%;
@@ -50,6 +57,7 @@ body {
 
 .chat-container-wrapper {
     display: flex;
+    vertical-align: middle;
     align-items: center;
     justify-content: start;
     min-height: 100vh;
