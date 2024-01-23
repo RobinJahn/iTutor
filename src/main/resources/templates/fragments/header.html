@@ -18,6 +18,12 @@
 				<li class="nav-item" sec:authorize="hasAuthority('EXPERT')">
 					<a class="nav-link" th:href="@{/experts/guideline}" th:text="#{navbar.guideline}">Guideline</a>
 				</li>
+				<li class="nav-item active">
+					<a class="nav-link" th:href="@{/ai}" th:text="#{navbar.ai}">Chat with AI</a>
+				</li>
+				<li class="nav-item active">
+					<a class="nav-link" th:href="@{/aiTranslate}" th:text="#{navbar.ai.translate}">Translate a course</a>
+				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" th:text="#{navbar.language}" id="navbarDropdown" role="button"
 					   data-bs-toggle="dropdown" aria-expanded="false">

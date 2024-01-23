@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface CourseServiceI {
 
+    List<Course> getAllCourses();
     Page<Course> getAllCourses(Pageable pageable);
     Optional<Course> getCourseById(Long id);
     Course createCourse(Course course);

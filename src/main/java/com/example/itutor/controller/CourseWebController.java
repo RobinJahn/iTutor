@@ -4,15 +4,23 @@ import com.example.itutor.domain.Content;
 import com.example.itutor.domain.Course;
 import com.example.itutor.service.ContentServiceI;
 import com.example.itutor.service.CourseServiceI;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -91,6 +99,78 @@ public class CourseWebController {
         }
     }
 
+    @PostMapping("/upload")
+    public String uploadFile(@RequestParam Long courseId,
+                             @RequestParam("file") MultipartFile file,
+                             @RequestParam("fileDescription") String fileDescription, // Capture file description
+                             RedirectAttributes attributes) {
+        System.out.println("Uploading file: " + file.getOriginalFilename());
+        try {
+            // Retrieve the course by ID
+            Optional<Course> optionalCourse = courseService.getCourseById(courseId);
 
+            if (optionalCourse.isPresent()) {
+                Course course = optionalCourse.get();
+
+                Content content = getContentForFile(file, fileDescription, course);
+
+                // Save content to your database
+                contentService.createContent(content);
+
+                // Add the new content to the course
+                course.addContent(content);
+
+                // Update the course with the new content
+                courseService.updateCourse(courseId, course);
+
+                attributes.addFlashAttribute("success", "File uploaded successfully!");
+                return "redirect:/courses/" + courseId;
+            } else {
+                attributes.addFlashAttribute("error", "Course not found!");
+                return "redirect:/courses";
+            }
+        } catch (Exception e) {
+            attributes.addFlashAttribute("error", "File upload failed!");
+            return "redirect:/courses";
+        }
+    }
+
+    private static Content getContentForFile(MultipartFile file, String fileDescription, Course course) throws IOException {
+        Content content = new Content();
+        content.setTitle(file.getOriginalFilename());
+        content.setContentType(Content.ContentType.DOCUMENT);
+        content.setContentData(fileDescription);
+        content.setContentByteData(file.getBytes());
+        content.setFileName(file.getOriginalFilename());
+        content.setMimeType(file.getContentType());
+
+        // Associate content with the course
+        content.setCourse(course);
+        return content;
+    }
+
+
+
+    @GetMapping("/files/{contentId}")
+    public ResponseEntity<Resource> getFile(@PathVariable Long contentId) {
+        try {
+            Content content = contentService.getContentById(contentId).isPresent() ? contentService.getContentById(contentId).get() : null;
+
+            if (content != null) {
+                ByteArrayResource resource = new ByteArrayResource(content.getContentByteData());
+
+                String contentType = content.getMimeType() != null ? content.getMimeType() : "application/octet-stream";
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + content.getFileName() + "\"")
+                        .body(resource);
+            }
+
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }

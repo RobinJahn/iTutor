@@ -24,4 +24,6 @@ public interface UserServiceI {
 
 	User findByUsername(String username);
 
+	User getCurrentUser();
+
 }

@@ -63,4 +63,15 @@ public class Course implements Serializable {
         contents.add(content);
         content.setCourse(this);
     }
+
+    public String getCourseAsText() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Course: ").append(title).append("\n");
+        sb.append("Description: ").append(description).append("\n");
+        sb.append("Contents: ").append("\n");
+        for (Content content : contents) {
+            sb.append(content.getContentAsString()).append("\n");
+        }
+        return sb.toString();
+    }
 }

@@ -17,6 +17,12 @@ public class CourseServiceImpl implements CourseServiceI {
     public CourseServiceImpl(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
+
+    @Override
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
+    }
+
     @Override
     public Page<Course> getAllCourses(Pageable pageable) {
         return courseRepository.findAll(pageable);
