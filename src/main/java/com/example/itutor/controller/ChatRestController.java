@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -28,6 +29,34 @@ public class ChatRestController {
         return ResponseEntity.ok(messages);
     }
 
+    @PostMapping("/messages")
+    public ResponseEntity<ChatMessage> sendMessage(@RequestBody ChatMessage chatMessage) {
+        ChatMessage savedMessage = chatMessageService.save(chatMessage);
+        return ResponseEntity.ok(savedMessage);
+    }
+
+    @PutMapping("/messages/{id}")
+    public ResponseEntity<ChatMessage> updateMessage(@PathVariable long id, @RequestBody ChatMessage updatedMessage) {
+        return chatMessageService.findById(id)
+                .map(message -> {
+                    message.setContent(updatedMessage.getContent());
+                    // Update other fields as necessary
+                    return ResponseEntity.ok(chatMessageService.save(message));
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/messages/{id}")
+    public ResponseEntity<Void> deleteMessage(@PathVariable long id) {
+        Optional<ChatMessage> message = chatMessageService.findById(id);
+        if (message.isPresent()) {
+            chatMessageService.deleteById(id);
+            return ResponseEntity.ok().build();  // Explicitly returning ResponseEntity<Void>
+        } else {
+            return ResponseEntity.notFound().build();  // Explicitly returning ResponseEntity<Void>
+        }
+    }
+
     // Get the count of all messages in the system
     @GetMapping("/messages/count")
     public ResponseEntity<Long> getTotalMessageCount() {
@@ -44,9 +73,15 @@ public class ChatRestController {
         return ResponseEntity.ok(messageCount);
     }
 
-    // man soll sich die nachrichten holen können mit userID also welcher user gerade eingeloggt ist soll seinen nachrichten verlauf sehen
+    // get the chat between two users, using their username
+    @GetMapping("/messages/{userName1}/{userName2}")
+    public ResponseEntity<List<ChatMessage>> getChatBetweenUsers(
+            @PathVariable String userName1,
+            @PathVariable String userName2,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
 
-    // ist ja REST also muss man Update delete, post undso also andere methoden auch machen
-
-    // more endpoints
+        Page<ChatMessage> messagesPage = chatMessageService.findChatMessages(userName1, userName2, page, size);
+        return ResponseEntity.ok(messagesPage.getContent());
+    }
 }
