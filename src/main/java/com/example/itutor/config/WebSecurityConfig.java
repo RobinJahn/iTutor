@@ -64,7 +64,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-
+                        .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/home")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/error")).permitAll()
@@ -88,6 +88,8 @@ public class WebSecurityConfig {
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll)
