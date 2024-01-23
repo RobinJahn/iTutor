@@ -1,19 +1,70 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example </title>
+    <title>Login</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
 </head>
 <body>
-<div th:if="${param.error}">
-    Invalid username and password.
+<div class="container mt-5">
+    <div class="justify-content-center">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-auto">
+                            <img class="img-fluid" th:src="@{/image/LoginOwl.png}" alt="Mascot">
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <!-- Login form -->
+                            <div>
+                                <form th:action="@{/login}" method="post">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-center" th:text="#{login.signIn}">Sign In</h3>
+
+                                        <div class="mb-3">
+                                            <label for="username" th:text="#{login.username}"
+                                                   class="form-label">Username:</label>
+                                            <input type="text" id="username" name="username" class="form-control"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" th:text="#{login.password}"
+                                                   class="form-label">Password:</label>
+                                            <input type="password" id="password" name="password" class="form-control"/>
+                                        </div>
+                                        <div class="d-grid gap-2">
+                                            <input type="submit" th:value="#{login.signIn}"
+                                                   class="btn btn-primary mb-2"/>
+                                            <a href="/" class="btn btn-secondary" th:text="#{login.return}">Return to Home</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="d-block mt-3">
+                    <!-- Error and logout messages -->
+                    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                        Invalid username and password.
+                    </div>
+                    <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                        You have been logged out.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
-<form th:action="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+
 </body>
 </html>

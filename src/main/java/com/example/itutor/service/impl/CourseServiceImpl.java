@@ -3,6 +3,8 @@ package com.example.itutor.service.impl;
 import com.example.itutor.domain.Course;
 import com.example.itutor.repository.CourseRepository;
 import com.example.itutor.service.CourseServiceI;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +17,15 @@ public class CourseServiceImpl implements CourseServiceI {
     public CourseServiceImpl(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
+
     @Override
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
+    }
+
+    @Override
+    public Page<Course> getAllCourses(Pageable pageable) {
+        return courseRepository.findAll(pageable);
     }
 
     @Override

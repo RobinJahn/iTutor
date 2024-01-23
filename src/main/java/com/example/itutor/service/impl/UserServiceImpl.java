@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import com.example.itutor.domain.Status;
 import com.example.itutor.domain.User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.example.itutor.repository.UserRepositoryI;
 import com.example.itutor.service.UserServiceI;
@@ -63,5 +65,34 @@ public class UserServiceImpl implements UserServiceI {
 	public void delete(User user) {
 		// TODO Auto-generated method stub
 		userRepository.delete(user);
+	}
+
+	@Override
+	public User findByUsername(String username) {
+		//return user or null
+		Optional<User> user = userRepository.findByUsername(username);
+		if(user.isPresent()) {
+			return user.get();
+		}
+		return null;
+	}
+
+	@Override
+	public User getCurrentUser() {
+		//get authentication and with that the current user
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentUserName = null;
+		if(authentication.isAuthenticated()) {
+			Object principal = authentication.getPrincipal();
+			if(principal instanceof org.springframework.security.core.userdetails.UserDetails) {
+				currentUserName = ((org.springframework.security.core.userdetails.UserDetails) principal).getUsername();
+			}else {
+				currentUserName = principal.toString();
+			}
+		}
+		if(currentUserName == null) {
+			return null;
+		}
+		return findByUsername(currentUserName);
 	}
 }

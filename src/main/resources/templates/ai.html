@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        .message-bubble {
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .user-message {
+            background-color: #c1c1c1;
+        }
+
+        .system-message {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .card-body {
+            max-height: 70vh; /* Maximum height */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+    </style>
+</head>
+
+<body>
+<section layout:fragment="mybody">
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header" th:text="#{ai.header}">Chat with AI</div>
+            <div class="card-body">
+                <th:block th:each="message, iterStat : ${aiMessages}">
+                    <div class="d-flex " th:classappend="${iterStat.even} ? 'flex-row-reverse' : 'flex-row'">
+                        <div class="col-8" >
+                            <div th:class="'message-bubble ' + (${iterStat.even} ? 'system-message' : 'user-message')"
+                                 th:text="${message}">
+                                Message content
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+
+
+            </div>
+
+            <div class="m-3">
+                <form action="/ai/message" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="message" name="message"
+                               placeholder="Type your message...">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-auto">
+                            <button type="submit" class="btn btn-primary mt-2" th:text="#{ai.send}">Send</button>
+                        </div>
+                        <div class="col text-right">
+                            <button type="button" class="btn btn-danger mt-2" onclick="location.href='/ai/delete'" th:text="#{ai.restart}">Restart Chat</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
