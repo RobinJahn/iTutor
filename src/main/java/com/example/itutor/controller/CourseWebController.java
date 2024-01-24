@@ -200,4 +200,21 @@ public class CourseWebController {
             return "redirect:/courses";
         }
     }
+
+    @PostMapping("/courses/updateContent")
+    public ResponseEntity<?> updateContent(@RequestBody Content content) {
+        System.out.println("updateContent");
+        //get content to update
+        Optional<Content> contentToUpdate = contentService.getContentById(content.getContentID());
+        if (contentToUpdate.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        //update tile and description
+        contentToUpdate.get().setTitle(content.getTitle());
+        contentToUpdate.get().setContentData(content.getContentData());
+
+        Content updatedContent = contentService.updateContent(content.getContentID(), contentToUpdate.get());
+        return updatedContent != null ? ResponseEntity.ok(updatedContent) : ResponseEntity.notFound().build();
+    }
+
 }

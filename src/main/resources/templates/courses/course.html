@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
 </head>
@@ -18,22 +19,8 @@
 
             <!-- Iterating over contents of the course -->
             <div th:each="content : ${contents}">
-                <div class="row">
-                    <div class="col">
-                        <!-- Content fragment -->
-                        <div th:insert="~{courses/contentFragment :: contentFragment (content=${content})}"></div>
-                    </div>
-                    <div class="col-auto mt-3">
-                        <!-- Delete button visible only to experts -->
-                        <div class="d-flex" sec:authorize="hasAuthority('EXPERT')">
-                            <form th:action="@{/courses/removeContent}" method="post">
-                                <input type="hidden" name="courseId" th:value="${course.courseId}"/>
-                                <input type="hidden" name="contentId" th:value="${content.contentID}"/>
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <!-- Content fragment -->
+                <div th:insert="~{courses/contentFragment :: contentFragment (content=${content})}"></div>
             </div>
 
             <!-- Pagination controls for contents -->
