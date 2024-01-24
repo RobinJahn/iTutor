@@ -1,5 +1,6 @@
 package com.example.itutor.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -33,17 +34,28 @@ public class User {
 
     private boolean active = true;
 
+    // Used for Chat feature to see if a user is currently online
+    private Status status;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name="userrole",
             joinColumns = @JoinColumn(name="iduser"),
             inverseJoinColumns = @JoinColumn(name="idrole")
     )
+    @JsonIgnore
     private List<Role> roles = new ArrayList<Role>();
 
 
 
     //Getters + Setters
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
     public long getId() {
         return id;
     }

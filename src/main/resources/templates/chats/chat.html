@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8" />
     <title>Chat</title>
@@ -8,37 +8,40 @@
 <body>
 <section layout:fragment="mybody">
 
-    <div id="username-page">
-        <div class="username-page-container">
-            <h1 class="title">Type your username to enter the Chatroom</h1>
-            <form id="usernameForm" name="usernameForm">
-                <div class="form-group">
-                    <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="accent username-submit">Start Chatting</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <div id="chat-page" class="hidden">
-        <div class="chat-container">
-            <div class="chat-header">
-                <h2>iTutor Chat Demo</h2>
-            </div>
-            <div class="connecting">
-                Connecting...
-            </div>
-            <ul id="messageArea"></ul>
-            <form id="messageForm" name="messageForm">
-                <div class="form-group">
-                    <div class="input-group clearfix">
-                        <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control" />
-                        <button type="submit" class="primary">Send</button>
-                    </div>
+    <div class="chat-container-wrapper">
+        <!-- image as banner -->
+
+        <h2 th:text="#{chat}">Chatroom iTutor - Chat with Experts and colleagues here!</h2>
+
+        <div class="banner-image">
+            <img src="/image/chattingOwls1.png" alt="chatting owls"/>
+        </div>
+
+        <div class="chat-container hidden" id="chat-page">
+            <div class="users-list">
+                <div class="users-list-container">
+                    <h2 th:text="#{chat.onlineUsers}">Online Users</h2>
+                    <ul id="connectedUsers">
+                    </ul>
                 </div>
-            </form>
+                <div>
+                    <p id="connected-user-firstName"></p>
+                </div>
+            </div>
+
+            <div class="chat-area">
+                <button id="loadMoreBtn" class="load-more-btn">Load More Messages</button>
+                <div class="chat-area" id="chat-messages">
+                </div>
+
+                <form id="messageForm" name="messageForm" class="hidden">
+                    <div class="message-input">
+                        <input autocomplete="off" type="text" id="message" th:placeholder="#{chat.typemessage}">
+                        <button type="submit" class="btn btn-primary" th:text="#{button.send}">Send</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -47,127 +50,237 @@
     <script>
         'use strict';
 
-        var usernamePage = document.querySelector("#username-page");
-        var chatPage = document.querySelector("#chat-page");
-        var usernameForm = document.querySelector("#usernameForm");
-        var messageForm = document.querySelector('#messageForm');
-        var messageInput = document.querySelector('#message');
-        var messageArea = document.querySelector('#messageArea');
-        var connectingElement = document.querySelector('.connecting');
+        const chatPage = document.querySelector('#chat-page');
+        const messageForm = document.querySelector('#messageForm');
+        const messageInput = document.querySelector('#message');
+        const connectingElement = document.querySelector('.connecting');
+        const chatArea = document.querySelector('#chat-messages');
 
-        // Websocket Client and username initialization
-        var stompClient = null;
-        var username = null;
+        let stompClient = globalStompClient;
+        let username = globalUsername;
+        let firstName = globalFirstName;
+        let selectedUserId = null;
 
-        // Colors for the users
-        var colors = [
-            '#2196F3', '#32c787', '#00BCD4', '#ff5652',
-            '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
-        ];
+        // for pagination
+        let currentPage = 0;
+        const pageSize = 10;
 
+        async function getCurrentUser(){
+            try {
+                const response = await fetch('/user/me');
+                if(response.ok) {
+                    const user = await response.json();
+                    username = user.username;
+                    firstName = user.firstName;
 
-        function connect(event) {
-            username = document.querySelector('#name').value.trim();
-            if (username) {
-                console.log("i get into the connect and the username is", username);
-                usernamePage.classList.add('hidden');
-                chatPage.classList.remove('hidden');
-                console.log("i get over the hidden parts");
+                    if (username && firstName) {
+                        chatPage.classList.remove('hidden');
 
-                var socket = new SockJS('/ws');
-                stompClient = Stomp.over(socket);
-
-                console.log("after connection");
-
-                stompClient.connect({}, onConnected, onError);
+                        const socket = new SockJS('/ws');
+                        stompClient = Stomp.over(socket);
+                        stompClient.connect({}, onConnected, onError);
+                    }
+                } else {
+                    console.error('failed to load user');
+                }
+            } catch (error) {
+                console.error('failed to load user', error);
             }
-            event.preventDefault();
         }
+
+        getCurrentUser();
+
 
         function onConnected() {
-            // Subscribe to the public topic
-            stompClient.subscribe('/topic/public', onMessageReceived);
+            stompClient.subscribe(`/user/${username}/queue/messages`, onMessageReceived);
+            stompClient.subscribe(`/user/public`, onMessageReceived);
 
-            // Tell the username to the server
-            stompClient.send('/app/chat.addUser',
-                {},
-                JSON.stringify({sender: username, type: 'JOIN'})
-            );
-            connectingElement.classList.add('hidden');
+            document.querySelector('#connected-user-firstName').textContent = firstName;
+            findAndDisplayConnectedUsers().then();
+
+            requestNotificationPermission();
         }
+
+        async function findAndDisplayConnectedUsers() {
+            const connectedUsersResponse = await fetch('/users');
+            let connectedUsers = await connectedUsersResponse.json();
+            connectedUsers = connectedUsers.filter(user => user.username !== username);
+            const connectedUsersList = document.getElementById('connectedUsers');
+            connectedUsersList.innerHTML = '';
+
+            connectedUsers.forEach(user => {
+                appendUserElement(user, connectedUsersList);
+                if (connectedUsers.indexOf(user) < connectedUsers.length - 1) {
+                    const separator = document.createElement('li');
+                    separator.classList.add('separator');
+                    connectedUsersList.appendChild(separator);
+                }
+            });
+        }
+
+        function appendUserElement(user, connectedUsersList) {
+            const listItem = document.createElement('li');
+            listItem.classList.add('user-item');
+            listItem.id = user.username;
+
+            const userImage = document.createElement('img');
+            userImage.src = '/image/user_icon.png';
+            userImage.alt = user.firstName;
+
+            const usernameSpan = document.createElement('span');
+            usernameSpan.textContent = user.firstName;
+
+            const receivedMsgs = document.createElement('span');
+            receivedMsgs.textContent = '0';
+            receivedMsgs.classList.add('nbr-msg', 'hidden');
+
+            listItem.appendChild(userImage);
+            listItem.appendChild(usernameSpan);
+            listItem.appendChild(receivedMsgs);
+
+            listItem.addEventListener('click', userItemClick);
+
+            connectedUsersList.appendChild(listItem);
+        }
+
+        function userItemClick(event) {
+            document.querySelectorAll('.user-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            messageForm.classList.remove('hidden');
+
+            const clickedUser = event.currentTarget;
+            clickedUser.classList.add('active');
+
+            selectedUserId = clickedUser.getAttribute('id');
+            fetchAndDisplayUserChat(0, pageSize).then();
+
+            const nbrMsg = clickedUser.querySelector('.nbr-msg');
+            nbrMsg.classList.add('hidden');
+            nbrMsg.textContent = '0';
+
+        }
+
+        function displayMessage(senderId, content, position = 'append') {
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message');
+            if (senderId === username) {
+                messageContainer.classList.add('sender');
+            } else {
+                messageContainer.classList.add('receiver');
+            }
+            const message = document.createElement('p');
+            message.textContent = content;
+            messageContainer.appendChild(message);
+
+            if (position === "prepend") {
+                chatArea.prepend(messageContainer);
+            } else {
+                chatArea.appendChild(messageContainer)
+            }
+        }
+
+        async function fetchAndDisplayUserChat() {
+            const userChatResponse = await fetch(`/messages/${username}/${selectedUserId}?page=${currentPage}&size=${pageSize}`);
+            if (userChatResponse.ok) {
+                const userChat = await userChatResponse.json();
+                console.log("content ist: " + userChat.content);
+                chatArea.innerHTML = '';
+
+                const reversedContent = userChat.content.reverse();
+                console.log("reversed content: " + reversedContent);
+
+                reversedContent.forEach(chat => {
+                    displayMessage(chat.senderId, chat.content);
+                });
+                if (!userChat.last) {
+                    document.getElementById('loadMoreBtn').style.display = 'block';
+                } else {
+                    document.getElementById('loadMoreBtn').style.display = 'none';
+                }
+            } else {
+                console.error('Failed to load messages');
+            }
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
 
         function onError() {
-            connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh the page and try again!';
-            connectingElement.style.color = "red";
+            connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
+            connectingElement.style.color = 'red';
         }
 
+
         function sendMessage(event) {
-            var messageContent = messageInput.value.trim();
-            if(messageContent && stompClient) {
-                var chatMessage = {
-                    sender: username,
-                    content: messageContent,
-                    type: 'CHAT'
+            const messageContent = messageInput.value.trim();
+            if (messageContent && stompClient) {
+                const chatMessage = {
+                    senderId: username,
+                    recipientId: selectedUserId,
+                    content: messageInput.value.trim(),
+                    timestamp: new Date()
                 };
-                stompClient.send(
-                    '/app/chat.sendMessage',
-                    {},
-                    JSON.stringify(chatMessage)
-                );
+                stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+                displayMessage(username, messageInput.value.trim());
                 messageInput.value = '';
             }
+            chatArea.scrollTop = chatArea.scrollHeight;
             event.preventDefault();
         }
 
-        function onMessageReceived(payload) {
-            var message = JSON.parse(payload.body);
 
-            var messageElement = document.createElement('li');
+        async function onMessageReceived(payload) {
+            await findAndDisplayConnectedUsers();
+            console.log('Message received', payload);
 
-            if(message.type === 'JOIN') {
-                messageElement.classList.add('event-message');
-                message.content = message.sender + ' has joined!';
-            } else if (message.type === 'LEAVE') {
-                messageElement.classList.add('event-message');
-                message.content = message.sender + ' has left!';
+            const message = JSON.parse(payload.body);
+            if (selectedUserId && selectedUserId === message.senderId) {
+                displayMessage(message.senderId, message.content);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            if (selectedUserId && selectedUserId !== message.senderId) {
+                showNotification(message.content);
+            }
+
+            if (selectedUserId) {
+                document.querySelector(`#${selectedUserId}`).classList.add('active');
             } else {
-                messageElement.classList.add('chat-message');
-
-                var avatarElement = document.createElement('i');
-                var avatarText = document.createTextNode(message.sender[0]);
-                avatarElement.appendChild(avatarText);
-                avatarElement.style['background-color'] = getAvatarColor(message.sender);
-
-                messageElement.appendChild(avatarElement);
-
-                var usernameElement = document.createElement('span');
-                var usernameText = document.createTextNode(message.sender);
-                usernameElement.appendChild(usernameText);
-                messageElement.appendChild(usernameElement);
+                messageForm.classList.add('hidden');
             }
 
-            var textElement = document.createElement('p');
-            var messageText = document.createTextNode(message.content);
-            textElement.appendChild(messageText);
-
-            messageElement.appendChild(textElement);
-
-            messageArea.appendChild(messageElement);
-            messageArea.scrollTop = messageArea.scrollHeight;
-        }
-
-        function getAvatarColor(messageSender) {
-            var hash = 0;
-            for (var i = 0; i < messageSender.length; i++) {
-                hash = 31 * hash + messageSender.charCodeAt(i);
+            const notifiedUser = document.querySelector(`#${message.senderId}`);
+            if (notifiedUser && !notifiedUser.classList.contains('active')) {
+                const nbrMsg = notifiedUser.querySelector('.nbr-msg');
+                nbrMsg.classList.remove('hidden');
+                nbrMsg.textContent = '';
             }
-            var index = Math.abs(hash % colors.length);
-            return colors[index];
         }
 
-        usernameForm.addEventListener('submit', connect, true);
+        async function loadMoreMessages(page, size) {
+            const response = await fetch(`/messages/${username}/${selectedUserId}?page=${page}&size=${size}`);
+            if (response.ok) {
+                const messagesPage = await response.json();
+                messagesPage.content.forEach(msg => {
+                    displayMessage(msg.senderId, msg.content, 'prepend');
+                });
+                // deactivates the button when no more messages can be loaded
+                if (messagesPage.last) {
+                    document.getElementById('loadMoreBtn').style.display = 'none';
+                }
+            } else {
+                console.error('Failed to load more messages');
+            }
+        }
+
+        requestNotificationPermission();
+
+        document.getElementById('loadMoreBtn').addEventListener('click', function() {
+            currentPage++; // Erhöht die aktuelle Seite, um die nächste Seite zu laden
+            loadMoreMessages(currentPage, pageSize);
+        });
+
         messageForm.addEventListener('submit', sendMessage, true);
-
 
     </script>
 </section>

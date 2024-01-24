@@ -7,6 +7,8 @@ import com.example.itutor.repository.CourseRepository;
 import com.example.itutor.repository.UserActivityRepositoryI;
 import com.example.itutor.service.CourseServiceI;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,9 +24,15 @@ public class CourseServiceImpl implements CourseServiceI {
         this.courseRepository = courseRepository;
         this.userActivityRepositoryI = userActivityRepositoryI;
     }
+
     @Override
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
+    }
+
+    @Override
+    public Page<Course> getAllCourses(Pageable pageable) {
+        return courseRepository.findAll(pageable);
     }
 
     @Override

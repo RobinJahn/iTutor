@@ -1,6 +1,7 @@
 package com.example.itutor.config;
 
 import com.example.itutor.domain.Role;
+import com.example.itutor.domain.Status;
 import com.example.itutor.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +23,7 @@ public class MyUserDetails implements UserDetails {
     private String userName;
     private String password;
     private boolean active;
+    private Status status;
     private List<GrantedAuthority> authorities;
 
     private List<Role> roles;
@@ -32,8 +34,10 @@ public class MyUserDetails implements UserDetails {
         // TODO Auto-generated constructor stub
         this.userName = user.getUsername();
         this.password = user.getPassword();
+        this.status = user.getStatus();
         System.out.println("password of the user is=" + password);
         System.out.println("userName of the user is=" + this.userName);
+        System.out.println("the user: " + userName + " has the status: " + status);
         this.active = user.isActive();
 
         //getting authorities from the DB
