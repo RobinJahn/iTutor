@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
 </head>
@@ -49,7 +49,7 @@
 
 
             <!-- Form for adding new course -->
-            <div class="card">
+            <div class="card" sec:authorize="hasRole('EXPERT')">
                 <div class="card-body">
                     <h2 class="card-title" th:text="#{courses.AddNew}">Add New Course</h2>
                     <form th:action="@{/courses/create}" method="post">

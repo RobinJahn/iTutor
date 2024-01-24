@@ -1,4 +1,5 @@
 package com.example.itutor.controller;
+
 import com.example.itutor.domain.Content;
 import com.example.itutor.domain.Course;
 import com.example.itutor.service.ContentServiceI;
@@ -132,9 +133,18 @@ public class CourseRESTController {
             return ResponseEntity.notFound().build();
         }
         //update the content
-        contentToUpdate.get().setTitle(content.getTitle());
-        contentToUpdate.get().setContentType(content.getContentType());
-        contentToUpdate.get().setContentData(content.getContentData());
+        if (content.getTitle() != null && !content.getTitle().isEmpty()) {
+            contentToUpdate.get().setTitle(content.getTitle());
+        }
+        if (content.getContentType() != null && !content.getContentType().isEmpty()) {
+            contentToUpdate.get().setContentType(content.getContentType());
+        }
+        if (content.getContentData() != null && !content.getContentData().isEmpty()) {
+            contentToUpdate.get().setContentData(content.getContentData());
+        }
+
+        //save the updated content
+        Content updatedContent = contentService.updateContent(contentId, contentToUpdate.get());
 
         return ResponseEntity.ok(course.get());
     }

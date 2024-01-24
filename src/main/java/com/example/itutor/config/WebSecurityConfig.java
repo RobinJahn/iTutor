@@ -78,10 +78,16 @@ public class WebSecurityConfig {
 
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/students/motivation")).hasAuthority("STUDENT")
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/experts/guideline")).hasAuthority("EXPERT")
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/courses/create")).hasAuthority("EXPERT")
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/courses/addContent")).hasAuthority("EXPERT")
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/courses/upload")).hasAuthority("EXPERT")
+
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/statistics")).hasAuthority("RESEARCHER")
 
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/css/**")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/js/**")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/images/**")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/webjars/**")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/image/**")).permitAll()
 
 

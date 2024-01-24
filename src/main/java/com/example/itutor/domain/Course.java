@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="course")
+@Table(name = "course")
 public class Course implements Serializable {
 
     @Id
@@ -62,6 +62,19 @@ public class Course implements Serializable {
     public void addContent(Content content) {
         contents.add(content);
         content.setCourse(this);
+    }
+
+    public boolean removeContent(Long contentId) {
+        boolean success = false;
+        for (Content content : contents) {
+            if (content.getContentID().equals(contentId)) {
+                contents.remove(content);
+                content.setCourse(null);
+                success = true;
+                break;
+            }
+        }
+        return success;
     }
 
     public String getCourseAsText() {

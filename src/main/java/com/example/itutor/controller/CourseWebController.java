@@ -150,7 +150,6 @@ public class CourseWebController {
     }
 
 
-
     @GetMapping("/files/{contentId}")
     public ResponseEntity<Resource> getFile(@PathVariable Long contentId) {
         try {
@@ -171,6 +170,51 @@ public class CourseWebController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+
+    @PostMapping("/removeContent")
+    public String removeContentFromCourse(@RequestParam Long courseId, @RequestParam Long contentId, RedirectAttributes redirectAttributes) {
+        // Retrieve the course by ID
+        Optional<Course> optionalCourse = courseService.getCourseById(courseId);
+
+        if (optionalCourse.isPresent()) {
+            Course course = optionalCourse.get();
+
+            // Remove the content from the course
+            boolean success = course.removeContent(contentId);
+
+            if (!success) {
+                redirectAttributes.addFlashAttribute("error", "Content not found!");
+                return "redirect:/courses/" + courseId;
+            }
+
+            // Update the course with the new content
+            contentService.deleteContent(contentId);
+            courseService.updateCourse(courseId, course);
+
+            redirectAttributes.addFlashAttribute("success", "Content removed successfully!");
+            return "redirect:/courses/" + courseId;
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Course not found!");
+            return "redirect:/courses";
+        }
+    }
+
+    @PostMapping("/courses/updateContent")
+    public ResponseEntity<?> updateContent(@RequestBody Content content) {
+        System.out.println("updateContent");
+        //get content to update
+        Optional<Content> contentToUpdate = contentService.getContentById(content.getContentID());
+        if (contentToUpdate.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        //update tile and description
+        contentToUpdate.get().setTitle(content.getTitle());
+        contentToUpdate.get().setContentData(content.getContentData());
+
+        Content updatedContent = contentService.updateContent(content.getContentID(), contentToUpdate.get());
+        return updatedContent != null ? ResponseEntity.ok(updatedContent) : ResponseEntity.notFound().build();
     }
 
 }

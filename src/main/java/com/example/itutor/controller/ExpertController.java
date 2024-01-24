@@ -56,7 +56,8 @@ public class ExpertController {
     @RequestMapping(value = "/experts/add/process")
     public String addExpert(@ModelAttribute @Valid Expert expertRequest,
                             BindingResult result,
-                            RedirectAttributes attr) {
+                            RedirectAttributes attr,
+                            Model model) {
 
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
@@ -73,6 +74,11 @@ public class ExpertController {
 
         // Save the expert and get the created entity
         User createdExpert = userService.saveUser(expertRequest);
+
+        if (createdExpert == null) {
+            model.addAttribute("error", "Error creating expert!");
+            return "experts/expertSignup";
+        }
 
         emailService.sendEmail(createdExpert.getEmail());
         System.out.println("Saved Expert:" + createdExpert);
