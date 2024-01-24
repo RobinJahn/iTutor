@@ -18,7 +18,22 @@
 
             <!-- Iterating over contents of the course -->
             <div th:each="content : ${contents}">
-                <div th:insert="~{courses/contentFragment :: contentFragment (content=${content})}"></div>
+                <div class="row">
+                    <div class="col">
+                        <!-- Content fragment -->
+                        <div th:insert="~{courses/contentFragment :: contentFragment (content=${content})}"></div>
+                    </div>
+                    <div class="col-auto mt-3">
+                        <!-- Delete button visible only to experts -->
+                        <div class="d-flex" sec:authorize="hasAuthority('EXPERT')">
+                            <form th:action="@{/courses/removeContent}" method="post">
+                                <input type="hidden" name="courseId" th:value="${course.courseId}"/>
+                                <input type="hidden" name="contentId" th:value="${content.contentID}"/>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Pagination controls for contents -->
@@ -26,16 +41,22 @@
                 <div>
                     <ul class="pagination mt-3">
                         <li class="page-item" th:classappend="${contents.first} ? 'disabled'">
-                            <a class="page-link" th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number - 1}, size=${contents.size})}">&laquo; Previous</a>
+                            <a class="page-link"
+                               th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number - 1}, size=${contents.size})}">&laquo;
+                                Previous</a>
                         </li>
 
                         <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, contents.totalPages - 1)}"
                             th:classappend="${pageNum == contents.number} ? 'active' : ''">
-                            <a class="page-link" th:href="@{/courses/{id}(id=${course.courseId}, page=${pageNum}, size=${contents.size})}" th:text="${pageNum + 1}"></a>
+                            <a class="page-link"
+                               th:href="@{/courses/{id}(id=${course.courseId}, page=${pageNum}, size=${contents.size})}"
+                               th:text="${pageNum + 1}"></a>
                         </li>
 
                         <li class="page-item" th:classappend="${contents.last} ? 'disabled'">
-                            <a class="page-link" th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number + 1}, size=${contents.size})}">Next &raquo;</a>
+                            <a class="page-link"
+                               th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number + 1}, size=${contents.size})}">Next
+                                &raquo;</a>
                         </li>
                     </ul>
                 </div>
@@ -43,7 +64,7 @@
 
 
             <!-- Form for adding content to course -->
-            <div class="card" sec:authorize="hasRole('EXPERT')">
+            <div class="card" sec:authorize="hasAuthority('EXPERT')">
                 <div class="card-body">
                     <h3 class="card-title" th:text="#{content.add}"> Add Content </h3>
                     <!-- Form for adding content to course -->
@@ -54,7 +75,8 @@
                         <!-- Input fields for content title and data -->
                         <div class="form-group">
                             <label for="contentTitle" th:text="#{content.title}">Content Title</label>
-                            <input type="text" class="form-control" id="contentTitle" name="contentTitle" th:placeholder="#{content.placeholder.title}">
+                            <input type="text" class="form-control" id="contentTitle" name="contentTitle"
+                                   th:placeholder="#{content.placeholder.title}">
                         </div>
                         <div class="form-group">
                             <label for="contentData" th:text="#{content.data}">Content Data</label>
@@ -69,7 +91,7 @@
 
 
             <!-- Form for uploading files to course -->
-            <div class="card mt-3" sec:authorize="hasRole('EXPERT')">
+            <div class="card mt-3" sec:authorize="hasAuthority('EXPERT')">
                 <div class="card-body">
                     <h3 class="card-title">Upload File</h3>
                     <form id="uploadForm" action="/courses/upload" method="post" enctype="multipart/form-data">
@@ -81,8 +103,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="fileDescription" >File Description</label>
-                            <textarea class="form-control" id="fileDescription" name="fileDescription" rows="3"></textarea>
+                            <label for="fileDescription">File Description</label>
+                            <textarea class="form-control" id="fileDescription" name="fileDescription"
+                                      rows="3"></textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary mt-3">Upload</button>
@@ -98,7 +121,7 @@
 </body>
 
 <script>
-    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+    document.getElementById('uploadForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
 
         var formData = new FormData(this);

@@ -150,7 +150,6 @@ public class CourseWebController {
     }
 
 
-
     @GetMapping("/files/{contentId}")
     public ResponseEntity<Resource> getFile(@PathVariable Long contentId) {
         try {
@@ -173,4 +172,32 @@ public class CourseWebController {
         }
     }
 
+
+    @PostMapping("/removeContent")
+    public String removeContentFromCourse(@RequestParam Long courseId, @RequestParam Long contentId, RedirectAttributes redirectAttributes) {
+        // Retrieve the course by ID
+        Optional<Course> optionalCourse = courseService.getCourseById(courseId);
+
+        if (optionalCourse.isPresent()) {
+            Course course = optionalCourse.get();
+
+            // Remove the content from the course
+            boolean success = course.removeContent(contentId);
+
+            if (!success) {
+                redirectAttributes.addFlashAttribute("error", "Content not found!");
+                return "redirect:/courses/" + courseId;
+            }
+
+            // Update the course with the new content
+            contentService.deleteContent(contentId);
+            courseService.updateCourse(courseId, course);
+
+            redirectAttributes.addFlashAttribute("success", "Content removed successfully!");
+            return "redirect:/courses/" + courseId;
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Course not found!");
+            return "redirect:/courses";
+        }
+    }
 }

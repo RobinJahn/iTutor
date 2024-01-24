@@ -86,6 +86,8 @@ public class WebSecurityConfig {
 
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/css/**")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/js/**")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/images/**")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/webjars/**")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(handlerMappingIntrospector, "/image/**")).permitAll()
 
 
