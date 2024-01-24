@@ -1,9 +1,8 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.Holiday;
-import com.example.itutor.domain.UserActivity;
-import com.example.itutor.repository.UserActivityRepositoryI;
 import com.example.itutor.service.HolidayServiceI;
+import com.example.itutor.service.impl.UserActivityService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class StatisticsController {
@@ -23,10 +20,11 @@ public class StatisticsController {
     final HolidayServiceI holidayService;
 
     @Autowired
-    private UserActivityRepositoryI userActivityRepositoryI;
+    private UserActivityService userActivityService;
 
-    public StatisticsController(HolidayServiceI holidayService) {
+    public StatisticsController(HolidayServiceI holidayService, UserActivityService userActivityService) {
         this.holidayService = holidayService;
+        this.userActivityService = userActivityService;
     }
 
     @RequestMapping("/statistics/next-holiday")
@@ -53,30 +51,12 @@ public class StatisticsController {
         return "statistics/general";
     }
 
-    // Methode für detaillierte Statistik 1
-    @RequestMapping("/statistics/detail1")
-    public String showDetailedStatistics1(Model model) {
-        // something
-        return "statistics/details1";
-    }
 
-    // Methode für detaillierte Statistik 2
-    @RequestMapping("/statistics/detail2")
-    public String showDetailedStatistics2(Model model) {
-        // something
-        return "statistics/details2";
-    }
-
-    @RequestMapping(value = "/statistics/statistics", method = RequestMethod.GET)
-    public String showStatisticsPage() {
-        return "statistics/statistics";
-    }
 
     @RequestMapping("/statistics/userActivityCourseCreation")
-    public String showCourseCreationStats(Model model){
-        List<UserActivity> courseCreationActivities = userActivityRepositoryI.findByActivityType("Course Creation");
-        System.out.println("the UserActivity looks like this: " + courseCreationActivities);
-        model.addAttribute("courseCreations", courseCreationActivities);
+    public String showCourseCreationStats(Model model) {
+        Map<String, Long> userActivityCounts = userActivityService.getUserActivityCountsByType("Course Creation");
+        model.addAttribute("userActivityCounts", userActivityCounts);
         return "statistics/userActivityCourseCreation";
     }
 }

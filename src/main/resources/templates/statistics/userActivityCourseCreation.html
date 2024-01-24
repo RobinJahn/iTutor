@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Course-Creation-Stats</title>
 </head>
 <body>
-<h1>Course-Creation-Stats</h1>
-<div>
-    <ul>
-        <li th:each="activity : ${courseCreations}">
-            <span th:text="${activity.date}">Datum</span>
-            - von <span th:text="${activity.username}">Benutzer</span>
-            - Kurs-ID: <span th:text="${activity.courseId}">Kurs-ID</span>
-        </li>
-    </ul>
-</div>
+<section layout:fragment="mybody">
+    <div>
+        <h1>User Course Creation Statistics</h1>
+        <div th:if="${userActivityCounts.isEmpty()}">
+            No data available.
+        </div>
+        <ul th:unless="${userActivityCounts.isEmpty()}">
+            <li th:each="entry : ${userActivityCounts}">
+                <span th:text="${entry.key}">Username</span>:
+                <span th:text="${entry.value}">Count</span>
+            </li>
+        </ul>
+    </div>
+</section>
 </body>
 </html>

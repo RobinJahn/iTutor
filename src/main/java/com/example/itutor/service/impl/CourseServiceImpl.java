@@ -4,7 +4,7 @@ import com.example.itutor.config.MyUserDetails;
 import com.example.itutor.domain.Course;
 import com.example.itutor.domain.UserActivity;
 import com.example.itutor.repository.CourseRepository;
-import com.example.itutor.repository.UserActivityRepositoryI;
+import com.example.itutor.repository.UserActivityRepository;
 import com.example.itutor.service.CourseServiceI;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.data.domain.Page;
@@ -18,11 +18,11 @@ import java.util.Optional;
 @Service
 public class CourseServiceImpl implements CourseServiceI {
     private final CourseRepository courseRepository;
-    private final UserActivityRepositoryI userActivityRepositoryI;
+    private final UserActivityRepository userActivityRepository;
     //@Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, UserActivityRepositoryI userActivityRepositoryI) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserActivityRepository userActivityRepository) {
         this.courseRepository = courseRepository;
-        this.userActivityRepositoryI = userActivityRepositoryI;
+        this.userActivityRepository = userActivityRepository;
     }
 
     @Override
@@ -46,8 +46,8 @@ public class CourseServiceImpl implements CourseServiceI {
         courseRepository.save(course);
 
         String loggedInUserUsername = getLoggedInUsername();
-        UserActivity activity = new UserActivity(LocalDate.now(), "Course Creation", loggedInUserUsername, course.getCourseId());
-        userActivityRepositoryI.save(activity);
+        UserActivity activity = new UserActivity(LocalDate.now(), "Course Creation", loggedInUserUsername);
+        userActivityRepository.save(activity);
         return course;
     }
 
