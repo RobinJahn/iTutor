@@ -31,8 +31,13 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public User saveUser(User user) {
 		// TODO Auto-generated method stub
-		user.setStatus(Status.ONLINE);
-		return userRepository.save(user);
+		try {
+			user.setStatus(Status.ONLINE);
+			return userRepository.save(user);
+		}
+		catch(Exception e) {
+			return null;
+		}
 	}
 
 	@Override
