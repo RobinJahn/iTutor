@@ -20,19 +20,20 @@
                 <div class="row">
                     <!-- Students Section -->
                     <div class="col-sm-auto">
-                        <div th:replace="~{fragments/home_card_component :: userCard('home.students', '/students/signup', 'editStudentForm', 'home.enterUsername')}"></div>
+                        <div th:replace="~{fragments/home_card_component :: userCard('home.students', '/students', 'editStudentForm', 'home.enterUsername')}"></div>
                     </div>
 
                     <!-- Experts Section -->
                     <div class="col-sm-auto">
-                        <div th:replace="~{fragments/home_card_component :: userCard('home.experts', '/experts/signup', 'editExpertForm', 'home.enterUsername')}"></div>
+                        <div th:replace="~{fragments/home_card_component :: userCard('home.experts', '/experts', 'editExpertForm', 'home.enterUsername')}"></div>
                     </div>
 
                     <!-- Researchers Section -->
                     <div class="col-sm-auto">
-                        <div th:replace="~{fragments/home_card_component :: userCard('home.researcher', '/researchers/signup', 'editResearcherForm', 'home.enterUsername')}"></div>
+                        <div th:replace="~{fragments/home_card_component :: userCard('home.researcher', '/researchers', 'editResearcherForm', 'home.enterUsername')}"></div>
                     </div>
                 </div>
+
 
             </div>
         </div>
@@ -42,27 +43,6 @@
             <p th:text="${success}"></p>
         </div>
     </div>
-
-    <script>
-        document.getElementById('editStudentForm').onsubmit = function (event) {
-            event.preventDefault();
-            redirectToEdit('students', document.getElementById('studentId').value);
-        };
-        document.getElementById('editExpertForm').onsubmit = function (event) {
-            event.preventDefault();
-            redirectToEdit('experts', document.getElementById('expertId').value);
-        };
-        document.getElementById('editResearcherForm').onsubmit = function (event) {
-            event.preventDefault();
-            redirectToEdit('researchers', document.getElementById('researcherId').value);
-        };
-
-        function redirectToEdit(userType, id) {
-            if (id) {
-                window.location.href = '/' + userType + '/edit/' + id;
-            }
-        }
-    </script>
 </section>
 
 </body>

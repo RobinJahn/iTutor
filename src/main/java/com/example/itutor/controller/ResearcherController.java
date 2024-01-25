@@ -15,10 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
@@ -85,8 +82,8 @@ public class ResearcherController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/researchers/edit/{userName}", method = RequestMethod.GET)
-    public String editResearcherForm(@PathVariable String userName, Model model) {
+    @RequestMapping(value = "/researchers/edit", method = RequestMethod.GET)
+    public String editResearcherForm(@RequestParam String userName, Model model) {
         // get researcher by username
         Researcher researcher = (Researcher) userService.findByUsername(userName);
 

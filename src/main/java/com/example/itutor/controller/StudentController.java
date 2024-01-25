@@ -89,8 +89,8 @@ public class StudentController {
     //add edit student method that has query parameter id
     // edit field, check if correct, delete button
 
-    @RequestMapping(value = "/students/edit/{userName}", method = RequestMethod.GET)
-    public String editStudentForm(@PathVariable String userName, Model model) {
+    @RequestMapping(value = "/students/edit", method = RequestMethod.GET)
+    public String editStudentForm(@RequestParam String userName, Model model) {
         // get student by username
         Student student = (Student) userService.findByUsername(userName);
 

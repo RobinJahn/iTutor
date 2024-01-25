@@ -100,6 +100,7 @@ public class WebSecurityConfig {
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll)
+                .csrf(AbstractHttpConfigurer::disable)
         ;
 
         return http.build();
