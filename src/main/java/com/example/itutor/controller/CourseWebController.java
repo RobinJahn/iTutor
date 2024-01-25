@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -201,20 +202,27 @@ public class CourseWebController {
         }
     }
 
-    @PostMapping("/courses/updateContent")
-    public ResponseEntity<?> updateContent(@RequestBody Content content) {
-        System.out.println("updateContent");
-        //get content to update
-        Optional<Content> contentToUpdate = contentService.getContentById(content.getContentID());
-        if (contentToUpdate.isEmpty()) {
-            return ResponseEntity.notFound().build();
+
+    @PostMapping("/deleteCourse")
+    public String deleteCourse(@RequestParam Long courseId, RedirectAttributes redirectAttributes) {
+        System.out.println("deleteCourse");
+        //delete contents
+        Course course = courseService.getCourseById(courseId).orElse(null);
+        if (course == null) {
+            redirectAttributes.addFlashAttribute("error", "Course not found!");
+            return "redirect:/courses";
         }
-        //update tile and description
-        contentToUpdate.get().setTitle(content.getTitle());
-        contentToUpdate.get().setContentData(content.getContentData());
-
-        Content updatedContent = contentService.updateContent(content.getContentID(), contentToUpdate.get());
-        return updatedContent != null ? ResponseEntity.ok(updatedContent) : ResponseEntity.notFound().build();
+        List<Content> contents = course.getContents();
+        for (Content content : contents) {
+            contentService.deleteContent(content.getContentID());
+        }
+        boolean deleted = courseService.deleteCourse(courseId);
+        if (deleted) {
+            redirectAttributes.addFlashAttribute("success", "Course deleted successfully!");
+            return "redirect:/courses";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Course not found!");
+            return "redirect:/courses";
+        }
     }
-
 }

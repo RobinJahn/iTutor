@@ -73,6 +73,15 @@ public class CourseRESTController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         System.out.println("deleteCourse");
+        //delete contents
+        Course course = courseService.getCourseById(id).orElse(null);
+        if (course == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Content> contents = course.getContents();
+        for (Content content : contents) {
+            contentService.deleteContent(content.getContentID());
+        }
         boolean deleted = courseService.deleteCourse(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }

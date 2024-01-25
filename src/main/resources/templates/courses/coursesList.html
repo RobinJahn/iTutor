@@ -1,7 +1,14 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
+    <style>
+        .disabled-link {
+            pointer-events: none; /* Disable pointer events */
+            opacity: 0.6; /* Dim the link to indicate it's disabled */
+        }
+    </style>
 </head>
 <body>
 <section layout:fragment="mybody">
@@ -15,11 +22,10 @@
             <!-- List of courses -->
             <div class="list-group mt-3">
                 <!-- Iterating over courses in the current page -->
-                <a th:href="@{/courses/{id}(id=${course.courseId})}"
-                   th:each="course : ${coursesPage}"
-                   class="list-group-item list-group-item-action">
+                <div th:each="course : ${coursesPage}">
+                    <!-- Course fragment -->
                     <div th:insert="~{courses/courseFragment :: courseFragment (course=${course})}"></div>
-                </a>
+                </div>
             </div>
 
             <!-- Pagination controls -->
@@ -32,7 +38,8 @@
                                 Previous</a>
                         </li>
 
-                        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, coursesPage.totalPages - 1)}"
+                        <li class="page-item"
+                            th:each="pageNum : ${#numbers.sequence(0, coursesPage.totalPages - 1)}"
                             th:classappend="${pageNum == coursesPage.number} ? 'active' : ''">
                             <a class="page-link" th:href="@{/courses(page=${pageNum}, size=${coursesPage.size})}"
                                th:text="${pageNum + 1}"></a>
@@ -49,7 +56,7 @@
 
 
             <!-- Form for adding new course -->
-            <div class="card" sec:authorize="hasRole('EXPERT')">
+            <div class="card" sec:authorize="hasAuthority('EXPERT')">
                 <div class="card-body">
                     <h2 class="card-title" th:text="#{courses.AddNew}">Add New Course</h2>
                     <form th:action="@{/courses/create}" method="post">
@@ -59,11 +66,13 @@
                                    th:placeholder="#{courses.placeholder.title}" required>
                         </div>
                         <div class="form-group">
-                            <label for="courseDescription" th:text="#{courses.description}">Course Description</label>
+                            <label for="courseDescription" th:text="#{courses.description}">Course
+                                Description</label>
                             <textarea class="form-control" id="courseDescription" name="description" rows="3"
                                       required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3" th:text="#{create.course}">Create Course</button>
+                        <button type="submit" class="btn btn-primary mt-3" th:text="#{create.course}">Create Course
+                        </button>
                     </form>
                 </div>
             </div>
