@@ -17,12 +17,10 @@ import java.util.Optional;
 public class ContentServiceImpl implements ContentServiceI {
 
     private final ContentRepository contentRepository;
-    private final GCPStorageService storageService;
 
     @Autowired
-    public ContentServiceImpl(ContentRepository contentRepository, GCPStorageService storageService) {
+    public ContentServiceImpl(ContentRepository contentRepository) {
         this.contentRepository = contentRepository;
-        this.storageService = storageService;
     }
 
     @Override
@@ -47,23 +45,6 @@ public class ContentServiceImpl implements ContentServiceI {
             return contentRepository.save(updatedContent);
         }
         return null; // Or Error-Handling
-    }
-
-    @Override
-    public String uploadContentDocument(String bucketName, MultipartFile file, String title, String contentType) {
-        try {
-            byte[] content = file.getBytes();
-
-            // Save Meta-Data
-            Content contentEntity = new Content();
-            contentEntity.setTitle(title);
-            contentEntity.setContentType(contentType);
-            contentEntity.setContentData(storageService.uploadDocument(bucketName, file.getOriginalFilename(), content));
-
-            return "Upload successful. Document link: " + contentEntity.getContentData();
-        } catch (IOException e) {
-            return "Error uploading document: " + e.getMessage();
-        }
     }
 
     @Override

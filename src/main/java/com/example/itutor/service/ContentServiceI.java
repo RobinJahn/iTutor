@@ -12,7 +12,6 @@ public interface ContentServiceI {
     Page<Content> getAllContents(Pageable pageable);
     Optional<Content> getContentById(Long id);
     Content createContent(Content content);
-    String uploadContentDocument(String bucketName, MultipartFile file, String title, String contentType);
     Content updateContent(Long id, Content updatedContent);
     boolean deleteContent(Long id);
     Page<Content> getContentsByCourseId(Long courseId, Pageable pageable);
