@@ -25,7 +25,6 @@ public class ContentServiceImpl implements ContentServiceI {
     private final UserActivityRepository userActivityRepository;
 
     @Autowired
-    public ContentServiceImpl(ContentRepository contentRepository) {
     public ContentServiceImpl(ContentRepository contentRepository, UserActivityRepository userActivityRepository) {
         this.contentRepository = contentRepository;
         this.userActivityRepository = userActivityRepository;
