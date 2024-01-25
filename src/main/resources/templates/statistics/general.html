@@ -9,24 +9,30 @@
 </head>
 <body>
 <section layout:fragment="mybody">
-    <div class="container" style="margin-top: 20px">
-        <div class="row">
+    <div class="container mt-3">
+        <div class="row justify-content-center">
             <!-- Länderauswahl -->
-            <div class="col-md-4">
+            <div class="col-4">
                 <select id="countrySelect" class="form-control">
                     <option value="DE">Deutschland</option>
                     <option value="US">United States of America</option>
                     <option value="BR">Brasilien</option>
                 </select>
+                <div class="d-flex mt-4">
+                    <div class="container">
+                        <img th:src="@{/image/statsOwl.png}" alt="Mascot" class="img-fluid">
+                    </div>
+                </div>
             </div>
 
+
             <!-- Kalender -->
-            <div class="col-md-4">
+            <div class="col-6">
                 <div id="calendar"></div>
             </div>
 
             <!-- Statistikauswahl -->
-            <div class="col-md-4">
+            <div class="col-2">
                 <select id="statsDropdown" class="form-control" onchange="changeStatsView()">
                     <option value="general">General Overview</option>
                     <option value="contentEngagement">Content Engagement</option>
