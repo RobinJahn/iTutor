@@ -18,6 +18,9 @@
 				<li class="nav-item" sec:authorize="hasAuthority('EXPERT')">
 					<a class="nav-link" th:href="@{/experts/guideline}" th:text="#{navbar.guideline}">Guideline</a>
 				</li>
+				<li class="nav-item" sec:authorize="hasAuthority('RESEARCHER')">
+					<a class="nav-link" th:href="@{/statistics/general}" th:text="#{navbar.statistics}">Statistics</a>
+				</li>
 				<li class="nav-item active">
 					<a class="nav-link" th:href="@{/ai}" th:text="#{navbar.ai}">Chat with AI</a>
 				</li>
@@ -45,7 +48,6 @@
 				<li class="nav-item">
 					<div class="notification-switch-container" th:text="#{navbar.notifications}">Notifications</div>
 				</li>
-				<!-- Add other navigation items here -->
 				<li class="nav-item first-item-right">
 					<form th:action="@{/login}" method="get">
 						<button type="submit" class="btn btn-link nav-link" th:text="#{login}">Login</button>

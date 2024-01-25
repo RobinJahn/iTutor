@@ -1,21 +1,28 @@
 package com.example.itutor.service.impl;
 
+import com.example.itutor.config.MyUserDetails;
 import com.example.itutor.domain.Course;
+import com.example.itutor.domain.UserActivity;
 import com.example.itutor.repository.CourseRepository;
+import com.example.itutor.repository.UserActivityRepository;
 import com.example.itutor.service.CourseServiceI;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseServiceI {
     private final CourseRepository courseRepository;
+    private final UserActivityRepository userActivityRepository;
     //@Autowired
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserActivityRepository userActivityRepository) {
         this.courseRepository = courseRepository;
+        this.userActivityRepository = userActivityRepository;
     }
 
     @Override
@@ -30,12 +37,27 @@ public class CourseServiceImpl implements CourseServiceI {
 
     @Override
     public Optional<Course> getCourseById(Long id) {
+        Optional<Course> courseOpt = courseRepository.findById(id);
+
+        if (courseOpt.isPresent()) {
+            // gets the activity of a user
+            String loggedInUserUsername = getLoggedInUsername();
+            UserActivity activity = new UserActivity(LocalDate.now(), "Course Viewing", loggedInUserUsername);
+            userActivityRepository.save(activity);
+        }
+
         return courseRepository.findById(id);
     }
 
     @Override
     public Course createCourse(Course course) {
-        return courseRepository.save(course);
+        // Course has to be saved first, to get an ID
+        courseRepository.save(course);
+
+        String loggedInUserUsername = getLoggedInUsername();
+        UserActivity activity = new UserActivity(LocalDate.now(), "Course Creation", loggedInUserUsername);
+        userActivityRepository.save(activity);
+        return course;
     }
 
     @Override
@@ -54,5 +76,15 @@ public class CourseServiceImpl implements CourseServiceI {
             return true;
         }
         return false; // Or Error-Handling
+    }
+
+    @Override
+    public String getLoggedInUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof MyUserDetails) {
+            return ((MyUserDetails) principal).getUsername();
+        } else {
+            return principal.toString();
+        }
     }
 }

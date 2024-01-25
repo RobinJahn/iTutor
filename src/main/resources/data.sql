@@ -47,3 +47,59 @@ INSERT INTO content (title, content_type, content_data, course_id) VALUES ('Adva
 INSERT INTO content (title, content_type, content_data, course_id) VALUES ('Mathematics in Science', 'text', 'Exploring the role of math in scientific research.', 1);
 
 
+-- Insert sample data for the statistics overview
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-23', 'Course Creation', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Creation', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Creation', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Creation', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Creation', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-21', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Creation', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Creation', 'MuchProvider2');
+
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-23', 'Course Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-21', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Course Viewing', 'MuchProvider2');
+
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-23', 'Content Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Content Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Content Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Content Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Content Viewing', 'ContentMachine1');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-21', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-24', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Content Viewing', 'MuchProvider2');
+INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Content Viewing', 'MuchProvider2');
+
+
+
+
+

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics</title>
+
+    <!-- FullCalendar -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+</head>
+<body>
+<section layout:fragment="mybody">
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <!-- Länderauswahl -->
+            <div class="col-4">
+                <select id="countrySelect" class="form-control">
+                    <option value="DE">Deutschland</option>
+                    <option value="US">United States of America</option>
+                    <option value="BR">Brasilien</option>
+                </select>
+                <div class="d-flex mt-4">
+                    <div class="container">
+                        <img th:src="@{/image/statsOwl.png}" alt="Mascot" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Kalender -->
+            <div class="col-6">
+                <div id="calendar"></div>
+            </div>
+
+            <!-- Statistikauswahl -->
+            <div class="col-2">
+                <select id="statsDropdown" class="form-control" onchange="changeStatsView()">
+                    <option value="general">General Overview</option>
+                    <option value="contentEngagement">Content Engagement</option>
+                    <option value="courseEngagement">Course Engagement</option>
+                    <option value="userActivityCourseCreation">User Activity in Course Creation</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+
+        var calender;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: [], // more events
+                // further configuration of required
+            });
+            calendar.render();
+            loadHolidays('DE'); // Initialer Ladevorgang für Deutschland
+        });
+
+        function loadHolidays(countryCode) {
+            var url = 'https://date.nager.at/Api/v2/PublicHolidays/2024/' + countryCode;
+            fetch(url)
+                .then(response => response.json())
+                .then(holidays => {
+                    addHolidaysToCalendar(holidays);
+                    // Verarbeiten und Anzeigen der Feiertage im Kalender
+                    console.log(holidays); // Testausgabe
+                    // Hier sollten Sie die Logik implementieren, um die Feiertage dem Kalender hinzuzufügen
+                })
+                .catch(error => console.error('Error fetching holidays:', error));
+        }
+
+        function addHolidaysToCalendar(holidays) {
+            var holidayEvents = holidays.map(holiday => {
+                return {
+                    title: holiday.localName,
+                    start: holiday.date,
+                    allDay: true,
+                    color: 'red'
+                };
+            });
+
+            calendar.removeAllEvents(); // remove all events
+            calendar.addEventSource(holidayEvents); // insert new events
+        }
+
+        // refreshing
+        document.getElementById('countrySelect').addEventListener('change', function() {
+            loadHolidays(this.value);
+        });
+
+    </script>
+
+
+
+    <script>
+        function changeStatsView() {
+            var selectedValue = document.getElementById('statsDropdown').value;
+            // Logik zum Anzeigen unterschiedlicher Statistikseiten basierend auf der Auswahl
+            // Beispiel: window.location.href = '/statistics/' + selectedValue;
+            window.location.href = '/statistics/' + selectedValue;
+        }
+    </script>
+
+
+</section>
+
+</body>
+</html>
