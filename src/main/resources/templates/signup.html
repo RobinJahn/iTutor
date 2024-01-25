@@ -16,16 +16,24 @@
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label th:for="username" th:text="#{form.label.username}">Username</label>
-                            <input type="text" class="form-control" id="username"
+                            <label id="usernameLabel"
+                                   th:for="username"
+                                   th:text="#{form.label.username}">
+                                Username
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="usernameInput"
                                    th:placeholder="#{form.placeholder.username}"
-                                   autofocus="autofocus" th:field="*{username}"
+                                   autofocus="autofocus"
+                                   th:field="*{username}"
                                    th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"/>
                             <div class="invalid-feedback">
                                 <span th:errors="*{username}"></span>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="form-row">
                         <div class="form-group col">

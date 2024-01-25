@@ -10,8 +10,8 @@
         <div class="form-group col-md-6">
             <label for="affiliation" th:text="#{form.label.affiliation}">Affiliation </label>
             <input type="text" class="form-control" id="affiliation" th:placeholder="#{form.placeholder.affiliation}"
-                    autofocus="autofocus" th:field="*{affiliation}"
-                   th:classappend="${#fields.hasErrors('Affiliation')} ? 'is-invalid'" />
+                   autofocus="autofocus" th:field="*{affiliation}"
+                   th:classappend="${#fields.hasErrors('Affiliation')} ? 'is-invalid'"/>
             <div class="invalid-feedback">
                 <span th:errors="*{affiliation}"></span>
             </div>
@@ -20,11 +20,33 @@
     <div class="form-row">
         <div class="form-group col-md-6">
             <label th:for="qualification" th:text="#{form.label.qualification}">Qualification </label>
-            <input type="text" class="form-control" id="qualification" th:placeholder="#{form.placeholder.qualification}"
+            <input type="text" class="form-control" id="qualification"
+                   th:placeholder="#{form.placeholder.qualification}"
                    th:field="*{qualification}"
-                   th:classappend="${#fields.hasErrors('Qualification')} ? 'is-invalid'" />
+                   th:classappend="${#fields.hasErrors('Qualification')} ? 'is-invalid'"/>
             <div class="invalid-feedback">
                 <span th:errors="*{qualification}"></span>
             </div>
         </div>
+
+
+        <script th:inline="javascript">
+            document.addEventListener("DOMContentLoaded", function() {
+                var usernameInput = document.getElementById('usernameInput');
+                var usernameLabel = document.getElementById('usernameLabel');
+
+                console.log('Username Input:', usernameInput);
+                console.log('Username Label:', usernameLabel);
+
+                if (usernameInput && usernameLabel) {
+                    // Disable the input
+                    usernameInput.disabled = true;
+
+                    // Change label text color to gray
+                    usernameLabel.style.color = 'gray';
+                }
+            });
+        </script>
+
+    </div>
 </section>

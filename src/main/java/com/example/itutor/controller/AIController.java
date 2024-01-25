@@ -97,6 +97,8 @@ public class AIController {
         Course selectedCourse = optionalCourse.get();
         String courseText = selectedCourse.getCourseAsText();
 
+
+        openAIService.deleteMessagesForUser(currentUser);
         AiMessages aiMessage = new AiMessages(currentUser);
         aiMessage.addMessage("Please translate this course to " + targetLanguage + ": " + courseText);
 

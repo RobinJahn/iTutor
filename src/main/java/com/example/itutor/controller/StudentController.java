@@ -76,8 +76,19 @@ public class StudentController {
         Role role = roleService.findOrCreate("STUDENT");
         studentRequest.addRole(role);
 
-        // Save the student using the service
-        User createdStudent = userService.saveUser(studentRequest);
+        User createdStudent = null;
+        try {
+            // Save the student using the service
+            createdStudent = userService.saveUser(studentRequest);
+        }
+        catch (Exception e) {
+            System.out.println("Error creating student: " + e.getMessage());
+        }
+        if (createdStudent == null) {
+            //render same page with model attribute error
+            attr.addFlashAttribute("error", "User with username " + studentRequest.getUsername() + " already exists!");
+            return "redirect:/students/signup";
+        }
 
         emailService.sendEmail(createdStudent.getEmail());
         System.out.println("Saved Student:" + createdStudent);
@@ -90,14 +101,14 @@ public class StudentController {
     // edit field, check if correct, delete button
 
     @RequestMapping(value = "/students/edit", method = RequestMethod.GET)
-    public String editStudentForm(@RequestParam String userName, Model model) {
+    public String editStudentForm(@RequestParam String userName, Model model, RedirectAttributes attr) {
         // get student by username
         Student student = (Student) userService.findByUsername(userName);
 
         if (student == null) {
-            // if student was not found -> redirect to another page
-            System.err.println("Student with id " + userName + " not found!");
-            return "error";
+            System.out.println("Student with username " + userName + " not found");
+            attr.addFlashAttribute("error", "Student not found!");
+            return "redirect:/";
         }
 
         student.setPassword(null);

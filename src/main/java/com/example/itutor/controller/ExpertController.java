@@ -70,7 +70,19 @@ public class ExpertController {
         expertRequest.addRole(expertRole);
 
         // Save the expert and get the created entity
-        User createdExpert = userService.saveUser(expertRequest);
+        User createdExpert = null;
+        try {
+            // Save the student using the service
+            createdExpert = userService.saveUser(expertRequest);
+        }
+        catch (Exception e) {
+            System.out.println("Error creating student: " + e.getMessage());
+        }
+        if (createdExpert == null) {
+            //render same page with model attribute error
+            attr.addFlashAttribute("error", "User with username " + expertRequest.getUsername() + " already exists!");
+            return "redirect:/students/signup";
+        }
 
         if (createdExpert == null) {
             model.addAttribute("error", "Error creating expert!");
@@ -85,14 +97,16 @@ public class ExpertController {
     }
 
     @RequestMapping(value = "/experts/edit", method = RequestMethod.GET)
-    public String editExpertForm(@RequestParam String userName, Model model) {
+    public String editExpertForm(@RequestParam String userName, Model model, RedirectAttributes attr) {
         System.out.println("editExpertForm");
         //get user by username
         Expert expert = (Expert) userService.findByUsername(userName);
 
         if (expert == null) {
-            System.err.println("Expert with id " + userName + " not found!");
-            return "error";
+            // if user was not found -> redirect to another page
+            System.out.println("Expert with username " + userName + " not found");
+            attr.addFlashAttribute("error", "Expert not found!");
+            return "redirect:/";
         }
 
         expert.setPassword(null);

@@ -72,7 +72,19 @@ public class ResearcherController {
         researcherRequest.addRole(researcherRole);
 
         // Save the student using the service
-        User createdResearcher = userService.saveUser(researcherRequest);
+        User createdResearcher = null;
+        try {
+            // Save the student using the service
+            createdResearcher = userService.saveUser(researcherRequest);
+        }
+        catch (Exception e) {
+            System.out.println("Error creating student: " + e.getMessage());
+        }
+        if (createdResearcher == null) {
+            //render same page with model attribute error
+            attr.addFlashAttribute("error", "User with username " + researcherRequest.getUsername() + " already exists!");
+            return "redirect:/students/signup";
+        }
 
         emailService.sendEmail(createdResearcher.getEmail());
         System.out.println("Saved Researcher:" + createdResearcher);
@@ -83,14 +95,15 @@ public class ResearcherController {
     }
 
     @RequestMapping(value = "/researchers/edit", method = RequestMethod.GET)
-    public String editResearcherForm(@RequestParam String userName, Model model) {
+    public String editResearcherForm(@RequestParam String userName, Model model, RedirectAttributes attr) {
         // get researcher by username
         Researcher researcher = (Researcher) userService.findByUsername(userName);
 
         if (researcher == null) {
             // if researcher was not found -> redirect to another page
-            System.out.println("Researcher with id " + userName + " not found");
-            return "error";
+            System.out.println("Researcher with username " + userName + " not found");
+            attr.addFlashAttribute("error", "Researcher not found!");
+            return "redirect:/";
         }
 
         researcher.setPassword(null);

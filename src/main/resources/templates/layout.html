@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <title>iTutor</title>
@@ -98,6 +98,14 @@
         <section layout:fragment="mybody">
             <div> main content</div>
         </section>
+    </div>
+    <!-- Success Message -->
+    <div th:if="${success}" class="alert alert-success m-3">
+        <p th:text="${success}"></p>
+    </div>
+    <!-- Error Message -->
+    <div th:if="${error}" class="alert alert-danger m-3">
+        <p th:text="${error}"></p>
     </div>
 </div>
 

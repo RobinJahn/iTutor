@@ -1,64 +1,110 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
 </head>
 <body>
 
 <section class="layout-content" layout:fragment="mybody">
-    <div class="container" id="edit-profile">
+    <div class="row align-items-start justify-content-center mt-3">
+        <!-- Sign Up and Edit Section -->
+        <div class="col-lg-5 col-md-12">
+            <div class="container mb-3" id="registration">
 
-        <!-- Update the action to the appropriate URL for editing -->
-        <form th:action="@{${link}}" th:object="${user}" method="POST">
+                <form th:action="@{${link}}"
+                      th:object="${user}" method="POST">
 
-            <h2>Edit Profile</h2>
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label th:for="firstName" th:text="#{form.label.firstname}">Firstname </label>
-                    <!-- Ensure fields are populated with existing user data -->
-                    <input type="text" class="form-control" id="firstName" th:placeholder="#{form.placeholder.firstname}"
-                           autofocus="autofocus" th:field="*{firstName}"
-                           th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" />
-                    <div class="invalid-feedback">
-                        <span th:errors="*{firstName}"></span>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label id="usernameLabel"
+                                   th:for="username"
+                                   th:text="#{form.label.username}">
+                                Username
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="usernameInput"
+                                   th:placeholder="#{form.placeholder.username}"
+                                   autofocus="autofocus"
+                                   th:field="*{username}"
+                                   th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"/>
+                            <div class="invalid-feedback">
+                                <span th:errors="*{username}"></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label th:for="lastName" th:text="#{form.label.lastName}">Lastname </label>
-                    <input type="text" class="form-control" id="lastName" th:placeholder="#{form.placeholder.lastname}"
-                           th:field="*{lastName}"
-                           th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" />
-                    <div class="invalid-feedback">
-                        <span th:errors="*{lastName}"></span>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label th:for="password" th:text="#{form.label.password}">Password</label>
+                            <input type="text" class="form-control" id="password"
+                                   th:placeholder="#{form.placeholder.password}"
+                                   autofocus="autofocus" th:field="*{password}"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"/>
+                            <div class="invalid-feedback">
+                                <span th:errors="*{password}"></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label th:for="email" th:text="#{form.label.email}">Email</label>
-                    <input type="text" class="form-control" id="email" th:placeholder="#{form.placeholder.email}"
-                           th:field="*{email}"
-                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" />
-                    <div class="invalid-feedback">
-                        <span th:errors="*{email}"></span>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label th:for="firstName" th:text="#{form.label.firstname}">Firstname </label>
+                            <input type="text" class="form-control" id="firstName"
+                                   th:placeholder="#{form.placeholder.firstname}"
+                                   autofocus="autofocus" th:field="*{firstName}"
+                                   th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'"/>
+                            <div class="invalid-feedback">
+                                <span th:errors="*{firstName}"></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Include other attributes to be edited if necessary -->
-            <div layout:fragment="moreAttributes">
-                <div> More attributes to edit </div>
-            </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label th:for="lastName" th:text="#{form.label.lastName}">Lastname </label>
+                            <input type="text" class="form-control" id="lastName"
+                                   th:placeholder="#{form.placeholder.lastname}"
+                                   autofocus="autofocus" th:field="*{lastName}"
+                                   th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'"/>
+                            <div class="invalid-feedback">
+                                <span th:errors="*{lastName}"></span>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Update the button text -->
-            <button type="submit" class="btn btn-primary btn-sm" th:text="#{form.update.profile}">Update Profile</button>
-        </form>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label th:for="email" th:text="#{form.label.email}">Email</label>
+                            <input type="text" class="form-control" id="email"
+                                   th:placeholder="#{form.placeholder.email}"
+                                   th:field="*{email}"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"/>
+                            <div class="invalid-feedback">
+                                <span th:errors="*{email}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div layout:fragment="moreAttributes">
+                        <div> more attributes</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-sm mt-2" th:text="#{form.button.save}">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Mascot Image Section -->
+        <div class="col-lg-4 col-md-12 d-flex justify-content-end">
+            <div class="container">
+                <img th:src="@{/image/signupOwl.png}" alt="Mascot" class="img-fluid">
+            </div>
+        </div>
     </div>
+
 </section>
 </body>
 </html>

@@ -12,4 +12,6 @@ public interface OpenAIServiceI {
     String getChatResponse(AiMessages aiMessages);
     AiMessages getMessagesForUser(User user);
     AiMessages resetMessagesForUser(User user);
+
+    void deleteMessagesForUser(User user);
 }

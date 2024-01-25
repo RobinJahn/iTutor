@@ -137,4 +137,9 @@ public class OpenAIService implements OpenAIServiceI {
         return aiMessages;
     }
 
+    @Override
+    public void deleteMessagesForUser(User user){
+        aiMessagesRepository.delete(getMessagesForUser(user));
+    }
+
 }

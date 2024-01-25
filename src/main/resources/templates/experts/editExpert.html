@@ -16,4 +16,22 @@
         </div>
     </div>
 
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            var usernameInput = document.getElementById('usernameInput');
+            var usernameLabel = document.getElementById('usernameLabel');
+
+            console.log('Username Input:', usernameInput);
+            console.log('Username Label:', usernameLabel);
+
+            if (usernameInput && usernameLabel) {
+                // Disable the input
+                usernameInput.disabled = true;
+
+                // Change label text color to gray
+                usernameLabel.style.color = 'gray';
+            }
+        });
+    </script>
+
 </section>
