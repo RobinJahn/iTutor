@@ -7,30 +7,38 @@
 
 <body>
 <section layout:fragment="mybody">
-    <div class="container mt-4">
-        <div class="card">
-            <div class="card-header" th:text="#{ai.translateHeading}">Translate a course with AI</div>
-            <div class="card-body">
-                <form th:action="@{/aiTranslate}" method="post">
-                    <div class="form-group">
-                        <label for="selectedCourse" th:text="#{ai.selectCourse}">Select Course:</label>
-                        <select class="form-control" id="selectedCourse" name="selectedCourse">
-                            <!-- Iterate over the courses and add them as options -->
-                            <th:block th:each="course : ${courses}">
-                                <option th:value="${course.courseId}" th:text="${course.title}">Course Title</option>
-                            </th:block>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="targetLanguage" th:text="#{ai.targetLanguage}">Target Language:</label>
-                        <input type="text" class="form-control" id="targetLanguage" name="targetLanguage" th:placeholder="#{ai.enterLanguage}">
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3" th:text="#{ai.translate}">Translate</button>
-                </form>
-
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-4">
+            <div class="card lg-3 banner-image">
+                <img th:src="@{/image/AiOwls.png}" alt="Mascot" class="img-fluid">
             </div>
         </div>
-    </div>
+        <div class="col-12 col-lg-6">
+            <div class="container mt-4">
+                <div class="card">
+                    <div class="card-header" th:text="#{ai.translateHeading}">Translate a course with AI</div>
+                    <div class="card-body">
+                        <form th:action="@{/aiTranslate}" method="post">
+                            <div class="form-group">
+                                <label for="selectedCourse" th:text="#{ai.selectCourse}">Select Course:</label>
+                                <select class="form-control" id="selectedCourse" name="selectedCourse">
+                                    <!-- Iterate over the courses and add them as options -->
+                                    <th:block th:each="course : ${courses}">
+                                        <option th:value="${course.courseId}" th:text="${course.title}">Course Title</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="targetLanguage" th:text="#{ai.targetLanguage}">Target Language:</label>
+                                <input type="text" class="form-control" id="targetLanguage" name="targetLanguage" th:placeholder="#{ai.enterLanguage}">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3" th:text="#{ai.translate}">Translate</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
 </section>
 </body>
 </html>
