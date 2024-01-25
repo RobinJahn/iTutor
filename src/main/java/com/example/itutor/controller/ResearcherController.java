@@ -1,7 +1,11 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.Researcher;
+import com.example.itutor.domain.Role;
+import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
+import com.example.itutor.service.EmailSenderService;
+import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -10,24 +14,32 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Arrays;
 
 @Controller
 public class ResearcherController {
 
-    private UserServiceI userService;
+    private final UserServiceI userService;
 
+    private final RoleServiceI roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ResearcherController(UserServiceI userService) {
+    @Autowired
+    EmailSenderService emailService;
+
+    private final Validator validator;
+
+    public ResearcherController(UserServiceI userService, RoleServiceI roleService,  Validator validator) {
         super(); //???
         this.userService = userService;
+        this.roleService = roleService;
+        this.validator = validator;
     }
 
     @RequestMapping(value = "/researchers/signup", method = RequestMethod.GET)
@@ -55,24 +67,33 @@ public class ResearcherController {
         // Encode the password before saving
         researcherRequest.setPassword(passwordEncoder.encode(researcherRequest.getPassword()));
 
+        //Get and set roles
+        Role researcherRole = roleService.findOrCreate("RESEARCHER");
+        researcherRequest.addRole(researcherRole);
+
         // Save the student using the service
         User createdResearcher = userService.saveUser(researcherRequest);
 
-        System.out.println("Saved Expert:" + createdResearcher);
+        emailService.sendEmail(createdResearcher.getEmail());
+        System.out.println("Saved Researcher:" + createdResearcher);
 
 
         attr.addFlashAttribute("success", "Researcher added!");
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/researchers/edit/{researcherId}", method = RequestMethod.GET)
-    public String editResearcherForm(@PathVariable Long researcherId, Model model) {
-        Researcher researcher = (Researcher) userService.getUserById(researcherId);
+    @RequestMapping(value = "/researchers/edit", method = RequestMethod.GET)
+    public String editResearcherForm(@RequestParam String userName, Model model) {
+        // get researcher by username
+        Researcher researcher = (Researcher) userService.findByUsername(userName);
 
         if (researcher == null) {
-            // if student was not found -> redirect to another page
-            return "errorPage";
+            // if researcher was not found -> redirect to another page
+            System.out.println("Researcher with id " + userName + " not found");
+            return "error";
         }
+
+        researcher.setPassword(null);
 
         model.addAttribute("user", researcher);
         model.addAttribute("link", "/researchers/edit/process");
@@ -80,17 +101,39 @@ public class ResearcherController {
     }
 
     @RequestMapping(value = "/researchers/edit/process", method = RequestMethod.POST)
-    public String editResearcher(@ModelAttribute @Valid Researcher researcherRequest,
+    public String editResearcher(@ModelAttribute Researcher researcherRequest,
                                  BindingResult result,
-                                 RedirectAttributes attr) {
+                                 RedirectAttributes attr,
+                                 Model model) {
+
+        researcherRequest.setId(userService.findByUsername(researcherRequest.getUsername()).getId());
+
+        // Check if a new password has been entered
+        if (!researcherRequest.getPassword().isEmpty()) {
+            // Encrypt the new password
+            String encodedPassword = passwordEncoder.encode(researcherRequest.getPassword());
+            researcherRequest.setPassword(encodedPassword);
+        } else {
+            // Retrieve the current password from the database and set it, so it doesn't get overwritten
+            Researcher existingResearcher = (Researcher) userService.getUserById(researcherRequest.getId());
+            researcherRequest.setPassword(existingResearcher.getPassword());
+        }
+
+        // Manually invoke validation
+        validator.validate(researcherRequest, result);
 
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
+            //add model attribute user
+            model.addAttribute("user", researcherRequest);
             return "researchers/editResearcher"; // if there are any errors -> back to edit form
         }
 
-        //TODO: Update the student details in the database based on the edited data in studentRequest
+
+
+        User updatedResearcher = userService.updateUser(researcherRequest);
+        System.out.println(updatedResearcher);
 
         attr.addFlashAttribute("success", "Researcher updated!");
         return "redirect:/";

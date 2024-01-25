@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepositoryImpl extends UserRepositoryI, CrudRepository<User, Long>{
-
 }

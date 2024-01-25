@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Successful</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}" />
+</head>
+<body>
+<section class="layout-content" layout:fragment="mybody">
+    <div class="container mt-5">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading" th:text="#{upload.success}">Upload Successful!</h4>
+            <p th:text="#{upload.success.message(${documentName})}"></p>
+        </div>
+
+        <a th:href="@{/courses}" class="btn btn-primary" th:text="#{upload.backToCourses}">Back to Courses</a>
+    </div>
+</section>
+</body>
+</html>

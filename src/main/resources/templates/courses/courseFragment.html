@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Course Fragments</title>
+</head>
+<body>
+<!-- Course Fragment -->
+<div th:fragment="courseFragment(course)">
+    <a th:href="@{/courses/{id}(id=${course.courseId})}"
+       class="list-group-item list-group-item-action"
+       th:id="'courseLink-' + ${course.courseId}">
+        <div class="card-body">
+            <!-- Heading for content -->
+            <h3 class="card-title" contenteditable="false" th:id="'courseTitle-' + ${course.courseId}"
+                th:text="${course.title}">Course Title</h3>
+
+            <p contenteditable="false" th:id="'courseDesc-' + ${course.courseId}"
+               th:text="${course.description}">Course Description</p>
+        </div>
+    </a>
+
+    <div class="row" sec:authorize="hasAuthority('EXPERT')">
+        <div class="col-auto">
+            <!-- Edit button -->
+            <button th:id="'courseEdit-' + ${course.courseId}" class="btn btn-primary my-2"
+                    th:onclick="'editCourse(this, \'' + ${course.courseId} + '\')'">Edit
+            </button>
+
+            <!-- Save button (initially hidden) -->
+            <button th:id="'courseSave-' + ${course.courseId}" class="btn btn-success my-2" style="display: none;"
+                    th:onclick="'saveCourse(this, ' + ${course.courseId} + ')'">Save
+            </button>
+        </div>
+        <div class="col-auto">
+            <!-- Delete button – wrapped in a form -->
+            <form th:action="@{/courses/deleteCourse}" method="post">
+                <input type="hidden" name="courseId" th:value="${course.courseId}"/>
+                <button type="submit" class="btn btn-danger my-2">Delete</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        function editCourse(button, courseId) {
+            // Make course title and description editable
+            document.getElementById('courseTitle-' + courseId).contentEditable = true;
+            document.getElementById('courseDesc-' + courseId).contentEditable = true;
+
+            // Disable link navigation
+            const link = document.getElementById('courseLink-' + courseId);
+            if (link) {
+                link.dataset.href = link.getAttribute('href'); // Store the href
+                link.removeAttribute('href'); // Remove the href to disable navigation
+            }
+
+            // Hide edit button and show save button
+            button.style.display = 'none';
+            document.getElementById('courseSave-' + courseId).style.display = 'inline-block';
+        }
+
+        function saveCourse(button, courseId) {
+            // Get updated course details
+            const updatedTitle = document.getElementById('courseTitle-' + courseId).innerText;
+            const updatedDescription = document.getElementById('courseDesc-' + courseId).innerText;
+
+            // AJAX call to the server to save the updated course details
+            fetch(`/api/courses/${courseId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    courseId: courseId,
+                    title: updatedTitle,
+                    description: updatedDescription
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Course updated successfully');
+                    } else {
+                        console.error('Error updating course');
+                    }
+                })
+                .catch(error => console.error('Error updating course:', error));
+
+            // Make course details non-editable
+            document.getElementById('courseTitle-' + courseId).contentEditable = false;
+            document.getElementById('courseDesc-' + courseId).contentEditable = false;
+
+            // Re-enable link navigation
+            const link = document.getElementById('courseLink-' + courseId);
+            if (link && link.dataset.href) {
+                link.setAttribute('href', link.dataset.href); // Restore the href
+            }
+
+            // Hide save button and show edit button
+            button.style.display = 'none';
+            document.getElementById('courseEdit-' + courseId).style.display = 'inline-block';
+        }
+
+        function deleteCourse(courseId) {
+            // AJAX call to the server to delete the course
+            fetch(`/api/courses/${courseId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Course deleted successfully');
+                        // Redirect or update the UI as needed
+                    } else {
+                        console.error('Error deleting course');
+                    }
+                })
+                .catch(error => console.error('Error deleting course:', error));
+        }
+    </script>
+</body>
+</html>

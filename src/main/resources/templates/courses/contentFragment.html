@@ -1,40 +1,115 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Content Fragments</title>
 </head>
 <body>
 <!-- Content Fragment -->
 <div th:fragment="contentFragment(content)">
-    <div class="card my-3">
-        <div class="card-body">
-            <!-- heading for content -->
-            <h3 class="card-title" th:text="${content.title}">Content Title</h3>
+    <div class="row my-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-body">
+                        <!-- Heading for content -->
+                        <h3 class="card-title" contenteditable="false" th:id="'title-' + ${content.contentID}"
+                            th:text="${content.title}">Content Title</h3>
 
-            <div th:switch="${content.contentType}">
-                <!-- Case for text content -->
-                <div th:case="${T(com.example.itutor.domain.Content$ContentType).TEXT}">
-                    <p class="card-text" th:text="${content.contentData}"></p>
-                </div>
-                <!-- Case for PDF content -->
-                <div th:case="${T(com.example.itutor.domain.Content$ContentType).PDF}">
-                    <a th:href="@{/pdfs/{contentData}(contentData=${content.contentData})}" class="btn btn-primary" th:text="${content.title}">PDF Link</a>
-                </div>
-                <!-- Case for video content -->
-                <div th:case="${T(com.example.itutor.domain.Content$ContentType).VIDEO}">
-                    <!-- Video content rendering logic here -->
-                </div>
-                <!-- Case for audio content -->
-                <div th:case="${T(com.example.itutor.domain.Content$ContentType).AUDIO}">
-                    <!-- Audio content rendering logic here -->
-                </div>
-                <!-- Case for image content -->
-                <div th:case="${T(com.example.itutor.domain.Content$ContentType).IMAGE}">
-                    <!-- Image content rendering logic here -->
+                        <div th:switch="${content.contentType}">
+                            <!-- Case for text content -->
+                            <div th:case="${T(com.example.itutor.domain.Content$ContentType).TEXT}">
+                                <p class="card-text" contenteditable="false" th:id="'data-' + ${content.contentID}"
+                                   th:text="${content.contentData}"></p>
+                            </div>
+                            <div th:case="${T(com.example.itutor.domain.Content$ContentType).DOCUMENT}">
+                                <p th:text="${content.contentData}">File Description</p>
+                                <a th:href="@{/courses/files/{id}(id=${content.contentID})}"
+                                   class="btn btn-primary">Download</a>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="col-auto" sec:authorize="hasAuthority('EXPERT')">
+            <!-- Edit button -->
+            <button th:id="'edit-' + ${content.contentID}" class="btn btn-primary"
+                    th:onclick="'editContent(this, \'' + ${content.contentID} + '\')'">Edit
+            </button>
+
+            <!-- Save button (initially hidden) -->
+            <button th:id="'save-' + ${content.contentID}" class="btn btn-success" style="display: none;"
+                    th:onclick="'saveContent(this, ' + ${course.courseId} + ', ' + ${content.contentID} + ')'">
+                Save
+            </button>
+
+            <!-- Delete button visible only to experts -->
+            <div class="d-flex mt-2">
+                <form th:action="@{/courses/removeContent}" method="post">
+                    <input type="hidden" name="courseId" th:value="${course.courseId}"/>
+                    <input type="hidden" name="contentId" th:value="${content.contentID}"/>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
+
+
+    <script>
+        function editContent(button, contentId) {
+            // Make content editable
+            document.getElementById('title-' + contentId).contentEditable = true;
+            document.getElementById('data-' + contentId).contentEditable = true;
+
+            // Hide edit button and show save button
+            button.style.display = 'none';
+            document.getElementById('save-' + contentId).style.display = 'inline-block';
+        }
+
+        function saveContent(button, courseId, contentId) {
+            // Get updated content
+            const updatedTitle = document.getElementById('title-' + contentId).innerText;
+            const updatedData = document.getElementById('data-' + contentId).innerText;
+
+            // AJAX call to the server to save the updated content
+            fetch(`/api/courses/${courseId}/contents/${contentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contentID: contentId, // Ensure this field name matches your Content class
+                    title: updatedTitle,
+                    contentData: updatedData
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Handle successful update
+                        console.log('Content updated successfully');
+                        response.json().then(course => {
+                            // You can use the updated course data here if needed
+                        });
+                    } else {
+                        // Handle errors
+                        console.error('Error updating content');
+                    }
+                })
+                .catch(error => console.error('Error updating content:', error));
+
+            // Make content non-editable
+            document.getElementById('title-' + contentId).contentEditable = false;
+            document.getElementById('data-' + contentId).contentEditable = false;
+
+            // Hide save button and show edit button
+            button.style.display = 'none';
+            document.getElementById('edit-' + contentId).style.display = 'inline-block';
+        }
+
+
+    </script>
+
+
 </body>
 </html>

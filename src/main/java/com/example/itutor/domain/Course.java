@@ -1,5 +1,6 @@
 package com.example.itutor.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="course")
+@Table(name = "course")
 public class Course implements Serializable {
 
     @Id
@@ -21,9 +22,9 @@ public class Course implements Serializable {
     @NotBlank
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
-    private List<Content> contents = new ArrayList<>(); // A list to hold multiple content items
-
+    @OneToMany(mappedBy = "course")
+    @JsonManagedReference
+    private List<Content> contents = new ArrayList<>();
 
 
     public void setCourseId(Long courseId) {
@@ -60,6 +61,30 @@ public class Course implements Serializable {
 
     public void addContent(Content content) {
         contents.add(content);
-        content.setCourse(this); // Set the course reference in the content
+        content.setCourse(this);
+    }
+
+    public boolean removeContent(Long contentId) {
+        boolean success = false;
+        for (Content content : contents) {
+            if (content.getContentID().equals(contentId)) {
+                contents.remove(content);
+                content.setCourse(null);
+                success = true;
+                break;
+            }
+        }
+        return success;
+    }
+
+    public String getCourseAsText() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Course: ").append(title).append("\n");
+        sb.append("Description: ").append(description).append("\n");
+        sb.append("Contents: ").append("\n");
+        for (Content content : contents) {
+            sb.append(content.getContentAsString()).append("\n");
+        }
+        return sb.toString();
     }
 }

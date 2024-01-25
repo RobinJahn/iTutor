@@ -1,9 +1,10 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.Expert;
+import com.example.itutor.domain.Role;
 import com.example.itutor.domain.User;
-import com.example.itutor.repository.UserRepositoryI;
-import com.example.itutor.repository.impl.UserRepositoryImpl;
+import com.example.itutor.service.EmailSenderService;
+import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -12,24 +13,30 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ExpertController {
 
-    private UserServiceI userService;
+    private final UserServiceI userService;
 
+    private final RoleServiceI roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ExpertController(UserServiceI userService) {
+    @Autowired
+    EmailSenderService emailService;
+
+    private final Validator validator;
+
+    public ExpertController(UserServiceI userService, RoleServiceI roleService, Validator validator) {
         super(); //???
         this.userService = userService;
+        this.roleService = roleService;
+        this.validator = validator;
     }
 
     @RequestMapping(value = "/experts/signup", method = RequestMethod.GET) //http://localhost:8080/experts/signup
@@ -46,7 +53,8 @@ public class ExpertController {
     @RequestMapping(value = "/experts/add/process")
     public String addExpert(@ModelAttribute @Valid Expert expertRequest,
                             BindingResult result,
-                            RedirectAttributes attr) {
+                            RedirectAttributes attr,
+                            Model model) {
 
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
@@ -57,24 +65,37 @@ public class ExpertController {
         // Encode the password before saving
         expertRequest.setPassword(passwordEncoder.encode(expertRequest.getPassword()));
 
+        //Get and set roles
+        Role expertRole = roleService.findOrCreate("EXPERT");
+        expertRequest.addRole(expertRole);
+
         // Save the expert and get the created entity
         User createdExpert = userService.saveUser(expertRequest);
 
+        if (createdExpert == null) {
+            model.addAttribute("error", "Error creating expert!");
+            return "experts/expertSignup";
+        }
+
+        emailService.sendEmail(createdExpert.getEmail());
         System.out.println("Saved Expert:" + createdExpert);
 
         attr.addFlashAttribute("success", "Expert added!");
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/experts/edit/{expertId}", method = RequestMethod.GET)
-    public String editExpertForm(@PathVariable Long expertId, Model model) {
-
-        Expert expert = (Expert) userService.getUserById(expertId); //TODO: test if that fails on return null
+    @RequestMapping(value = "/experts/edit", method = RequestMethod.GET)
+    public String editExpertForm(@RequestParam String userName, Model model) {
+        System.out.println("editExpertForm");
+        //get user by username
+        Expert expert = (Expert) userService.findByUsername(userName);
 
         if (expert == null) {
-            System.err.println("Expert with id " + expertId + " not found!");
-            return "errorPage";
+            System.err.println("Expert with id " + userName + " not found!");
+            return "error";
         }
+
+        expert.setPassword(null);
 
         model.addAttribute("user", expert);
         model.addAttribute("link", "/experts/edit/process");
@@ -84,20 +105,47 @@ public class ExpertController {
 
     @RequestMapping(value = "/experts/edit/process")
     public String editExpert(@ModelAttribute
-                             @Valid Expert expertRequest,
+                             Expert expertRequest,
                              BindingResult result,
-                             RedirectAttributes attr) {
+                             RedirectAttributes attr,
+                             Model model) {
+        System.out.println("editExpert");
+
+        expertRequest.setId(userService.findByUsername(expertRequest.getUsername()).getId());
+
+        // Check if a new password has been entered
+        if (!expertRequest.getPassword().isEmpty()) {
+            // Encrypt the new password
+            String encodedPassword = passwordEncoder.encode(expertRequest.getPassword());
+            expertRequest.setPassword(encodedPassword);
+        } else {
+            // Retrieve the current password from the database and set it, so it doesn't get overwritten
+            Expert existingExpert = (Expert) userService.getUserById(expertRequest.getId());
+            expertRequest.setPassword(existingExpert.getPassword());
+        }
+
+        // Manually invoke validation
+        validator.validate(expertRequest, result);
 
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
-            return "experts/editExpert";
+            //add model attribute user
+            model.addAttribute("user", expertRequest);
+            return "/experts/editExpert"; // if there are any errors -> back to edit form
         }
+
+
 
         User updatedExpert = userService.updateUser(expertRequest);
         System.out.println(updatedExpert);
 
         attr.addFlashAttribute("success", "Expert updated!");
         return "redirect:/";
+    }
+
+    @RequestMapping(value = "/experts/guideline", method = RequestMethod.GET)
+    public String showGuideline() {
+        return "experts/guideline";
     }
 }

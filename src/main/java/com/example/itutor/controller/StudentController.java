@@ -1,35 +1,49 @@
 package com.example.itutor.controller;
 
+import com.example.itutor.domain.Role;
 import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
-import com.example.itutor.repository.UserRepositoryI;
+import com.example.itutor.service.EmailSenderService;
+import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
+import com.example.itutor.service.impl.EmailSenderServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 public class StudentController {
 
     private UserServiceI userService;
 
+    private RoleServiceI roleService;
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public StudentController(UserServiceI userService) {
+    @Autowired
+    EmailSenderService emailService;
+
+    private final Validator validator;
+
+    public StudentController(UserServiceI userService, RoleServiceI roleService, Validator validator) {
         super(); //???
         this.userService = userService;
+        this.roleService = roleService;
+        this.validator = validator;
     }
 
     @RequestMapping(value = "/students/signup", method = RequestMethod.GET) //http://localhost:8080/students/signup
@@ -58,10 +72,15 @@ public class StudentController {
         // Encode the password before saving
         studentRequest.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
 
+        //Get and set roles
+        Role role = roleService.findOrCreate("STUDENT");
+        studentRequest.addRole(role);
+
         // Save the student using the service
         User createdStudent = userService.saveUser(studentRequest);
 
-        System.out.println("Saved Expert:" + createdStudent);
+        emailService.sendEmail(createdStudent.getEmail());
+        System.out.println("Saved Student:" + createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
         return "redirect:/";
@@ -70,18 +89,18 @@ public class StudentController {
     //add edit student method that has query parameter id
     // edit field, check if correct, delete button
 
-    @RequestMapping(value = "/students/edit/{studentId}", method = RequestMethod.GET)
-    public String editStudentForm(@PathVariable Long studentId, Model model) {
-        // Here the logic would have to be implemented to retrieve the student with the given studentId from the database
-
-        // get student from database by id
-        Student student = (Student) userService.getUserById(studentId);
+    @RequestMapping(value = "/students/edit", method = RequestMethod.GET)
+    public String editStudentForm(@RequestParam String userName, Model model) {
+        // get student by username
+        Student student = (Student) userService.findByUsername(userName);
 
         if (student == null) {
             // if student was not found -> redirect to another page
-            System.err.println("Student with id " + studentId + " not found!");
-            return "errorPage";
+            System.err.println("Student with id " + userName + " not found!");
+            return "error";
         }
+
+        student.setPassword(null);
 
         // Add the student to the model to pre-populate the form on the page
         model.addAttribute("user", student);
@@ -90,15 +109,36 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/students/edit/process", method = RequestMethod.POST)
-    public String editStudent(@ModelAttribute @Valid Student studentRequest,
+    public String editStudent(@ModelAttribute Student studentRequest,
                               BindingResult result,
-                              RedirectAttributes attr) {
+                              RedirectAttributes attr,
+                              Model model) {
+
+        studentRequest.setId(userService.findByUsername(studentRequest.getUsername()).getId());
+
+        // Check if a new password has been entered
+        if (!studentRequest.getPassword().isEmpty()) {
+            // Encrypt the new password
+            String encodedPassword = passwordEncoder.encode(studentRequest.getPassword());
+            studentRequest.setPassword(encodedPassword);
+        } else {
+            // Retrieve the current password from the database and set it, so it doesn't get overwritten
+            Student existingStudent = (Student) userService.getUserById(studentRequest.getId());
+            studentRequest.setPassword(existingStudent.getPassword());
+        }
+
+        // Manually invoke validation
+        validator.validate(studentRequest, result);
 
         if (result.hasErrors()) {
             System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
+            //add model attribute user
+            model.addAttribute("user", studentRequest);
             return "/students/editStudent"; // if there are any errors -> back to edit form
         }
+
+
 
         User updatedStudent = userService.updateUser(studentRequest);
         System.out.println(updatedStudent);
@@ -106,5 +146,22 @@ public class StudentController {
         attr.addFlashAttribute("success", "Student updated!");
         return "redirect:/";
 
+    }
+
+    @RequestMapping(value = "/students/motivation", method = RequestMethod.GET)
+    public String showMotivation(HttpServletRequest request, Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = null;
+
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            username = userDetails.getUsername();
+        }
+
+        User user = userService.findByUsername(username);
+
+        model.addAttribute("user", user);
+        return "students/motivation";
     }
 }
