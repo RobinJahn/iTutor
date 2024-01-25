@@ -25,6 +25,52 @@
         var courseCreationStats = /*[[${courseCreationStats}]]*/ {};
         console.log("coursecreationstats", courseCreationStats);
 
+/*
+        var labels = [];
+        var data = [];
+        var backgroundColors = [];
+
+        // Sammeln Sie die Gesamtanzahl der Aktivitäten pro Benutzer
+        Object.entries(courseCreationStats).forEach(([date, userStats]) => {
+            Object.entries(userStats).forEach(([username, count]) => {
+                var userIndex = labels.indexOf(username);
+                if (userIndex === -1) {
+                    labels.push(username);
+                    data.push(count);
+                    backgroundColors.push(getRandomColor());
+                } else {
+                    data[userIndex] += count;
+                }
+            });
+        });
+
+        var ctx = document.getElementById('userActivityChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'pie', // Ändern Sie den Typ zu 'pie' für ein Tortendiagramm
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColors,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Course Creation by User'
+                    }
+                }
+            },
+        });
+
+ */
+
+
         // Konvertieren Sie die Daten in ein Format, das von Chart.js verstanden wird
         var labels = Object.keys(courseCreationStats); // Datumsangaben
         var datasets = [];
@@ -70,6 +116,8 @@
                 }
             }
         });
+
+
     </script>
 </section>
 </body>

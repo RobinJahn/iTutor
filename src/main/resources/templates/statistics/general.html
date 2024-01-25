@@ -3,22 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <title>Statistics</title>
+
+    <!-- FullCalendar -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 </head>
 <body>
 <section layout:fragment="mybody">
-    <h1>Statistik-Übersicht</h1>
+    <div class="container" style="margin-top: 20px">
+        <div class="row">
+            <!-- Länderauswahl -->
+            <div class="col-md-4">
+                <select id="countrySelect" class="form-control">
+                    <option value="DE">Deutschland</option>
+                    <option value="US">United States of America</option>
+                    <option value="BR">Brasilien</option>
+                </select>
+            </div>
 
-    <!-- Dropdown-Menü zur Auswahl der Statistik -->
-    <select id="statsDropdown" onchange="changeStatsView()">
-        <option value="general">General Overview</option>
-        <option value="holidays">Statistics regarding public holidays</option>
-        <option value="userActivityCourseCreation">User Activity in Course Creation</option>
-        <option value="courseAndContentEngagement">Kursbeteiligung</option>
-    </select>
+            <!-- Kalender -->
+            <div class="col-md-4">
+                <div id="calendar"></div>
+            </div>
 
-    <div id="statsContent">
-        <!-- Inhalt ändert sich basierend auf der Auswahl -->
+            <!-- Statistikauswahl -->
+            <div class="col-md-4">
+                <select id="statsDropdown" class="form-control" onchange="changeStatsView()">
+                    <option value="general">General Overview</option>
+                    <option value="holidays">Statistics regarding public holidays</option>
+                    <option value="userActivityCourseCreation">User Activity in Course Creation</option>
+                    <option value="courseAndContentEngagement">Kursbeteiligung</option>
+                </select>
+            </div>
+        </div>
     </div>
+
+    <script th:inline="javascript">
+
+        var calender;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: [], // more events
+                // further configuration of required
+            });
+            calendar.render();
+            loadHolidays('DE'); // Initialer Ladevorgang für Deutschland
+        });
+
+        function loadHolidays(countryCode) {
+            var url = 'https://date.nager.at/Api/v2/PublicHolidays/2024/' + countryCode;
+            fetch(url)
+                .then(response => response.json())
+                .then(holidays => {
+                    addHolidaysToCalendar(holidays);
+                    // Verarbeiten und Anzeigen der Feiertage im Kalender
+                    console.log(holidays); // Testausgabe
+                    // Hier sollten Sie die Logik implementieren, um die Feiertage dem Kalender hinzuzufügen
+                })
+                .catch(error => console.error('Error fetching holidays:', error));
+        }
+
+        function addHolidaysToCalendar(holidays) {
+            var holidayEvents = holidays.map(holiday => {
+                return {
+                    title: holiday.localName,
+                    start: holiday.date,
+                    allDay: true,
+                    color: 'red'
+                };
+            });
+
+            calendar.removeAllEvents(); // remove all events
+            calendar.addEventSource(holidayEvents); // insert new events
+        }
+
+        // refreshing
+        document.getElementById('countrySelect').addEventListener('change', function() {
+            loadHolidays(this.value);
+        });
+
+    </script>
+
+
 
     <script>
         function changeStatsView() {
