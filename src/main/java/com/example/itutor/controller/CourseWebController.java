@@ -4,10 +4,10 @@ import com.example.itutor.domain.Content;
 import com.example.itutor.domain.Course;
 import com.example.itutor.service.ContentServiceI;
 import com.example.itutor.service.CourseServiceI;
+import com.example.itutor.service.impl.GCPStorageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
@@ -28,10 +28,12 @@ import java.util.Optional;
 public class CourseWebController {
     private final CourseServiceI courseService;
     private final ContentServiceI contentService;
+    private final GCPStorageService storageService;
 
-    public CourseWebController(CourseServiceI courseService, ContentServiceI contentService) {
+    public CourseWebController(CourseServiceI courseService, ContentServiceI contentService, GCPStorageService storageService) {
         this.courseService = courseService;
         this.contentService = contentService;
+        this.storageService = storageService;
     }
 
     @GetMapping
@@ -103,7 +105,7 @@ public class CourseWebController {
     public String uploadFile(@RequestParam Long courseId,
                              @RequestParam("file") MultipartFile file,
                              @RequestParam("fileDescription") String fileDescription, // Capture file description
-                             RedirectAttributes attributes) {
+                             RedirectAttributes attributes, Model model) {
         System.out.println("Uploading file: " + file.getOriginalFilename());
         try {
             // Retrieve the course by ID
@@ -113,7 +115,8 @@ public class CourseWebController {
                 Course course = optionalCourse.get();
 
                 Content content = getContentForFile(file, fileDescription, course);
-
+                content.setUrl(storageService.uploadDocument("i-tutor", file.getOriginalFilename(), file.getBytes()));
+                model.addAttribute("documentName", file.getOriginalFilename());
                 // Save content to your database
                 contentService.createContent(content);
 
@@ -122,7 +125,6 @@ public class CourseWebController {
 
                 // Update the course with the new content
                 courseService.updateCourse(courseId, course);
-                contentService.uploadContentDocument(file.getOriginalFilename(), file, file.getOriginalFilename(), file.getContentType());
 
                 attributes.addFlashAttribute("success", "File uploaded successfully!");
                 return "upload";

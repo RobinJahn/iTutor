@@ -39,6 +39,9 @@ public class Content implements Serializable {
     @Column(nullable = true)
     private String mimeType;
 
+    @Column(nullable = true)
+    private String url;
+
     @Lob
     @Column(nullable = true)
     private byte[] contentByteData;
