@@ -123,9 +123,10 @@ public class CourseWebController {
 
                 // Update the course with the new content
                 courseService.updateCourse(courseId, course);
+                contentService.uploadContentDocument(file.getOriginalFilename(), file, file.getOriginalFilename(), file.getContentType());
 
                 attributes.addFlashAttribute("success", "File uploaded successfully!");
-                return "redirect:/courses/" + courseId;
+                return "upload";
             } else {
                 attributes.addFlashAttribute("error", "Course not found!");
                 return "redirect:/courses";
