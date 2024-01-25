@@ -52,11 +52,12 @@ public class StatisticsController {
     }
 
 
-
     @RequestMapping("/statistics/userActivityCourseCreation")
     public String showCourseCreationStats(Model model) {
-        Map<String, Long> userActivityCounts = userActivityService.getUserActivityCountsByType("Course Creation");
-        model.addAttribute("userActivityCounts", userActivityCounts);
+        Map<LocalDate, Map<String, Long>> courseCreationStats = userActivityService.getCourseCreationStats();
+        System.out.println("Controller: " + courseCreationStats);
+        model.addAttribute("courseCreationStats", courseCreationStats);
         return "statistics/userActivityCourseCreation";
     }
+
 }
