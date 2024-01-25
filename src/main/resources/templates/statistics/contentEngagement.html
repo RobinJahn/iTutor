@@ -2,13 +2,13 @@
 <html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Course-Creation-Stats</title>
+    <title>Course-Viewing-Stats</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <section layout:fragment="mybody">
     <div>
-        <h1>User Course Creation Stats</h1>
+        <h1>User Content Viewing Stats</h1>
         <canvas id="userActivityChart"></canvas>
     </div>
     <script th:inline="javascript">
@@ -22,20 +22,17 @@
             return color;
         }
 
-        var courseCreationStats = /*[[${courseCreationStats}]]*/ {};
-        console.log("coursecreationstats", courseCreationStats);
-
-
+        var courseViewingStats = /*[[${contentViewingStats}]]*/ {}; // Ändern Sie den Namen der Variablen entsprechend
+        console.log("courseviewingstats", courseViewingStats);
 
         // Konvertieren Sie die Daten in ein Format, das von Chart.js verstanden wird
-        var labels = Object.keys(courseCreationStats); // Datumsangaben
+        var labels = Object.keys(courseViewingStats); // Datumsangaben
         var datasets = [];
-
 
         console.log("labels in frontend: ", labels);
 
         // Erstellen Sie für jeden Benutzer ein Dataset
-        Object.entries(courseCreationStats).forEach(([date, userStats]) => {
+        Object.entries(courseViewingStats).forEach(([date, userStats]) => {
             console.log("date: " + date + " and ");
             Object.entries(userStats).forEach(([username, count]) => {
                 console.log("username, count: ", username, count);
@@ -44,11 +41,10 @@
                     userDataset = {
                         label: username,
                         data: [],
-                        backgroundColor: getRandomColor(), // Eine Funktion, die eine zufällige Farbe generiert
+                        backgroundColor: getRandomColor(),
                         stack: 'Stack 0'
                     };
                     datasets.push(userDataset);
-                    console.log("userDataset inside forEach: ", userDataset);
                 }
                 userDataset.data.push({x: date, y: count});
             });
@@ -56,7 +52,7 @@
 
         var ctx = document.getElementById('userActivityChart').getContext('2d');
         var chart = new Chart(ctx, {
-            type: 'bar',
+            type: 'bar', // Oder ein anderer Typ, wenn gewünscht
             data: {
                 labels: labels,
                 datasets: datasets
@@ -72,7 +68,6 @@
                 }
             }
         });
-
 
     </script>
 </section>

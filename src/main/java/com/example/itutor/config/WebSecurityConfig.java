@@ -92,6 +92,7 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
+                .csrf(AbstractHttpConfigurer::disable)
                 .logout(LogoutConfigurer::permitAll)
         ;
 

@@ -1,22 +1,29 @@
 package com.example.itutor.service.impl;
 
+import com.example.itutor.config.MyUserDetails;
 import com.example.itutor.domain.Content;
+import com.example.itutor.domain.Course;
+import com.example.itutor.domain.UserActivity;
 import com.example.itutor.repository.ContentRepository;
-import com.example.itutor.repository.CourseRepository;
+import com.example.itutor.repository.UserActivityRepository;
 import com.example.itutor.service.ContentServiceI;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
 public class ContentServiceImpl implements ContentServiceI {
 
     private final ContentRepository contentRepository;
+    private final UserActivityRepository userActivityRepository;
 
-    public ContentServiceImpl(ContentRepository contentRepository) {
+    public ContentServiceImpl(ContentRepository contentRepository, UserActivityRepository userActivityRepository) {
         this.contentRepository = contentRepository;
+        this.userActivityRepository = userActivityRepository;
     }
 
     @Override
@@ -54,8 +61,26 @@ public class ContentServiceImpl implements ContentServiceI {
 
     @Override
     public Page<Content> getContentsByCourseId(Long courseId, Pageable pageable) {
-        return contentRepository.findByCourseCourseId(courseId, pageable);
+        Page<Content> contents = contentRepository.findByCourseCourseId(courseId, pageable);
+
+        String loggedInUserUsername = getLoggedInUsername();
+        LocalDate currentDate = LocalDate.now();
+        contents.forEach(content -> {
+            // Gets activity for every content part
+            UserActivity activity = new UserActivity(currentDate, "Content Viewing", loggedInUserUsername);
+            userActivityRepository.save(activity);
+        });
+
+        return contents;
     }
 
-
+    @Override
+    public String getLoggedInUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof MyUserDetails) {
+            return ((MyUserDetails) principal).getUsername();
+        } else {
+            return principal.toString();
+        }
+    }
 }

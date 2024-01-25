@@ -37,6 +37,15 @@ public class CourseServiceImpl implements CourseServiceI {
 
     @Override
     public Optional<Course> getCourseById(Long id) {
+        Optional<Course> courseOpt = courseRepository.findById(id);
+
+        if (courseOpt.isPresent()) {
+            // gets the activity of a user
+            String loggedInUserUsername = getLoggedInUsername();
+            UserActivity activity = new UserActivity(LocalDate.now(), "Course Viewing", loggedInUserUsername);
+            userActivityRepository.save(activity);
+        }
+
         return courseRepository.findById(id);
     }
 

@@ -27,24 +27,6 @@ public class StatisticsController {
         this.userActivityService = userActivityService;
     }
 
-    @RequestMapping("/statistics/next-holiday")
-    public String showNextHoliday(Model model) {
-        List<Holiday> holidays = holidayService.getHolidays("DE");
-        LocalDate today = LocalDate.now();
-
-        Optional<Holiday> nextHoliday = holidays.stream()
-                .filter(holiday -> holiday.getDate().isAfter(today))
-                .min(Comparator.comparing(Holiday::getDate));
-
-        if (nextHoliday.isPresent()) {
-            model.addAttribute("holiday", nextHoliday.get());
-        } else {
-            model.addAttribute("message", "Keine weiteren Feiertage in diesem Jahr gefunden.");
-        }
-
-        return "statistics/next-holiday";
-    }
-
     @RequestMapping(value = "/statistics/general", method = RequestMethod.GET)
     public String showStatistics(HttpServletRequest request, Model model) {
 
@@ -55,9 +37,25 @@ public class StatisticsController {
     @RequestMapping("/statistics/userActivityCourseCreation")
     public String showCourseCreationStats(Model model) {
         Map<LocalDate, Map<String, Long>> courseCreationStats = userActivityService.getCourseCreationStats();
-        System.out.println("Controller: " + courseCreationStats);
+        // System.out.println("Controller: " + courseCreationStats);
         model.addAttribute("courseCreationStats", courseCreationStats);
         return "statistics/userActivityCourseCreation";
+    }
+
+    @RequestMapping("/statistics/courseEngagement")
+    public String showCourseViewingStats(Model model) {
+        Map<LocalDate, Map<String, Long>> courseViewingStats = userActivityService.getCourseViewingStats();
+        // System.out.println("Controller: " + courseViewingStats);
+        model.addAttribute("courseViewingStats", courseViewingStats);
+        return "statistics/courseEngagement";
+    }
+
+    @RequestMapping("/statistics/contentEngagement")
+    public String showContentViewingStats(Model model) {
+        Map<LocalDate, Map<String, Long>> contentViewingStats = userActivityService.getContentViewingStats();
+        // System.out.println("Controller: " + contentViewingStats);
+        model.addAttribute("contentViewingStats", contentViewingStats);
+        return "statistics/contentEngagement";
     }
 
 }

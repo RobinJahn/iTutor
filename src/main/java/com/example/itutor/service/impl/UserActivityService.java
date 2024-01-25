@@ -35,7 +35,7 @@ public class UserActivityService {
 
     public Map<LocalDate, Map<String, Long>> getCourseCreationStats() {
         List<UserActivity> activities = userActivityRepository.findByActivityType("Course Creation");
-        System.out.println("Service: " + activities);
+        // System.out.println("Service: " + activities);
 
         return activities.stream()
                 .collect(Collectors.groupingBy(
@@ -46,6 +46,35 @@ public class UserActivityService {
                         )
                 ));
     }
+
+    public Map<LocalDate, Map<String, Long>> getCourseViewingStats() {
+        List<UserActivity> activities = userActivityRepository.findByActivityType("Course Viewing");
+        // System.out.println("Service: " + activities);
+
+        return activities.stream()
+                .collect(Collectors.groupingBy(
+                        UserActivity::getDate,
+                        Collectors.groupingBy(
+                                UserActivity::getUsername,
+                                Collectors.counting()
+                        )
+                ));
+    }
+
+    public Map<LocalDate, Map<String, Long>> getContentViewingStats() {
+        List<UserActivity> activities = userActivityRepository.findByActivityType("Content Viewing");
+        // System.out.println("Service: " + activities);
+
+        return activities.stream()
+                .collect(Collectors.groupingBy(
+                        UserActivity::getDate,
+                        Collectors.groupingBy(
+                                UserActivity::getUsername,
+                                Collectors.counting()
+                        )
+                ));
+    }
+
 
 
     // Add other methods as needed
