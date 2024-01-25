@@ -28,6 +28,16 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         }
     }
 
+    @Override
+    public void sendEmailWithContent(String toEmail, String subject, String text) {
+        System.out.println("Sending email to: " + toEmail);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(toEmail);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(text);
+        mailSender.send(mailMessage);
+    }
+
     private boolean isValidEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
             return false;

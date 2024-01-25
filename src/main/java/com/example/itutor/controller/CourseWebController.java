@@ -116,6 +116,7 @@ public class CourseWebController {
                 Course course = optionalCourse.get();
 
                 Content content = getContentForFile(file, fileDescription, course);
+                contentService.fileAdded();
                 content.setUrl(storageService.uploadDocument("i-tutor", file.getOriginalFilename(), file.getBytes()));
                 model.addAttribute("documentName", file.getOriginalFilename());
                 // Save content to your database
