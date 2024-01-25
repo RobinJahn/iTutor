@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Test</title>
+</head>
+<body>
+<h1>Create Test</h1>
+
+<form action="/tests/create" method="post" th:object="${test}">
+    <label for="testName">Test Name:</label>
+    <input type="text" id="testName" name="testName" th:field="*{testName}" required>
+    <button type="submit">Create Test</button>
+</form>
+
+<th:block th:if="${test != null}">
+    <form action="/questions/create" method="post" th:object="${question}">
+        <label for="question">Frage Text:</label>
+        <input type="text" id="question" name="question" th:field="*{question}" required>
+        <input type="hidden" id="testId" name="testId" th:value="${test.testId}">
+        <button type="submit">Add Frage</button>
+    </form>
+</th:block>
+</body>
+</html>

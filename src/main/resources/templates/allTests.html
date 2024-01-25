@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>All Tests</title>
+</head>
+<body>
+<h1>All Tests</h1>
+<ul>
+  <th:block th:each="test : ${tests}">
+    <li th:text="${test.testName}"></li>
+  </th:block>
+</ul>
+</body>
+</html>
