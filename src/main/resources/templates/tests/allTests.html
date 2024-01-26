@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>All Tests</title>
+</head>
+<body>
+<section class="layout-content" layout:fragment="mybody">
+    <div class="card m-3">
+        <div class="card-body">
+            <h1 class="card-title" th:text="#{tests.showAll}">All Tests</h1>
+
+            <!-- List of tests -->
+            <div class="list-group mt-3">
+                <!-- Iterating over tests in the current page -->
+                <th:block th:each="test : ${tests}">
+                    <a th:href="@{/tests/{id}(id=${test.testId})}" class="list-group-item list-group-item-action">
+                        <!-- Assuming you have a fragment for displaying a test -->
+                        <div th:insert="~{tests/testFragment :: testFragment(test=${test})}"></div>
+                    </a>
+                </th:block>
+            </div>
+
+            <!-- Form for adding new test -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h2 class="card-title" th:text="#{tests.AddNew}">Add New Test</h2>
+                    <form th:action="@{/tests/create}" method="post">
+                        <div class="form-group">
+                            <label for="testName" th:text="#{tests.name}">Test Name</label>
+                            <input type="text" class="form-control" id="testName" name="testName"
+                                   th:placeholder="#{tests.placeholder.name}" required>
+                        </div>
+                        <div class="form-group">
+                            <!-- add more fields for additional information about the test -->
+                            <!-- For example, difficulty, duration, etc. -->
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3" th:text="#{create.test}">Create Test</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

@@ -1,6 +1,8 @@
 package com.example.itutor.service.impl;
 
+import com.example.itutor.domain.Course;
 import com.example.itutor.domain.Expert;
+import com.example.itutor.domain.Question;
 import com.example.itutor.domain.Test;
 import com.example.itutor.repository.TestRepository;
 import com.example.itutor.service.TestServiceI;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TestServiceImpl implements TestServiceI {
@@ -26,5 +29,18 @@ public class TestServiceImpl implements TestServiceI {
 
     public List<Test> getAllTests() {
         return testRepository.findAll();
+    }
+    @Override
+    public Optional<Test> getTestById(Long id) {
+        return testRepository.findById(id);
+    }
+
+    @Override
+    public Test updateTest(Long id, Test updatedTest) {
+        if (testRepository.existsById(id)) {
+            updatedTest.setTestId(id);
+            return testRepository.save(updatedTest);
+        }
+        return null; // Or Error-Handling
     }
 }

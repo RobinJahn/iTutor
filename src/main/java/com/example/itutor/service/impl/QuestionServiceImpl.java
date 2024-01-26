@@ -1,5 +1,6 @@
 package com.example.itutor.service.impl;
 
+import com.example.itutor.domain.Content;
 import com.example.itutor.domain.Question;
 import com.example.itutor.domain.Test;
 import com.example.itutor.repository.QuestionRepository;
@@ -22,4 +23,5 @@ public class QuestionServiceImpl implements QuestionServiceI {
     public List<Question> getQuestionByTest(Test test) {
         return questionRepository.findByTest(test);
     }
+
 }

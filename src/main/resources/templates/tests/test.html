@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+
+<body>
+<section layout:fragment="mybody">
+    <div class="card m-3">
+        <div class="card-body">
+            <!-- heading for content -->
+            <h1 class="card-title" th:text="${test.testName}">Test Title</h1>
+
+            <!-- Iterating over questions of the course -->
+            <div th:each="question : ${questions}">
+                <div th:insert="~{tests/questionFragment :: questionFragment (question=${question})}"></div>
+            </div>
+
+            <div class="card ">
+                <div class="card-body">
+                    <h3 class="card-title" th:text="#{question.add}"> Add Question </h3>
+                    <!-- Form for adding content to course -->
+                    <form th:action="@{/tests/addQuestion}" method="post">
+                        <!-- Input field for testId -->
+                        <input type="hidden" name="testId" th:value="${test.testId}" />
+                        <!-- Input fields for question -->
+                        <div class="form-group">
+                            <label for="question" th:text="#{question.enter}">Please enter your question:</label>
+                            <textarea class="form-control" id="question" name="question" rows="3"></textarea>
+                        </div>
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary" th:text="#{question.add}">Add Question</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <a href="/tests" class="btn btn-primary mt-3" th:text="#{tests.back.button}">Back to Tests</a>
+
+    </div>
+
+</section>

@@ -1,6 +1,9 @@
 package com.example.itutor.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,8 +18,9 @@ public class Test {
     @ManyToOne
     private Expert createdBy;
 
-    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
-    private List<Question> questions;
+    @OneToMany(mappedBy = "test")
+    @JsonManagedReference
+    private List<Question> questions = new ArrayList<>();
 
     public Long getTestId() {
         return testId;
@@ -42,11 +46,18 @@ public class Test {
         this.createdBy = createdBy;
     }
 
+
     public List<Question> getQuestions() {
         return questions;
     }
 
+
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public void addQuestion(Question question) {
+        questions.add(question);
+        question.setTest(this);
     }
 }

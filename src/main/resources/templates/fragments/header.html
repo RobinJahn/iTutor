@@ -22,7 +22,7 @@
 					<a class="nav-link" th:href="@{/tests}" th:text="#{navbar.testKnowledge}">Test your knowledge</a>
 				</li>
 				<li class="nav-item" sec:authorize="hasAuthority('EXPERT')">
-					<a class="nav-link" th:href="@{/tests/create}" th:text="#{navbar.createTest}">Create Tests</a>
+					<a class="nav-link" th:href="@{/tests}" th:text="#{navbar.createTest}">Create Tests</a>
 				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" th:text="#{navbar.language}" id="navbarDropdown" role="button"
