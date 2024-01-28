@@ -8,6 +8,7 @@ import com.example.itutor.repository.ContentRepository;
 import com.example.itutor.repository.UserActivityRepository;
 import com.example.itutor.service.ContentServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,11 +24,18 @@ public class ContentServiceImpl implements ContentServiceI {
 
     private final ContentRepository contentRepository;
     private final UserActivityRepository userActivityRepository;
+    private final EmailSenderServiceImpl emailSenderService;
+
+    @Value("${master.email}")
+    String toEmail;
+
+    private long countOfFiles = 0;
 
     @Autowired
-    public ContentServiceImpl(ContentRepository contentRepository, UserActivityRepository userActivityRepository) {
+    public ContentServiceImpl(ContentRepository contentRepository, UserActivityRepository userActivityRepository, EmailSenderServiceImpl emailSenderService) {
         this.contentRepository = contentRepository;
         this.userActivityRepository = userActivityRepository;
+        this.emailSenderService = emailSenderService;
     }
 
     @Override
@@ -87,4 +95,14 @@ public class ContentServiceImpl implements ContentServiceI {
             return principal.toString();
         }
     }
+
+    @Override
+    public void fileAdded(){
+        countOfFiles++;
+        int limit = 10;
+        if (countOfFiles % limit == 0){
+            emailSenderService.sendEmailWithContent(toEmail, "Files added", limit + " files added. The amount is now " + countOfFiles + ".");
+        }
+    }
+
 }

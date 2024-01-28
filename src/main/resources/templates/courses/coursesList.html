@@ -21,7 +21,7 @@
 
             <!-- List of courses -->
             <div class="list-group mt-3">
-                <!-- Iterating over courses in the current page -->
+                <!-- Iterating over courses -->
                 <div th:each="course : ${coursesPage}">
                     <!-- Course fragment -->
                     <div th:insert="~{courses/courseFragment :: courseFragment (course=${course})}"></div>
@@ -34,8 +34,10 @@
                     <ul class="pagination mt-3">
                         <li class="page-item" th:classappend="${coursesPage.first} ? 'disabled'">
                             <a class="page-link"
-                               th:href="@{/courses(page=${coursesPage.number - 1}, size=${coursesPage.size})}">&laquo;
-                                Previous</a>
+                               th:href="@{/courses(page=${coursesPage.number - 1}, size=${coursesPage.size})}">
+                               &laquo;
+                                <span th:text="#{pagination.previous}">Previous</span>
+                            </a>
                         </li>
 
                         <li class="page-item"
@@ -47,8 +49,10 @@
 
                         <li class="page-item" th:classappend="${coursesPage.last} ? 'disabled'">
                             <a class="page-link"
-                               th:href="@{/courses(page=${coursesPage.number + 1}, size=${coursesPage.size})}">Next
-                                &raquo;</a>
+                               th:href="@{/courses(page=${coursesPage.number + 1}, size=${coursesPage.size})}">
+                                <span th:text="#{pagination.next}">Next</span>
+                                &raquo;
+                            </a>
                         </li>
                     </ul>
                 </div>

@@ -16,4 +16,6 @@ public interface ContentServiceI {
     boolean deleteContent(Long id);
     Page<Content> getContentsByCourseId(Long courseId, Pageable pageable);
     String getLoggedInUsername();
+
+    void fileAdded();
 }

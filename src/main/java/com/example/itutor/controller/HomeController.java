@@ -30,10 +30,4 @@ public class HomeController {
     public String showLayout() {
         return "/layout";
     }
-
-
-    @RequestMapping(value = "/hello")
-    public String showHello() {
-        return "/hello";
-    }
 }

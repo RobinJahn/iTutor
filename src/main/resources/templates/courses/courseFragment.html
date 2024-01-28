@@ -9,8 +9,8 @@
     <a th:href="@{/courses/{id}(id=${course.courseId})}"
        class="list-group-item list-group-item-action"
        th:id="'courseLink-' + ${course.courseId}">
+        <!-- Course title and description -->
         <div class="card-body">
-            <!-- Heading for content -->
             <h3 class="card-title" contenteditable="false" th:id="'courseTitle-' + ${course.courseId}"
                 th:text="${course.title}">Course Title</h3>
 
@@ -23,19 +23,21 @@
         <div class="col-auto">
             <!-- Edit button -->
             <button th:id="'courseEdit-' + ${course.courseId}" class="btn btn-primary my-2"
-                    th:onclick="'editCourse(this, \'' + ${course.courseId} + '\')'">Edit
+                    th:onclick="'editCourse(this, \'' + ${course.courseId} + '\')'"
+                    th:text="#{courses.edit}">Edit
             </button>
 
             <!-- Save button (initially hidden) -->
             <button th:id="'courseSave-' + ${course.courseId}" class="btn btn-success my-2" style="display: none;"
-                    th:onclick="'saveCourse(this, ' + ${course.courseId} + ')'">Save
+                    th:onclick="'saveCourse(this, ' + ${course.courseId} + ')'"
+                    th:text="#{courses.save}">Save
             </button>
         </div>
         <div class="col-auto">
-            <!-- Delete button – wrapped in a form -->
+            <!-- Delete button -->
             <form th:action="@{/courses/deleteCourse}" method="post">
                 <input type="hidden" name="courseId" th:value="${course.courseId}"/>
-                <button type="submit" class="btn btn-danger my-2">Delete</button>
+                <button type="submit" class="btn btn-danger my-2" th:text="#{courses.delete}">Delete</button>
             </form>
         </div>
     </div>
