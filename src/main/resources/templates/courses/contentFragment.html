@@ -35,21 +35,24 @@
         <div class="col-auto" sec:authorize="hasAuthority('EXPERT')">
             <!-- Edit button -->
             <button th:id="'edit-' + ${content.contentID}" class="btn btn-primary"
-                    th:onclick="'editContent(this, \'' + ${content.contentID} + '\')'">Edit
+                    th:onclick="'editContent(this, \'' + ${content.contentID} + '\')'"
+                    th:text="#{courses.edit}">Edit
             </button>
 
             <!-- Save button (initially hidden) -->
             <button th:id="'save-' + ${content.contentID}" class="btn btn-success" style="display: none;"
-                    th:onclick="'saveContent(this, ' + ${course.courseId} + ', ' + ${content.contentID} + ')'">
+                    th:onclick="'saveContent(this, ' + ${course.courseId} + ', ' + ${content.contentID} + ')'"
+                    th:text="#{courses.save}">
                 Save
             </button>
 
-            <!-- Delete button visible only to experts -->
+            <!-- Delete button-->
             <div class="d-flex mt-2">
                 <form th:action="@{/courses/removeContent}" method="post">
                     <input type="hidden" name="courseId" th:value="${course.courseId}"/>
                     <input type="hidden" name="contentId" th:value="${content.contentID}"/>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger"
+                            th:text="#{courses.delete}">Delete</button>
                 </form>
             </div>
         </div>

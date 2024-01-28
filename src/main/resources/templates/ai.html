@@ -35,7 +35,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-4">
                 <div class="card mb-3 banner-image">
-                    <img th:src="@{/image/AiOwls.png}" alt="Mascot" class="img-fluid">
+                    <img th:src="@{/image/AiOwls.png}" alt="iTutor owl chatting to AI owl" class="img-fluid">
                 </div>
             </div>
             <div class="col-lg-6">
@@ -60,7 +60,7 @@
                         <form action="/ai/message" method="post">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="message" name="message"
-                                       placeholder="Type your message...">
+                                       th:placeholder="#{ai.placeholder}">
                             </div>
                             <div class="row">
                                 <div class="col-sm-auto">

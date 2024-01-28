@@ -14,12 +14,13 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="row">
+                        <!-- Login Owl -->
                         <div class="col-md-6 col-sm-auto">
-                            <img class="img-fluid" th:src="@{/image/LoginOwl.png}" alt="Mascot">
+                            <img class="img-fluid" th:src="@{/image/LoginOwl.png}" alt="iTutor Mascot">
                         </div>
 
+                        <!-- Login Form -->
                         <div class="col-md-6 col-sm-12">
-                            <!-- Login form -->
                             <div>
                                 <form th:action="@{/login}" method="post">
                                     <div class="card-body">
@@ -36,8 +37,7 @@
                                             <input type="password" id="password" name="password" class="form-control"/>
                                         </div>
                                         <div class="d-grid gap-2">
-                                            <input type="submit" th:value="#{login.signIn}"
-                                                   class="btn btn-primary mb-2"/>
+                                            <input type="submit" th:value="#{login.signIn}" class="btn btn-primary mb-2"/>
                                             <a href="/" class="btn btn-secondary" th:text="#{login.return}">Return to Home</a>
                                         </div>
                                     </div>
@@ -52,10 +52,11 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="d-block mt-3">
-                    <!-- Error and logout messages -->
+                    <!-- Error message -->
                     <div th:if="${param.error}" class="alert alert-danger" role="alert">
                         Invalid username and password.
                     </div>
+                    <!-- Logout message -->
                     <div th:if="${param.logout}" class="alert alert-success" role="alert">
                         You have been logged out.
                     </div>

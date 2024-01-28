@@ -9,15 +9,17 @@
 <section layout:fragment="mybody">
     <div class="card m-3">
 
+        <!-- Course owls image -->
         <img class="card-img-top" src="/image/StudyOwls2.png" alt="Studying owls">
 
+        <!-- Course details -->
         <div class="card-body">
-            <!-- heading for content -->
+
             <h1 class="card-title" th:text="${course.title}">Course Title</h1>
 
             <p th:text="${course.description}">Course Description</p>
 
-            <!-- Iterating over contents of the course -->
+            <!-- Iterating over the contents of the course -->
             <div th:each="content : ${contents}">
                 <!-- Content fragment -->
                 <div th:insert="~{courses/contentFragment :: contentFragment (content=${content})}"></div>
@@ -29,8 +31,10 @@
                     <ul class="pagination mt-3">
                         <li class="page-item" th:classappend="${contents.first} ? 'disabled'">
                             <a class="page-link"
-                               th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number - 1}, size=${contents.size})}">&laquo;
-                                Previous</a>
+                               th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number - 1}, size=${contents.size})}">
+                               &laquo;
+                            <span th:text="#{pagination.previous}"> Previous</span>
+                            </a>
                         </li>
 
                         <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, contents.totalPages - 1)}"
@@ -42,8 +46,10 @@
 
                         <li class="page-item" th:classappend="${contents.last} ? 'disabled'">
                             <a class="page-link"
-                               th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number + 1}, size=${contents.size})}">Next
-                                &raquo;</a>
+                               th:href="@{/courses/{id}(id=${course.courseId}, page=${contents.number + 1}, size=${contents.size})}">
+                                <span th:text="#{pagination.next}">Next</span>
+                                &raquo;
+                            </a>
                         </li>
                     </ul>
                 </div>
