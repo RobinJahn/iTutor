@@ -15,7 +15,6 @@
                 <!-- Iterating over tests in the current page -->
                 <th:block th:each="test : ${tests}">
                     <a th:href="@{/tests/{id}(id=${test.testId})}" class="list-group-item list-group-item-action">
-                        <!-- Assuming you have a fragment for displaying a test -->
                         <div th:insert="~{tests/testFragment :: testFragment(test=${test})}"></div>
                     </a>
                 </th:block>
