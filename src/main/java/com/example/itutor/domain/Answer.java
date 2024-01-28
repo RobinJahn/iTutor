@@ -48,4 +48,5 @@ public class Answer {
     public void setGivenAnswer(String givenAnswer) {
         this.givenAnswer = givenAnswer;
     }
+
 }

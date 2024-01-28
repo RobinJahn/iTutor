@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>All Tests</title>
@@ -22,7 +22,7 @@
             </div>
 
             <!-- Form for adding new test -->
-            <div class="card mt-3">
+            <div class="card mt-3" sec:authorize="hasAuthority('EXPERT')">
                 <div class="card-body">
                     <h2 class="card-title" th:text="#{tests.AddNew}">Add New Test</h2>
                     <form th:action="@{/tests/create}" method="post">

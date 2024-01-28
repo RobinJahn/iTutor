@@ -1,6 +1,7 @@
 package com.example.itutor.controller;
 
 import com.example.itutor.domain.*;
+import com.example.itutor.service.AnswerServiceI;
 import com.example.itutor.service.QuestionServiceI;
 import com.example.itutor.service.TestServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class TestController {
     private TestServiceI testService;
     @Autowired
     private QuestionServiceI questionService;
+    @Autowired
+    private AnswerServiceI answerService;
 
 
     @GetMapping
@@ -97,5 +100,24 @@ public class TestController {
             redirectAttributes.addFlashAttribute("error", "Test not found!");
             return "redirect:/tests";
         }
+    }
+
+    @PostMapping("/saveAnswer")
+    public String saveAnswer(@RequestParam Long questionId, @RequestParam String answer) {
+        Answer newAnswer = new Answer();
+        newAnswer.setGivenAnswer(answer);
+        answerService.saveAnswer(newAnswer);
+
+        return "redirect:/tests";
+    }
+
+    @GetMapping("/question/{questionId}")
+    public String showAnswerByQuestion(@PathVariable Long questionId, Model model) {
+        Question question = new Question();
+        question.setId(questionId);
+        // Annahme: Du möchtest die Antworten zu einer bestimmten Frage anzeigen
+        List<Answer> answers = answerService.getAnswersByStudentAndQuestion(null, question);
+        model.addAttribute("answers", answers);
+        return "tests/answers";
     }
 }

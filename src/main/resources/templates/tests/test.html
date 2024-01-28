@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
 </head>
@@ -15,8 +15,17 @@
             <div th:each="question : ${questions}">
                 <div th:insert="~{tests/questionFragment :: questionFragment (question=${question})}"></div>
             </div>
+            <div class="card" sec:authorize="hasAuthority('STUDENT')">
+                <div class="card-body">
+                    <form th:action="@{/tests/saveAnswer}" method="post" th:each="question : ${questions}">
+                        <input type="hidden" name="questionId" th:value="${question.id}"/>
+                        <textarea name="answer" rows="3"></textarea>
+                        <button type="submit">Answer</button>
+                    </form>
+                </div>
+            </div>
 
-            <div class="card ">
+            <div class="card " sec:authorize="hasAuthority('EXPERT')">
                 <div class="card-body">
                     <h3 class="card-title" th:text="#{question.add}"> Add Question </h3>
                     <!-- Form for adding content to course -->

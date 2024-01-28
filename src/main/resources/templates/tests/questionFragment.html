@@ -8,8 +8,14 @@
 <div th:fragment="questionFragment(question)">
   <div class="card my-3">
     <div class="card-body">
-      <!-- heading for content -->
-      <h3 class="card-title" th:text="${question.question}">Question Title</h3>
+      <a th:href="@{/tests/question/{id}(id=${question.id})}" class="list-group-item list-group-item-action">
+        <!-- heading for content -->
+        <h3 class="card-title" th:text="${question.question}">Question Title</h3>
+      </a>
+      <!-- Iterating over answers of the questions -->
+      <div th:each="answer : ${answers}">
+        <div th:insert="~{tests/answerFragment :: answerFragment (answer=${answer})}"></div>
+      </div>
     </div>
   </div>
 </div>

@@ -46,4 +46,13 @@ INSERT INTO content (title, content_type, content_data, course_id) VALUES ('Math
 INSERT INTO content (title, content_type, content_data, course_id) VALUES ('Advanced Mathematical Theories', 'text', 'A deep dive into advanced math theories.', 1);
 INSERT INTO content (title, content_type, content_data, course_id) VALUES ('Mathematics in Science', 'text', 'Exploring the role of math in scientific research.', 1);
 
+--Insert Tests
+INSERT INTO test (testName) VALUES ('Mathematics');
+INSERT INTO test (testName) VALUES ('Physics');
+INSERT INTO test (testName) VALUES ('Chemistry');
+INSERT INTO test (testName) VALUES ('Spanish');
+
+INSERT INTO question(question, test_id) VALUES ('Let the equation be given: 2x+5=15. Solve the equation and determine the value of x.',1)
+
+
 
