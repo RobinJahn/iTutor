@@ -82,7 +82,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    contentID: contentId, // Ensure this field name matches your Content class
+                    contentID: contentId,
                     title: updatedTitle,
                     contentData: updatedData
                 })
@@ -92,7 +92,6 @@
                         // Handle successful update
                         console.log('Content updated successfully');
                         response.json().then(course => {
-                            // You can use the updated course data here if needed
                         });
                     } else {
                         // Handle errors

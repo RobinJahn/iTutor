@@ -14,7 +14,6 @@ import com.example.itutor.service.UserServiceI;
 @Service
 public class UserServiceImpl implements UserServiceI {
 
-	//Why not autowired ??? - because constructor injection is better
 	private UserRepositoryI userRepository;
 	
 	public UserServiceImpl(UserRepositoryI userRepository) {
@@ -24,13 +23,11 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public List<User> getAllUsers() {
-		// TODO Auto-generated method stub
 		return (List<User>) userRepository.findAll();
 	}
 
 	@Override
 	public User saveUser(User user) {
-		// TODO Auto-generated method stub
 		try {
 			user.setStatus(Status.ONLINE);
 			return userRepository.save(user);
@@ -56,25 +53,21 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public User getUserById(Long id) {
-		// TODO Auto-generated method stub
 		return userRepository.findById(id).get();
 	}
 
 	@Override
 	public User updateUser(User user) {
-		// TODO Auto-generated method stub
 		return userRepository.save(user);
 	}
 
 	@Override
 	public void delete(User user) {
-		// TODO Auto-generated method stub
 		userRepository.delete(user);
 	}
 
 	@Override
 	public User findByUsername(String username) {
-		//return user or null
 		Optional<User> user = userRepository.findByUsername(username);
 		if(user.isPresent()) {
 			return user.get();

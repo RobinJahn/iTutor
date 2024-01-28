@@ -26,15 +26,12 @@
         console.log("coursecreationstats", courseCreationStats);
 
 
-
-        // Konvertieren Sie die Daten in ein Format, das von Chart.js verstanden wird
-        var labels = Object.keys(courseCreationStats); // Datumsangaben
+        var labels = Object.keys(courseCreationStats);
         var datasets = [];
 
 
         console.log("labels in frontend: ", labels);
 
-        // Erstellen Sie für jeden Benutzer ein Dataset
         Object.entries(courseCreationStats).forEach(([date, userStats]) => {
             console.log("date: " + date + " and ");
             Object.entries(userStats).forEach(([username, count]) => {
@@ -44,7 +41,7 @@
                     userDataset = {
                         label: username,
                         data: [],
-                        backgroundColor: getRandomColor(), // Eine Funktion, die eine zufällige Farbe generiert
+                        backgroundColor: getRandomColor(),
                         stack: 'Stack 0'
                     };
                     datasets.push(userDataset);

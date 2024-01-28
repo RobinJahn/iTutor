@@ -25,14 +25,11 @@ public class StudentServiceImpl implements StudentServiceI {
     }
 
     public Student createStudent(Student student) {
-        // Erstellung eines Studenten
         return studentRepository.save(student);
     }
 
     public Student updateStudent(Long id, Student studentDetails) {
-        // Aktualisierung eines Studenten
         Student student = getStudentById(id);
-        // Details für den Studenten setzen und speichern
         student.setUsername(studentDetails.getUsername());
         student.setEmail(studentDetails.getEmail());
         student.setBirthDate(studentDetails.getBirthDate());
@@ -43,7 +40,6 @@ public class StudentServiceImpl implements StudentServiceI {
     }
 
     public void deleteStudent(Long id) {
-        // Löschen eines Studenten
         Student student = getStudentById(id);
         studentRepository.delete(student);
     }

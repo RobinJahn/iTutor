@@ -31,7 +31,6 @@ public class StatisticsController {
     @RequestMapping("/statistics/userActivityCourseCreation")
     public String showCourseCreationStats(Model model) {
         Map<LocalDate, Map<String, Long>> courseCreationStats = userActivityService.getCourseCreationStats();
-        // System.out.println("Controller: " + courseCreationStats);
         model.addAttribute("courseCreationStats", courseCreationStats);
         return "statistics/userActivityCourseCreation";
     }
@@ -39,7 +38,6 @@ public class StatisticsController {
     @RequestMapping("/statistics/courseEngagement")
     public String showCourseViewingStats(Model model) {
         Map<LocalDate, Map<String, Long>> courseViewingStats = userActivityService.getCourseViewingStats();
-        // System.out.println("Controller: " + courseViewingStats);
         model.addAttribute("courseViewingStats", courseViewingStats);
         return "statistics/courseEngagement";
     }
@@ -47,7 +45,6 @@ public class StatisticsController {
     @RequestMapping("/statistics/contentEngagement")
     public String showContentViewingStats(Model model) {
         Map<LocalDate, Map<String, Long>> contentViewingStats = userActivityService.getContentViewingStats();
-        // System.out.println("Controller: " + contentViewingStats);
         model.addAttribute("contentViewingStats", contentViewingStats);
         return "statistics/contentEngagement";
     }

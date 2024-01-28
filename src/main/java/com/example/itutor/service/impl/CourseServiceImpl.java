@@ -66,7 +66,7 @@ public class CourseServiceImpl implements CourseServiceI {
             updatedCourse.setCourseId(id);
             return courseRepository.save(updatedCourse);
         }
-        return null; // Or Error-Handling
+        return null;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CourseServiceImpl implements CourseServiceI {
             courseRepository.deleteById(id);
             return true;
         }
-        return false; // Or Error-Handling
+        return false;
     }
 
     @Override
