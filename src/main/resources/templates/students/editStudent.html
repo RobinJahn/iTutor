@@ -21,6 +21,10 @@
         </div>
     </div>
 
+    <!-- Delete Button -->
+    <button type="button" class="btn btn-danger mt-3" id="deleteButton" th:text="#{courses.delete}">Delete</button>
+
+
     <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", function() {
             var usernameInput = document.getElementById('usernameInput');
@@ -36,6 +40,17 @@
                 // Change label text color to gray
                 usernameLabel.style.color = 'gray';
             }
+
+            var deleteButton = document.getElementById('deleteButton');
+
+            deleteButton.addEventListener('click', function() {
+                var userName = usernameInput.value;
+                if(userName) {
+                    window.location.href = '/students/delete?userName=' + encodeURIComponent(userName);
+                } else {
+                    alert('Username is missing');
+                }
+            });
         });
     </script>
 </section>

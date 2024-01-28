@@ -1,5 +1,6 @@
 package com.example.itutor.controller;
 
+import com.example.itutor.domain.Expert;
 import com.example.itutor.domain.Researcher;
 import com.example.itutor.domain.Role;
 import com.example.itutor.domain.User;
@@ -9,6 +10,7 @@ import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,19 +72,19 @@ public class ResearcherController {
         Role researcherRole = roleService.findOrCreate("RESEARCHER");
         researcherRequest.addRole(researcherRole);
 
-        // Save the student using the service
+        // Save the Researcher using the service
         User createdResearcher = null;
         try {
-            // Save the student using the service
+            // Save the Researcher using the service
             createdResearcher = userService.saveUser(researcherRequest);
         }
         catch (Exception e) {
-            System.out.println("Error creating student: " + e.getMessage());
+            System.out.println("Error creating researcher: " + e.getMessage());
         }
         if (createdResearcher == null) {
             //render same page with model attribute error
             attr.addFlashAttribute("error", "User with username " + researcherRequest.getUsername() + " already exists!");
-            return "redirect:/students/signup";
+            return "redirect:/researchers/signup";
         }
 
         emailService.sendSignupVerificationEmail(createdResearcher.getEmail());
@@ -96,7 +98,12 @@ public class ResearcherController {
     @RequestMapping(value = "/researchers/edit", method = RequestMethod.GET)
     public String editResearcherForm(@RequestParam String userName, Model model, RedirectAttributes attr) {
         // get researcher by username
-        Researcher researcher = (Researcher) userService.findByUsername(userName);
+        Researcher researcher = null;
+        try {
+            researcher = (Researcher) userService.findByUsername(userName);
+        } catch (ClassCastException e) {
+            researcher = null;
+        }
 
         if (researcher == null) {
             // if researcher was not found -> redirect to another page
@@ -146,6 +153,31 @@ public class ResearcherController {
         System.out.println(updatedResearcher);
 
         attr.addFlashAttribute("success", "Researcher updated!");
+        return "redirect:/";
+    }
+
+
+    @RequestMapping(value = "/researchers/delete", method = RequestMethod.GET)
+    public String deleteResearcher(@RequestParam String userName, RedirectAttributes attr, HttpServletRequest request) {
+        //get user by username
+        Researcher researcher = (Researcher) userService.findByUsername(userName);
+
+        if (researcher == null) {
+            // if user was not found
+            System.out.println("Researcher with username " + userName + " not found");
+            attr.addFlashAttribute("error", "Researcher not found!");
+            return "redirect:/";
+        }
+
+        // delete the Researcher
+        userService.delete(researcher);
+        System.out.println("Deleted Researcher:" + researcher);
+
+        // Perform logout
+        SecurityContextHolder.clearContext();
+        request.getSession().invalidate();
+
+        attr.addFlashAttribute("success", "Researcher deleted!");
         return "redirect:/";
     }
 

@@ -8,6 +8,7 @@ import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,7 +95,12 @@ public class ExpertController {
     @RequestMapping(value = "/experts/edit", method = RequestMethod.GET)
     public String editExpertForm(@RequestParam String userName, Model model, RedirectAttributes attr) {
         //get user by username
-        Expert expert = (Expert) userService.findByUsername(userName);
+        Expert expert = null;
+        try {
+            expert = (Expert) userService.findByUsername(userName);
+        } catch (ClassCastException e) {
+            expert = null;
+        }
 
         if (expert == null) {
             // if user was not found
@@ -154,6 +160,28 @@ public class ExpertController {
         return "experts/guideline";
     }
 
+    @RequestMapping(value = "/experts/delete", method = RequestMethod.GET)
+    public String deleteExpert(@RequestParam String userName, RedirectAttributes attr, HttpServletRequest request) {
+        //get user by username
+        Expert expert = (Expert) userService.findByUsername(userName);
 
+        if (expert == null) {
+            // if user was not found
+            System.out.println("Expert with username " + userName + " not found");
+            attr.addFlashAttribute("error", "Expert not found!");
+            return "redirect:/";
+        }
+
+        // delete the expert
+        userService.delete(expert);
+        System.out.println("Deleted Expert:" + expert);
+
+        // Perform logout
+        SecurityContextHolder.clearContext();
+        request.getSession().invalidate();
+
+        attr.addFlashAttribute("success", "Expert deleted!");
+        return "redirect:/";
+    }
 
 }

@@ -102,7 +102,12 @@ public class StudentController {
     @RequestMapping(value = "/students/edit", method = RequestMethod.GET)
     public String editStudentForm(@RequestParam String userName, Model model, RedirectAttributes attr) {
         // get student by username
-        Student student = (Student) userService.findByUsername(userName);
+        Student student = null;
+        try {
+            student = (Student) userService.findByUsername(userName);
+        } catch (ClassCastException e) {
+            student = null;
+        }
 
         if (student == null) {
             System.out.println("Student with username " + userName + " not found");
@@ -171,5 +176,29 @@ public class StudentController {
 
         model.addAttribute("user", user);
         return "students/motivation";
+    }
+
+    @RequestMapping(value = "/students/delete", method = RequestMethod.GET)
+    public String deleteStudent(@RequestParam String userName, RedirectAttributes attr, HttpServletRequest request) {
+        //get user by username
+        Student student = (Student) userService.findByUsername(userName);
+
+        if (student == null) {
+            // if user was not found
+            System.out.println("Student with username " + userName + " not found");
+            attr.addFlashAttribute("error", "Student not found!");
+            return "redirect:/";
+        }
+
+        // delete the student
+        userService.delete(student);
+        System.out.println("Deleted Student:" + student);
+
+        // Perform logout
+        SecurityContextHolder.clearContext();
+        request.getSession().invalidate();
+
+        attr.addFlashAttribute("success", "Student deleted!");
+        return "redirect:/";
     }
 }

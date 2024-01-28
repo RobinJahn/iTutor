@@ -31,25 +31,38 @@
                 <span th:errors="*{qualification}"></span>
             </div>
         </div>
+    </div>
+
+    <!-- Delete Button -->
+    <button type="button" class="btn btn-danger mt-3" id="deleteButton" th:text="#{courses.delete}">Delete</button>
 
 
-        <script th:inline="javascript">
-            document.addEventListener("DOMContentLoaded", function() {
-                var usernameInput = document.getElementById('usernameInput');
-                var usernameLabel = document.getElementById('usernameLabel');
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            var usernameInput = document.getElementById('usernameInput');
+            var usernameLabel = document.getElementById('usernameLabel');
 
-                console.log('Username Input:', usernameInput);
-                console.log('Username Label:', usernameLabel);
+            console.log('Username Input:', usernameInput);
+            console.log('Username Label:', usernameLabel);
 
-                if (usernameInput && usernameLabel) {
-                    // Disable the input
-                    usernameInput.disabled = true;
+            if (usernameInput && usernameLabel) {
+                // Disable the input
+                usernameInput.disabled = true;
 
-                    // Change label text color to gray
-                    usernameLabel.style.color = 'gray';
+                // Change label text color to gray
+                usernameLabel.style.color = 'gray';
+            }
+
+            var deleteButton = document.getElementById('deleteButton');
+
+            deleteButton.addEventListener('click', function() {
+                var userName = usernameInput.value;
+                if(userName) {
+                    window.location.href = '/researchers/delete?userName=' + encodeURIComponent(userName);
+                } else {
+                    alert('Username is missing');
                 }
             });
-        </script>
-
-    </div>
+        });
+    </script>
 </section>
