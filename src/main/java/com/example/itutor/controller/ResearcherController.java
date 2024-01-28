@@ -85,7 +85,7 @@ public class ResearcherController {
             return "redirect:/students/signup";
         }
 
-        emailService.sendEmail(createdResearcher.getEmail());
+        emailService.sendSignupVerificationEmail(createdResearcher.getEmail());
         System.out.println("Saved Researcher:" + createdResearcher);
 
 
@@ -134,16 +134,14 @@ public class ResearcherController {
         // Manually invoke validation
         validator.validate(researcherRequest, result);
 
+        // Check if there are any validation errors
         if (result.hasErrors()) {
-            System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
-            //add model attribute user
-            model.addAttribute("user", researcherRequest);
-            return "researchers/editResearcher"; // if there are any errors -> back to edit form
+            attr.addFlashAttribute("error", "Some input fields where invalid!");
+            return "redirect:/";
         }
 
-
-
+        // update the researcher
         User updatedResearcher = userService.updateUser(researcherRequest);
         System.out.println(updatedResearcher);
 

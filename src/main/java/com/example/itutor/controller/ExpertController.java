@@ -8,7 +8,6 @@ import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,24 +23,23 @@ public class ExpertController {
 
     private final RoleServiceI roleService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    EmailSenderService emailService;
+    private final EmailSenderService emailService;
 
     private final Validator validator;
 
-    public ExpertController(UserServiceI userService, RoleServiceI roleService, Validator validator) {
-        super(); //???
+    public ExpertController(UserServiceI userService, RoleServiceI roleService, PasswordEncoder passwordEncoder, EmailSenderService emailService, Validator validator) {
+        super();
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
         this.validator = validator;
     }
 
-    @RequestMapping(value = "/experts/signup", method = RequestMethod.GET) //http://localhost:8080/experts/signup
+    @RequestMapping(value = "/experts/signup", method = RequestMethod.GET)
     public String showExpertSignup(HttpServletRequest request, Model model) {
-
         Expert expert = new Expert();
         model.addAttribute("user", expert);
 
@@ -57,9 +55,9 @@ public class ExpertController {
                             Model model) {
 
         if (result.hasErrors()) {
-            System.out.println(result.getErrorCount());
-            System.out.println(result.getAllErrors());
-            return "signup";
+            System.out.println("Validation error for created expert: " + result.getAllErrors());
+            attr.addFlashAttribute("error", "Some input fields where invalid!");
+            return "redirect:/experts/signup";
         }
 
         // Encode the password before saving
@@ -72,24 +70,20 @@ public class ExpertController {
         // Save the expert and get the created entity
         User createdExpert = null;
         try {
-            // Save the student using the service
             createdExpert = userService.saveUser(expertRequest);
         }
         catch (Exception e) {
-            System.out.println("Error creating student: " + e.getMessage());
-        }
-        if (createdExpert == null) {
+            System.out.println("Error creating expert: " + e.getMessage());
             //render same page with model attribute error
             attr.addFlashAttribute("error", "User with username " + expertRequest.getUsername() + " already exists!");
-            return "redirect:/students/signup";
+            return "redirect:/experts/signup";
         }
-
         if (createdExpert == null) {
-            model.addAttribute("error", "Error creating expert!");
-            return "experts/expertSignup";
+            attr.addAttribute("Something went wrong! Please try again!");
+            return "redirect:/experts/signup";
         }
 
-        emailService.sendEmail(createdExpert.getEmail());
+        emailService.sendSignupVerificationEmail(createdExpert.getEmail());
         System.out.println("Saved Expert:" + createdExpert);
 
         attr.addFlashAttribute("success", "Expert added!");
@@ -98,17 +92,17 @@ public class ExpertController {
 
     @RequestMapping(value = "/experts/edit", method = RequestMethod.GET)
     public String editExpertForm(@RequestParam String userName, Model model, RedirectAttributes attr) {
-        System.out.println("editExpertForm");
         //get user by username
         Expert expert = (Expert) userService.findByUsername(userName);
 
         if (expert == null) {
-            // if user was not found -> redirect to another page
+            // if user was not found
             System.out.println("Expert with username " + userName + " not found");
             attr.addFlashAttribute("error", "Expert not found!");
             return "redirect:/";
         }
 
+        // Set the password to null, so it doesn't get overwritten
         expert.setPassword(null);
 
         model.addAttribute("user", expert);
@@ -123,8 +117,6 @@ public class ExpertController {
                              BindingResult result,
                              RedirectAttributes attr,
                              Model model) {
-        System.out.println("editExpert");
-
         expertRequest.setId(userService.findByUsername(expertRequest.getUsername()).getId());
 
         // Check if a new password has been entered
@@ -141,16 +133,14 @@ public class ExpertController {
         // Manually invoke validation
         validator.validate(expertRequest, result);
 
+        // Check if there are any validation errors
         if (result.hasErrors()) {
-            System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
-            //add model attribute user
-            model.addAttribute("user", expertRequest);
-            return "/experts/editExpert"; // if there are any errors -> back to edit form
+            attr.addFlashAttribute("error", "Some input fields where invalid!");
+            return "redirect:/";
         }
 
-
-
+        // update the expert
         User updatedExpert = userService.updateUser(expertRequest);
         System.out.println(updatedExpert);
 

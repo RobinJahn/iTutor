@@ -6,7 +6,6 @@ import com.example.itutor.domain.User;
 import com.example.itutor.service.EmailSenderService;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;
-import com.example.itutor.service.impl.EmailSenderServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -90,7 +89,7 @@ public class StudentController {
             return "redirect:/students/signup";
         }
 
-        emailService.sendEmail(createdStudent.getEmail());
+        emailService.sendSignupVerificationEmail(createdStudent.getEmail());
         System.out.println("Saved Student:" + createdStudent);
 
         attr.addFlashAttribute("success", "Student added!");
@@ -141,16 +140,14 @@ public class StudentController {
         // Manually invoke validation
         validator.validate(studentRequest, result);
 
+        // Check if there are any validation errors
         if (result.hasErrors()) {
-            System.out.println(result.getErrorCount());
             System.out.println(result.getAllErrors());
-            //add model attribute user
-            model.addAttribute("user", studentRequest);
-            return "/students/editStudent"; // if there are any errors -> back to edit form
+            attr.addFlashAttribute("error", "Some input fields where invalid!");
+            return "redirect:/";
         }
 
-
-
+        // update the student
         User updatedStudent = userService.updateUser(studentRequest);
         System.out.println(updatedStudent);
 

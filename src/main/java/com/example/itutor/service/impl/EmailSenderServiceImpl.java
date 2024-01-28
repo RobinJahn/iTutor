@@ -15,7 +15,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     @Autowired
     private JavaMailSender mailSender;
     @Override
-    public void sendEmail(String toEmail) {
+    public void sendSignupVerificationEmail(String toEmail) {
         if (isValidEmail(toEmail)) {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setTo(toEmail);

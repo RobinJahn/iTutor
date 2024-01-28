@@ -6,6 +6,9 @@
 <body>
 
 <section class="layout-content" layout:fragment="moreAttributes">
+    <!-- Hidden field for username -->
+    <input type="hidden" th:field="*{username}" />
+
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="birthDate" th:text="#{form.label.birth}">Birthdate </label>

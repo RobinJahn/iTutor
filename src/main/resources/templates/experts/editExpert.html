@@ -4,6 +4,9 @@
 <body>
 
 <section class="layout-content" layout:fragment="moreAttributes">
+    <!-- Hidden field for username -->
+    <input type="hidden" th:field="*{username}" />
+
     <div class="form-row">
         <div class="form-group col-md-6">
             <label th:for="expertise" th:text="#{form.label.expertise}">Expertise </label>
