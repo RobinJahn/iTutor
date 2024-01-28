@@ -21,6 +21,9 @@
 				<li class="nav-item" sec:authorize="hasAuthority('RESEARCHER')">
 					<a class="nav-link" th:href="@{/statistics/general}" th:text="#{navbar.statistics}">Statistics</a>
 				</li>
+                <li class="nav-item" sec:authorize="hasAuthority('EXPERT')">
+                    <a class="nav-link" th:href="@{/tests}" th:text="#{navbar.createTest}">Create Tests</a>
+                </li>
 				<li class="nav-item active">
 					<a class="nav-link" th:href="@{/ai}" th:text="#{navbar.ai}">Chat with AI</a>
 				</li>
