@@ -2,9 +2,7 @@ package com.example.itutor.controller;
 
 import com.example.itutor.domain.Researcher;
 import com.example.itutor.domain.Role;
-import com.example.itutor.domain.Student;
 import com.example.itutor.domain.User;
-import com.example.itutor.service.HolidayServiceI;
 import com.example.itutor.service.EmailSenderService;
 import com.example.itutor.service.RoleServiceI;
 import com.example.itutor.service.UserServiceI;

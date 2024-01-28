@@ -1,7 +1,5 @@
 package com.example.itutor.controller;
 
-import com.example.itutor.domain.Holiday;
-import com.example.itutor.service.HolidayServiceI;
 import com.example.itutor.service.impl.UserActivityService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +15,9 @@ import java.util.*;
 public class StatisticsController {
 
     @Autowired
-    final HolidayServiceI holidayService;
-
-    @Autowired
     private UserActivityService userActivityService;
 
-    public StatisticsController(HolidayServiceI holidayService, UserActivityService userActivityService) {
-        this.holidayService = holidayService;
+    public StatisticsController(UserActivityService userActivityService) {
         this.userActivityService = userActivityService;
     }
 

@@ -40,7 +40,6 @@ public class ChatRestController {
         return chatMessageService.findById(id)
                 .map(message -> {
                     message.setContent(updatedMessage.getContent());
-                    // Update other fields as necessary
                     return ResponseEntity.ok(chatMessageService.save(message));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -51,9 +50,9 @@ public class ChatRestController {
         Optional<ChatMessage> message = chatMessageService.findById(id);
         if (message.isPresent()) {
             chatMessageService.deleteById(id);
-            return ResponseEntity.ok().build();  // Explicitly returning ResponseEntity<Void>
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.notFound().build();  // Explicitly returning ResponseEntity<Void>
+            return ResponseEntity.notFound().build();
         }
     }
 

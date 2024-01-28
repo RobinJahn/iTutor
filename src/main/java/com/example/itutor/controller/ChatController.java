@@ -1,6 +1,5 @@
 package com.example.itutor.controller;
 
-import com.example.itutor.domain.ChatRoom;
 import com.example.itutor.domain.User;
 import com.example.itutor.domain.chat.ChatMessage;
 import com.example.itutor.service.impl.ChatMessageService;
@@ -9,9 +8,6 @@ import com.example.itutor.repository.UserRepositoryI;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller

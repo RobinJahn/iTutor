@@ -6,7 +6,7 @@ body {
 }
 
 .load-more-btn {
-    display: none; /* Button anfangs versteckt */
+    display: none; /* hide button in the beginning */
     margin: 10px auto;
     padding: 5px 15px;
     background-color: #007bff;

@@ -1,16 +1,11 @@
 package com.example.itutor.domain;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 import java.io.Serializable;
 
 @Entity
 public class Researcher extends User implements Serializable {
-
-    // Attributes
-    // Q: should the researchers be actual researchers, for example working for a company
-    // or are these just normal people with the ability to see the statistics on the site
 
     // Affiliation being the institution / company the researcher works for
     private String affiliation;

@@ -57,10 +57,9 @@
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 events: [], // more events
-                // further configuration of required
             });
             calendar.render();
-            loadHolidays('DE'); // Initialer Ladevorgang für Deutschland
+            loadHolidays('DE'); // initial loading for germany
         });
 
         function loadHolidays(countryCode) {
@@ -70,8 +69,7 @@
                 .then(holidays => {
                     addHolidaysToCalendar(holidays);
                     // Verarbeiten und Anzeigen der Feiertage im Kalender
-                    console.log(holidays); // Testausgabe
-                    // Hier sollten Sie die Logik implementieren, um die Feiertage dem Kalender hinzuzufügen
+                    console.log(holidays);
                 })
                 .catch(error => console.error('Error fetching holidays:', error));
         }
