@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tests")
+@Table(name = "test")
 public class Test {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long testId;
 
+    @Column(name = "TESTNAME")
     private String testName;
     @ManyToOne
     private Expert createdBy;

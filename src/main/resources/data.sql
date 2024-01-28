@@ -100,6 +100,12 @@ INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 
 INSERT INTO user_activity (date, activity_type, username) VALUES ('2024-01-25', 'Content Viewing', 'MuchProvider2');
 
 
+--Insert Tests
+INSERT INTO test (testName) VALUES ('Mathematics');
+INSERT INTO test (testName) VALUES ('Physics');
+INSERT INTO test (testName) VALUES ('Chemistry');
+INSERT INTO test (testName) VALUES ('Spanish');
 
+INSERT INTO question(question, test_id) VALUES ('Let the equation be given: 2x+5=15. Solve the equation and determine the value of x.',1)
 
 
