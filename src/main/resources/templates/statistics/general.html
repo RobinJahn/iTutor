@@ -14,9 +14,9 @@
             <!-- Länderauswahl -->
             <div class="col-4">
                 <select id="countrySelect" class="form-control">
-                    <option value="DE">Deutschland</option>
-                    <option value="US">United States of America</option>
-                    <option value="BR">Brasilien</option>
+                    <option value="DE" th:text="#{chooseCountry.germany}">Germany</option>
+                    <option value="US" th:text="#{chooseCountry.america}">United States of America</option>
+                    <option value="BR" th:text="#{chooseCountry.brazil}">Brazil</option>
                 </select>
                 <div class="d-flex mt-4">
                     <div class="container">
@@ -100,8 +100,6 @@
     <script>
         function changeStatsView() {
             var selectedValue = document.getElementById('statsDropdown').value;
-            // Logik zum Anzeigen unterschiedlicher Statistikseiten basierend auf der Auswahl
-            // Beispiel: window.location.href = '/statistics/' + selectedValue;
             window.location.href = '/statistics/' + selectedValue;
         }
     </script>
