@@ -57,7 +57,6 @@ public class AIController {
         aiMessages.addMessage(message); // User's message
 
         // Process the message
-        // For example, send it to OpenAI service and get a response
         String response = openAIService.getChatResponse(aiMessages);
 
 
@@ -81,7 +80,7 @@ public class AIController {
         if (currentUser == null) {
             return "redirect:/login";
         }
-        List<Course> courses = courseService.getAllCourses(); // Replace with your method to fetch courses
+        List<Course> courses = courseService.getAllCourses();
         model.addAttribute("courses", courses);
         return "/aiTranslate";
     }

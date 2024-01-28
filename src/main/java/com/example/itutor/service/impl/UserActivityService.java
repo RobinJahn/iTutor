@@ -74,10 +74,5 @@ public class UserActivityService {
                         )
                 ));
     }
-
-
-
-    // Add other methods as needed
-
 }
 

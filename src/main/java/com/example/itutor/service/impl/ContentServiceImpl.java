@@ -59,7 +59,7 @@ public class ContentServiceImpl implements ContentServiceI {
             updatedContent.setContentID(id);
             return contentRepository.save(updatedContent);
         }
-        return null; // Or Error-Handling
+        return null;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ContentServiceImpl implements ContentServiceI {
             contentRepository.deleteById(id);
             return true;
         }
-        return false; // Or Error-Handling
+        return false;
     }
 
     @Override

@@ -65,7 +65,7 @@ public class RoleServiceImpl implements RoleServiceI {
             updatedRole.setId(id);
             return roleRepository.save(updatedRole);
         }
-        return null; // Or Error-Handling
+        return null;
     }
 
     @Override
@@ -74,6 +74,6 @@ public class RoleServiceImpl implements RoleServiceI {
             roleRepository.deleteById(id);
             return true;
         }
-        return false; // Or Error-Handling
+        return false;
     }
 }

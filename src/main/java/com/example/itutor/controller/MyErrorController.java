@@ -9,7 +9,6 @@ public class MyErrorController implements ErrorController{
 
     @RequestMapping("/error")
     public String handleError() {
-        // Provide the path to your error page template
         return "error";
     }
 

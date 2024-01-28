@@ -40,6 +40,7 @@ public class ExpertController {
 
     @RequestMapping(value = "/experts/signup", method = RequestMethod.GET)
     public String showExpertSignup(HttpServletRequest request, Model model) {
+
         Expert expert = new Expert();
         model.addAttribute("user", expert);
 
