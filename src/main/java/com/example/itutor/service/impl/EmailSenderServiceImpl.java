@@ -2,6 +2,7 @@ package com.example.itutor.service.impl;
 
 import com.example.itutor.service.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,10 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Value("${spring.mail.host}")
+    String sendEmail;
+
     @Override
     public void sendSignupVerificationEmail(String toEmail) {
         if (isValidEmail(toEmail)) {
@@ -32,9 +37,11 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         System.out.println("Sending email to: " + toEmail);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(toEmail);
+        mailMessage.setFrom(sendEmail);
         mailMessage.setSubject(subject);
         mailMessage.setText(text);
         mailSender.send(mailMessage);
+        System.out.println("Message sent successfully");
     }
 
     private boolean isValidEmail(String email) {
